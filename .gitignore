@@ -1,0 +1,24 @@
+.env
+CLAUDE.md
+*.env
+
+CLAUDE.md
+
+scripts/alerting/last_run.txt
+
+elastic-agent/
+snapshots/
+scripts/alerting/
+docker/elastic/.env
+*.local
+
+# Frozen private components
+AI system/
+triage-service/
+
+# Python cache
+__pycache__/
+*.pyc
+argus/engine/
+
+argus/start_argus.ps1
