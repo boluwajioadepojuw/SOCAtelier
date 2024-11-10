@@ -8,7 +8,7 @@
 
 - **Host:** DESKTOP-MM1REM9 (Windows 10, 10.0.20.10)
 - **Attack framework:** Atomic Red Team (330 atomics installed)
-- **Detection pipeline:** Sysmon → Elastic Agent → Elasticsearch (logs-winlog.winlog-default)
+- **Detection pipeline:** Sysmon  Elastic Agent  Elasticsearch (logs-winlog.winlog-default)
 - **Cases formed:** 6 cases, 708 total behaviors, 16:45-17:16 UTC window
 - **Tactics observed:** EXECUTION, PERSISTENCE, DISCOVERY, DEFENSE_EVASION, CREDENTIAL_ACCESS
 

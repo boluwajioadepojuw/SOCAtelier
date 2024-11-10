@@ -13,8 +13,8 @@ Sanitized JSON exports from live Elasticsearch telemetry generated during Argus 
 | Execution window | 16:45-17:16 UTC, 2026-05-16 |
 | Cases formed | 6 (CASE-001 through CASE-006) |
 | Total behaviors | 708 across all cases |
-| EDR pipeline | Sysmon EID 1/10/11/13 via Elastic Agent → Elasticsearch |
-| NDR pipeline | Suricata EVE via Filebeat 7.14.0 → Elasticsearch |
+| EDR pipeline | Sysmon EID 1/10/11/13 via Elastic Agent  Elasticsearch |
+| NDR pipeline | Suricata EVE via Filebeat 7.14.0  Elasticsearch |
 
 ---
 
