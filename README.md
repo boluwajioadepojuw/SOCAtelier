@@ -1,4 +1,4 @@
-# SOC Homelab: Detection & Incident Response
+# SOCAtelier - SOC Homelab: Detection and Incident Response
 
 **Focus:** SOC Analyst | Detection Engineering | Incident Response
 
