@@ -87,7 +87,7 @@ export default function HuntWorkbench() {
     }
   }
 
-  async function askClaude() {
+  async function askLLM() {
     if (!result || !activeId) return
     setCopilotLoading(true)
     try {
@@ -232,11 +232,11 @@ export default function HuntWorkbench() {
                 <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 14px", borderBottom: "1px solid var(--ln)", background: "var(--bg2)" }}>
                   <span style={{ fontSize: 9, fontFamily: "var(--mono)", letterSpacing: "0.08em", color: "var(--t3)", textTransform: "uppercase" }}>Results</span>
                   <span style={{ fontSize: 9, fontFamily: "var(--mono)", color: "var(--t3)", background: "var(--bg3)", padding: "1px 6px", borderRadius: 2 }}>{result.total} rows</span>
-                  <button onClick={askClaude} disabled={copilotLoading} style={{
+                  <button onClick={askLLM} disabled={copilotLoading} style={{
                     marginLeft: "auto", fontSize: 9, fontFamily: "var(--mono)", padding: "3px 10px",
                     border: "1px solid var(--teal3)", background: "var(--teal2)", color: "var(--teal)",
                     borderRadius: 3, cursor: "pointer", opacity: copilotLoading ? 0.6 : 1,
-                  }}>{copilotLoading ? "Thinking..." : "✦ Ask Claude"}</button>
+                  }}>{copilotLoading ? "Thinking..." : "✦ Ask LLM"}</button>
                 </div>
 
                 {result.rows.length === 0 ? (
@@ -282,7 +282,7 @@ export default function HuntWorkbench() {
             {/* Copilot */}
             {copilot && (
               <div style={{ background: "var(--bg2)", border: "1px solid var(--teal3)", borderRadius: 4, padding: "12px 16px", borderLeft: "3px solid var(--teal)" }}>
-                <div style={{ fontSize: 9, fontFamily: "var(--mono)", letterSpacing: "0.08em", color: "var(--teal)", textTransform: "uppercase", marginBottom: 8 }}>Claude Co-pilot</div>
+                <div style={{ fontSize: 9, fontFamily: "var(--mono)", letterSpacing: "0.08em", color: "var(--teal)", textTransform: "uppercase", marginBottom: 8 }}>LLM Co-pilot</div>
                 <div style={{ fontSize: 11, color: "var(--t1)", lineHeight: 1.6, marginBottom: 10 }}>{(copilot as any).summary}</div>
                 {(copilot as any).findings?.length > 0 && <>
                   <div style={{ fontSize: 9, fontFamily: "var(--mono)", color: "var(--t3)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>Findings</div>

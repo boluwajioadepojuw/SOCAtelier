@@ -4,7 +4,7 @@ app.py - Argus FastAPI Backend
 Routes:
 - GET /api/cases                        - all cases sorted by risk_score desc
 - GET /api/cases/{case_id}/behaviors    - behaviors for a case (used by timeline)
-- GET /api/cases/{case_id}/summary      - generate/return cached Claude case summary (4.5)
+- GET /api/cases/{case_id}/summary      - generate/return cached LLM case summary (4.5)
 - GET /api/behaviors/{behavior_id}      - single behavior + parent case context
 - GET /api/behaviors/{behavior_id}/process_tree  - adjacency JSON from raw Sysmon EID 1
 - GET /api/behaviors/{behavior_id}/network_context - CL-1: Suricata cross-layer correlation
@@ -15,8 +15,8 @@ Routes:
 - POST /api/hunt                        - execute a hunt template
 - POST /api/hunt/raw_esql               - execute raw ES|QL (used by Create Behavior flow)
 - POST /api/hunt/create_behavior        - create behavior doc from hunt result row (4.11)
-- POST /api/hunt/copilot               - Claude interpretation of hunt results (4.10)
-- POST /api/brief                       - generate Claude briefing for a behavior
+- POST /api/hunt/copilot               - LLM interpretation of hunt results (4.10)
+- POST /api/brief                       - generate LLM briefing for a behavior
 - GET /api/brief/{behavior_id}          - fetch cached briefing from argus-briefings
 
 Run:
@@ -110,7 +110,7 @@ async def get_case_behaviors(case_id: str):
 
 # ---------------------------------------------------------------------------
 # GET /api/cases/{case_id}/summary
-# Generate 1-2 sentence Claude summary for a case card (task 4.5)
+# Generate 1-2 sentence LLM summary for a case card (task 4.5)
 # Uses case metadata only — no behavior fetch needed. Caches result in ES.
 # ---------------------------------------------------------------------------
 @app.get("/api/cases/{case_id}/summary")
@@ -164,16 +164,16 @@ Case data:
 
 Write 1-2 sentences only. Start with what happened, end with why it matters. No bullet points. No headers. No preamble."""
 
-    CLAUDE_API_KEY = os.environ.get("CLAUDE_API_KEY", "")
-    if not CLAUDE_API_KEY:
-        return {"ok": False, "error": "CLAUDE_API_KEY not set"}
+    ARGUS_LLM_API_KEY = os.environ.get("ARGUS_LLM_API_KEY", "")
+    if not ARGUS_LLM_API_KEY:
+        return {"ok": False, "error": "ARGUS_LLM_API_KEY not set"}
 
     try:
         async with httpx.AsyncClient(timeout=20) as client:
             r = await client.post(
                 "https://api.anthropic.com/v1/messages",
                 headers={
-                    "x-api-key":         CLAUDE_API_KEY,
+                    "x-api-key":         ARGUS_LLM_API_KEY,
                     "anthropic-version": "2023-06-01",
                     "content-type":      "application/json"
                 },
@@ -186,7 +186,7 @@ Write 1-2 sentences only. Start with what happened, end with why it matters. No 
             r.raise_for_status()
             summary = r.json()["content"][0]["text"].strip()
     except Exception as e:
-        return {"ok": False, "error": f"Claude API failed: {str(e)}"}
+        return {"ok": False, "error": f"LLM API failed: {str(e)}"}
 
     # Write back to case doc so next load is instant (cached)
     try:
@@ -725,14 +725,14 @@ async def hunt_create_behavior(payload: dict):
 
 # ---------------------------------------------------------------------------
 # POST /api/brief
-# Investigation screen — generate Claude AI briefing for a behavior.
-# Narration only. Claude never scores, labels, or classifies.
+# Investigation screen — generate LLM AI briefing for a behavior.
+# Narration only. LLM never scores, labels, or classifies.
 # Caches result in argus-briefings index so repeat loads are instant.
 # ---------------------------------------------------------------------------
 @app.post("/api/brief")
 async def generate_brief(payload: dict):
     """
-    Generate an AI briefing for a behavior using Claude Haiku."""
+    Generate an AI briefing for a behavior using LLM Haiku."""
     import httpx, json as _json
 
     behavior_id = payload.get("behavior_id")
@@ -783,17 +783,17 @@ Respond in exactly this JSON format with no extra text, no markdown, no backtick
 
 escalate should be true if severity is HIGH or CRITICAL, false otherwise."""
 
-    CLAUDE_API_KEY = os.environ.get("CLAUDE_API_KEY", "")
-    if not CLAUDE_API_KEY:
-        return {"ok": False, "error": "CLAUDE_API_KEY not set in environment"}
+    ARGUS_LLM_API_KEY = os.environ.get("ARGUS_LLM_API_KEY", "")
+    if not ARGUS_LLM_API_KEY:
+        return {"ok": False, "error": "ARGUS_LLM_API_KEY not set in environment"}
 
-    # Call Claude Haiku — fast and cheap for narration
+    # Call LLM Haiku — fast and cheap for narration
     try:
         async with httpx.AsyncClient(timeout=30) as client:
             r = await client.post(
                 "https://api.anthropic.com/v1/messages",
                 headers={
-                    "x-api-key":            CLAUDE_API_KEY,
+                    "x-api-key":            ARGUS_LLM_API_KEY,
                     "anthropic-version":    "2023-06-01",
                     "content-type":         "application/json"
                 },
@@ -806,7 +806,7 @@ escalate should be true if severity is HIGH or CRITICAL, false otherwise."""
             r.raise_for_status()
             raw = r.json()["content"][0]["text"].strip()
     except Exception as e:
-        return {"ok": False, "error": f"Claude API failed: {str(e)}"}
+        return {"ok": False, "error": f"LLM API failed: {str(e)}"}
 
     # Parse JSON response
     try:
@@ -817,7 +817,7 @@ escalate should be true if severity is HIGH or CRITICAL, false otherwise."""
             clean    = raw.replace("```json", "").replace("```", "").strip()
             briefing = _json.loads(clean)
         except Exception:
-            return {"ok": False, "error": "Claude response was not valid JSON", "raw": raw}
+            return {"ok": False, "error": "LLM response was not valid JSON", "raw": raw}
 
     # Cache in argus-briefings — failure is non-fatal, still return briefing
     try:
@@ -838,11 +838,11 @@ escalate should be true if severity is HIGH or CRITICAL, false otherwise."""
 
 # ---------------------------------------------------------------------------
 # GET /api/brief/{behavior_id}
-# Fetch cached briefing — avoids re-calling Claude on page reload
+# Fetch cached briefing — avoids re-calling LLM on page reload
 # ---------------------------------------------------------------------------
 @app.get("/api/brief/{behavior_id}")
 async def get_brief(behavior_id: str):
-    """Fetch the most recent cached Claude briefing from argus-briefings."""
+    """Fetch the most recent cached LLM briefing from argus-briefings."""
     try:
         resp = es.search(
             index="argus-briefings",
@@ -862,7 +862,7 @@ async def get_brief(behavior_id: str):
 
 # ---------------------------------------------------------------------------
 # POST /api/hunt/copilot
-# Screen 4 — Claude co-pilot interpretation of hunt results (4.10)
+# Screen 4 — LLM co-pilot interpretation of hunt results (4.10)
 # Ephemeral: no ES persistence. Cached client-side in LAST_RESULT.copilot.
 # ---------------------------------------------------------------------------
 
@@ -888,16 +888,16 @@ Rules:
 @app.post("/api/hunt/copilot")
 async def hunt_copilot(payload: dict):
     """
-    Generate Claude co-pilot interpretation of hunt results.
+    Generate LLM co-pilot interpretation of hunt results.
     Receives compact payload: template metadata + columns + up to 20 preview rows.
     Returns structured JSON: summary, findings, mitre_tags, recommended_actions, limitations.
     No ES write — ephemeral, cached client-side only.
     """
     import httpx, json as _json
 
-    api_key = os.environ.get("CLAUDE_API_KEY", "")
+    api_key = os.environ.get("ARGUS_LLM_API_KEY", "")
     if not api_key:
-        return {"ok": False, "error": "CLAUDE_API_KEY not set"}
+        return {"ok": False, "error": "ARGUS_LLM_API_KEY not set"}
 
     template_id          = payload.get("template_id", "unknown")
     template_name        = payload.get("template_name", template_id)
@@ -969,9 +969,9 @@ Interpret these results for a SOC analyst."""
         return {"ok": True, "copilot": copilot}
 
     except httpx.HTTPStatusError as e:
-        return {"ok": False, "error": f"Claude API HTTP {e.response.status_code}"}
+        return {"ok": False, "error": f"LLM API HTTP {e.response.status_code}"}
     except _json.JSONDecodeError as e:
-        return {"ok": False, "error": f"Claude returned non-JSON: {e}"}
+        return {"ok": False, "error": f"LLM returned non-JSON: {e}"}
     except Exception as e:
         return {"ok": False, "error": str(e)}
 

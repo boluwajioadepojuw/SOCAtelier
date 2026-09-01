@@ -225,7 +225,7 @@ def create_case(group, case_id):
         "highest_severity": highest_severity,
         "tactics_seen": tactics_seen,
         "risk_score": risk_score,
-        "case_summary": ""  # Placeholder — Claude generates this later
+        "case_summary": ""  # Placeholder — LLM generates this later
     }
     
     # Write case to argus-cases

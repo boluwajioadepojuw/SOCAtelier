@@ -44,7 +44,7 @@ The center workspace defaults to "select a case from the queue" until a case is 
 
 Clicking a case loads the investigation workspace. The case header shows severity, behavior count, time window, host, risk score, and the tactics involved (EXECUTION, DISCOVERY, PERSISTENCE as chips).
 
-The right rail Intel tab immediately shows a Claude Haiku-generated case summary. This is cached in Elasticsearch on first generation and served instantly on subsequent loads. The summary is narration only: it describes what happened, it does not make decisions.
+The right rail Intel tab immediately shows a LLM Haiku-generated case summary. This is cached in Elasticsearch on first generation and served instantly on subsequent loads. The summary is narration only: it describes what happened, it does not make decisions.
 
 The process tree loads in the center workspace automatically.
 
@@ -66,7 +66,7 @@ The behavior timeline strip at the bottom shows events plotted chronologically w
 
 ![Process Tree with AI Briefing](screenshots/process_tree_node_click.png)
 
-Clicking any node pins the investigation to that specific behavior. The system matches the node's PID against the behavior documents for that case and loads the Claude Haiku briefing for the matched behavior.
+Clicking any node pins the investigation to that specific behavior. The system matches the node's PID against the behavior documents for that case and loads the LLM Haiku briefing for the matched behavior.
 
 The right rail shows an escalation recommendation, a behavioral analysis identifying the relevant MITRE technique, and numbered next steps the analyst should take. Path tracing is active: everything outside the ancestry chain of the clicked node is dimmed to 30% opacity.
 
@@ -128,11 +128,11 @@ In this screenshot, a pivot on remote IP 10.0.30.10 from the Cross-layer tab pre
 
 ---
 
-### Hunt Workbench: Claude Co-pilot
+### Hunt Workbench: LLM Co-pilot
 
 ![Hunt Workbench co-pilot](screenshots/hunt_workbench_copilot.png)
 
-After a hunt run, clicking Ask Claude sends the results to Claude Haiku for interpretation. The co-pilot returns a structured analysis: summary of what the hunt found, findings per notable result, recommended actions, and MITRE ATT&CK references.
+After a hunt run, clicking Ask LLM sends the results to LLM Haiku for interpretation. The co-pilot returns a structured analysis: summary of what the hunt found, findings per notable result, recommended actions, and MITRE ATT&CK references.
 
 This is not a decision engine. It summarizes what the data shows. Triage decisions remain with the analyst.
 
@@ -204,21 +204,21 @@ Windows 10 Victim (10.0.20.10)          pfSense OPT1
 | /api/hunt | POST | Execute ES|QL hunt template |
 | /api/hunt/raw_esql | POST | Execute raw ES|QL query |
 | /api/hunt/create_behavior | POST | Manually create behavior document |
-| /api/brief | POST | Generate behavior briefing via Claude |
+| /api/brief | POST | Generate behavior briefing via LLM |
 | /api/brief/{behavior_id} | GET | Fetch cached briefing |
 | /api/hunt/copilot | POST | Hunt co-pilot |
 
 ---
 
-## Claude API boundary
+## LLM API boundary
 
-Claude Haiku is used at three points only:
+LLM Haiku is used at three points only:
 
 1. Case summary: short description of what the case represents, cached in the argus-cases index
 2. Behavior briefing: per-node analysis with next steps, cached in argus-briefings index
 3. Hunt co-pilot: interpretation of hunt results on demand
 
-Detection, scoring, and case formation are fully deterministic. Claude never contributes to risk scores or triage decisions.
+Detection, scoring, and case formation are fully deterministic. LLM never contributes to risk scores or triage decisions.
 
 ---
 
@@ -246,5 +246,5 @@ See `investigation-reports/IR-006/` for the full report and screenshots.
 | Vite | 8 | Dev server and proxy |
 | TanStack Query | v5 | Data fetching |
 | D3.js | Latest | Process tree rendering |
-| Claude Haiku | claude-haiku-4-5 | Narration layer |
+| LLM Haiku | llm-haiku-4-5 | Narration layer |
 | Python | 3.14 | Detection daemons |
