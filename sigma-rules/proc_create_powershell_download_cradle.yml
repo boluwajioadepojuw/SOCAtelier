@@ -5,8 +5,8 @@ description: Detects PowerShell downloading content via Invoke-WebRequest or its
 references:
     - https://attack.mitre.org/techniques/T1059/001/
     - https://attack.mitre.org/techniques/T1105/
-    - https://github.com/farrukhCTI/SOCAtelier
-author: Farrukh (farrukhCTI)
+    - https://github.com/Adepoju/SOCAtelier
+author: Boluwaji Oluwaseyi Adepoju
 date: 2026-05-16
 tags:
     - attack.execution

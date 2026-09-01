@@ -5,8 +5,8 @@ description: Detects tasklist.exe usage combined with findstr filtering for lsas
 references:
     - https://attack.mitre.org/techniques/T1057/
     - https://attack.mitre.org/techniques/T1003/001/
-    - https://github.com/farrukhCTI/SOCAtelier
-author: Farrukh (farrukhCTI)
+    - https://github.com/Adepoju/SOCAtelier
+author: Boluwaji Oluwaseyi Adepoju
 date: 2026-05-16
 tags:
     - attack.discovery

@@ -4,8 +4,8 @@ status: test
 description: Detects writes to common registry run key locations used for persistence. Observed in Argus stress test (T1547.001) and IR-006 scenario. Sysmon EID 13 captures registry value set events on these paths.
 references:
     - https://attack.mitre.org/techniques/T1547/001/
-    - https://github.com/farrukhCTI/SOCAtelier
-author: Farrukh (farrukhCTI)
+    - https://github.com/Adepoju/SOCAtelier
+author: Boluwaji Oluwaseyi Adepoju
 date: 2026-05-16
 tags:
     - attack.persistence

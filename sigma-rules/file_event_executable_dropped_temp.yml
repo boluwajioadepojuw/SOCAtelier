@@ -4,8 +4,8 @@ status: test
 description: Detects executable files written to user or system temp directories. Observed repeatedly in Argus stress test (T1105) — Atomic Red Team drops payloads to %TEMP% before execution. Sysmon EID 11 (file creation) captures these writes. High volume of this event in a short window indicates staged payload delivery.
 references:
     - https://attack.mitre.org/techniques/T1105/
-    - https://github.com/farrukhCTI/SOCAtelier
-author: Farrukh (farrukhCTI)
+    - https://github.com/Adepoju/SOCAtelier
+author: Boluwaji Oluwaseyi Adepoju
 date: 2026-05-16
 tags:
     - attack.execution

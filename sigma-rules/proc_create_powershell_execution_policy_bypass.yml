@@ -4,8 +4,8 @@ status: test
 description: Detects PowerShell launched with -ExecutionPolicy Bypass flag, commonly used by attackers to run unsigned scripts without restriction. Observed in Argus stress test 2026-05-16 across CASE-001 and CASE-004.
 references:
     - https://attack.mitre.org/techniques/T1059/001/
-    - https://github.com/farrukhCTI/SOCAtelier
-author: Farrukh (farrukhCTI)
+    - https://github.com/Adepoju/SOCAtelier
+author: Boluwaji Oluwaseyi Adepoju
 date: 2026-05-16
 tags:
     - attack.execution

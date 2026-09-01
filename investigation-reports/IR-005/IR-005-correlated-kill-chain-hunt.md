@@ -1,7 +1,7 @@
 # IR-005: Correlated Kill Chain Hunt
 
 **Classification:** Controlled Simulation
-**Analyst:** Farrukh Ejaz
+**Analyst:** Boluwaji Oluwaseyi Adepoju
 **Date:** 2026-04-02
 **Status:** Closed
 **Severity:** Critical

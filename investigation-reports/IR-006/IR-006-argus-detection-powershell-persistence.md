@@ -1,7 +1,7 @@
 # IR-006: PowerShell-Originated Payload Retrieval and Persistence
 
 **Classification:** Controlled Simulation  
-**Analyst:** Farrukh Ejaz  
+**Analyst:** Boluwaji Oluwaseyi Adepoju
 **Date:** 2026-05-16  
 **Status:** Closed  
 **Severity:** High  

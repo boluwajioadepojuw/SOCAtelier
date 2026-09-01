@@ -12,6 +12,7 @@ This lab demonstrates how a single network alert can be expanded into a full kil
 - [What This Demonstrates](#what-this-demonstrates)
 - [Argus: SOC Investigation Console](#argus-soc-investigation-console)
 - [Investigation Reports](#investigation-reports)
+- [osTicket Alert-to-Ticket Bridge](#osticket-alert-to-ticket-bridge)
 - [Kibana Dashboards](#kibana-dashboards)
 - [Kill Chain Narrative](#kill-chain-narrative-ir-002-to-ir-005)
 - [Key Achievements](#key-achievements)
@@ -60,7 +61,7 @@ The frontend is a workstation-style layout: case queue on the left, process tree
 
 ## Investigation Reports
 
-IR-001 through IR-005 cover a connected kill chain simulating LOLBin-based post-compromise operator behavior on a defended Windows 10 endpoint (Defender ON, UAC ON throughout). IR-006 is a separate controlled simulation conducted entirely inside Argus, demonstrating the full investigation workflow from case triage through cross-layer corroboration and hunt pivot.
+IR-001 through IR-005 cover a connected kill chain simulating LOLBin-based post-compromise operator behavior on a defended Windows 10 endpoint (Defender ON, UAC ON throughout). IR-006 is a separate controlled simulation conducted entirely inside Argus, demonstrating the full investigation workflow from case triage through cross-layer corroboration and hunt pivot. IR-007 demonstrates the complete SOC L1 alert-to-ticket loop: an SSH brute-force burst detected by Sysmon, enriched by Argus into CASE-014, opened automatically as osTicket ticket #512 by the alert-to-ticket bridge, triaged, and closed.
 
 | Report | Title | MITRE TTPs | Platform | Status |
 |---|---|---|---|---|
@@ -70,12 +71,42 @@ IR-001 through IR-005 cover a connected kill chain simulating LOLBin-based post-
 | IR-004 | Defense Evasion and Persistence | T1218.005, T1547.001, T1562.001, T1036 | Kibana | Complete |
 | IR-005 | Correlated Kill Chain Hunt | Cross-layer, all TTPs | Kibana | Complete |
 | IR-006 | PowerShell-Originated Payload Retrieval and Persistence | T1059.001, T1105, T1053.005, T1082, T1016, T1049, T1033 | Argus | Complete |
+| IR-007 | Brute-Force Alert to osTicket Ticket (SOC L1 workflow) | T1110 | Argus + osTicket | Complete |
 
 IR-005 is the Kibana-era centrepiece: a pure analyst exercise reconstructing the full kill chain from a single NDR alert by pivoting on timestamp, chaining ProcessGuid relationships, and validating activity independently across both EDR and NDR datasets.
 
 IR-006 is the Argus-era centrepiece: a controlled simulation investigated entirely inside the Argus console. CASE-011 (26 behaviors, risk 5,109) was triaged through process tree analysis, cross-layer corroboration (6 Suricata events independently confirming EDR-observed PowerShell HTTP activity), entity pivot to the hunt workbench, and analyst action logging. It is the first investigation to demonstrate the full Argus workflow end to end against live telemetry.
 
 ---
+
+## osTicket Alert-to-Ticket Bridge
+
+The alert-to-ticket loop a SOC L1 runs daily: an Argus case opens, an
+osTicket ticket appears automatically, the analyst works it, and the close
+synchronizes back. `argus/osticket_bridge.py` is that bridge.
+
+- Reads OPEN Argus cases that have no ticket yet (same "unassigned" contract
+  as case_builder).
+- Builds a ticket from the case document: title, severity, host, tactics,
+  blast radius, and a deep link to the case in Kibana.
+- Idempotent: a successful export marks the case with `osticket_ticket_id`;
+  a failure leaves the case untouched (fail-open).
+- Configured entirely via environment variables — no secrets in the repo.
+
+```bash
+OSTICKET_URL=https://tickets.example.com/api/http.php/tickets.json \
+OSTICKET_API_KEY=xxxx \
+python -m argus.osticket_bridge --every 60
+```
+
+Run the stack:
+
+```bash
+docker compose -f docker/osticket/docker-compose.yml up -d
+```
+
+The osTicket run is documented end-to-end in **IR-007** (brute-force burst ->
+CASE-014 -> ticket #512 -> triage -> ban -> close).
 
 ## Kibana Dashboards
 
@@ -330,6 +361,7 @@ SOCAtelier/
 | Elastic Agent | 8.17.0 | EDR collection on victim |
 | Sysmon | v15.20 | Endpoint telemetry |
 | Suricata | CE (pfSense) | Network IDS |
+| osTicket | 1.18 | Alert-to-ticket bridge (Argus -> tickets) |
 | Filebeat | 7.14.0 | NDR pipeline (pfSense FreeBSD) |
 | pfSense | CE 2.8.1 | Routing and IDS |
 | Proxmox | VE | Hypervisor (Node 2) |
@@ -352,6 +384,5 @@ SOCAtelier/
 
 ## Author
 
-Farrukh Ejaz
-GitHub: https://github.com/farrukhCTI
-LinkedIn: https://linkedin.com/in/farrukhejazminhas
+Boluwaji Oluwaseyi Adepoju
+GitHub: https://github.com/Adepoju/SOCAtelier

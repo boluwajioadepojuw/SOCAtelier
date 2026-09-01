@@ -4,8 +4,8 @@ status: test
 description: Detects scheduled task creation using schtasks.exe with /create flag. Used for persistence in Argus stress test (T1053.005). Schtasks spawned as child of PowerShell or cmd.exe is particularly suspicious.
 references:
     - https://attack.mitre.org/techniques/T1053/005/
-    - https://github.com/farrukhCTI/SOCAtelier
-author: Farrukh (farrukhCTI)
+    - https://github.com/Adepoju/SOCAtelier
+author: Boluwaji Oluwaseyi Adepoju
 date: 2026-05-16
 tags:
     - attack.persistence

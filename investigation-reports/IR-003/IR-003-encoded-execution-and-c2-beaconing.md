@@ -1,7 +1,7 @@
 # IR-003: Encoded PowerShell Execution and C2 Beaconing
 
 **Classification:** Controlled Simulation
-**Analyst:** Farrukh Ejaz
+**Analyst:** Boluwaji Oluwaseyi Adepoju
 **Date:** 2026-04-02
 **Status:** Closed
 **Severity:** High
