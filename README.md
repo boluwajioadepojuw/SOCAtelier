@@ -178,7 +178,6 @@ Traffic between attacker and victim is forced through a monitored pfSense interf
 
 ## Architecture Diagram
 
-![Homelab Architecture](diagrams/homelab-diagram.png)
 
 *Figure: Segmented lab with Suricata positioned on OPT1 to monitor attack traffic between networks*
 

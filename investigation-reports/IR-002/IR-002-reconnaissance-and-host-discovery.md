@@ -112,8 +112,6 @@ None observed.
 
 ### Screenshots
 
-- ![NDR: Suricata SID 9000001](screenshots/IR-002-NDR-suricata-sid9000001-01.png)
-- ![EDR: Recon EID 1 burst](screenshots/IR-002-EDR-recon-eid1-burst-01.png)
 
 ---
 

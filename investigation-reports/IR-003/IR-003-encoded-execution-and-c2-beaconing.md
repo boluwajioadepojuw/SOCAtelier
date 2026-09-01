@@ -112,11 +112,6 @@ None observed beyond initial encoded command output (whoami/hostname/date).
 
 ### Screenshots
 
-- ![EDR: Encoded PowerShell EID 1](screenshots/IR-003-EDR-encoded-powershell-eid1-01.png)
-- ![EDR: C2 beacon EID 3](screenshots/IR-003-EDR-c2-beacon-eid3-01.png)
-- ![EDR: update.bat EID 11](screenshots/IR-003-EDR-updatebat-eid11-01.png)
-- ![NDR: Suricata HTTP flows](screenshots/IR-003-NDR-c2-beacon-suricata-flows-01.png)
-- ![NDR: Kali http.server log](screenshots/IR-003-NDR-c2-beacon-http-kali-01.png)
 
 ---
 

@@ -28,7 +28,6 @@ Three Python daemons run continuously in the background:
 
 ### Case Queue
 
-![Case Queue](screenshots/case_queue_updated.png)
 
 The left rail is the case queue. Every case shows the case ID, behavior count, time window, severity badge, risk score, and tactic tags showing the tactics observed in that case.
 
@@ -40,7 +39,6 @@ The center workspace defaults to "select a case from the queue" until a case is 
 
 ### Case Selected: AI Case Summary
 
-![Case Selected](screenshots/case_selected.png)
 
 Clicking a case loads the investigation workspace. The case header shows severity, behavior count, time window, host, risk score, and the tactics involved (EXECUTION, DISCOVERY, PERSISTENCE as chips).
 
@@ -52,7 +50,6 @@ The process tree loads in the center workspace automatically.
 
 ### Process Tree: Full Chain
 
-![Process Tree Full Chain](screenshots/process_tree_full_chain.png)
 
 The process tree is built from raw Sysmon EID 1 events using a 30-minute window around the case. It reconstructs the full parent-child process chain from the richest attack subtree in the data.
 
@@ -64,7 +61,6 @@ The behavior timeline strip at the bottom shows events plotted chronologically w
 
 ### Process Tree: Node Click and AI Briefing
 
-![Process Tree with AI Briefing](screenshots/process_tree_node_click.png)
 
 Clicking any node pins the investigation to that specific behavior. The system matches the node's PID against the behavior documents for that case and loads the LLM Haiku briefing for the matched behavior.
 
@@ -78,7 +74,6 @@ Nodes that appear in raw Sysmon telemetry but have no matching detection profile
 
 ### Behavior Timeline
 
-![Timeline](screenshots/timeline.png)
 
 The Timeline tab shows all behaviors for this case in chronological order. Each row shows the UTC timestamp, tactic label, and behavior description. Useful for understanding attack sequencing and distinguishing automated script execution (rapid burst) from manual operator activity (irregular spacing).
 
@@ -86,7 +81,6 @@ The Timeline tab shows all behaviors for this case in chronological order. Each 
 
 ### Cross-layer Correlation
 
-![Cross-layer Tab](screenshots/crosslayer_tab.png)
 
 The Cross-layer tab queries the NDR pipeline (Suricata via Filebeat) for network events matching the victim IP within a 15-minute window around the selected behavior. It returns flow records, alert signatures, destination IPs, and HTTP metadata from an entirely separate sensor with no shared data path to the EDR pipeline.
 
@@ -100,7 +94,6 @@ In the IR-006 investigation, this tab confirmed 6 Suricata http and fileinfo eve
 
 ### Hunt Workbench
 
-![Hunt Workbench](screenshots/hunt_workbench.png)
 
 The Hunt Workbench gives the analyst 7 ES|QL-based hunt templates covering the most common detection scenarios:
 
@@ -120,7 +113,6 @@ Selecting a template shows the description, parameters, and a Run Hunt button. T
 
 ### Hunt Workbench: Entity Pivot
 
-![Hunt Workbench with Pivot](screenshots/hunt_workbench_pivot.png)
 
 When navigating from the Cross-layer tab via an entity pivot, the Hunt Workbench pre-fills the relevant template and parameters automatically. A banner at the top of the results panel identifies the pivot source (entity value and originating case ID) so the analyst knows what triggered the hunt.
 
@@ -130,7 +122,6 @@ In this screenshot, a pivot on remote IP 10.0.30.10 from the Cross-layer tab pre
 
 ### Hunt Workbench: LLM Co-pilot
 
-![Hunt Workbench co-pilot](screenshots/hunt_workbench_copilot.png)
 
 After a hunt run, clicking Ask LLM sends the results to LLM Haiku for interpretation. The co-pilot returns a structured analysis: summary of what the hunt found, findings per notable result, recommended actions, and MITRE ATT&CK references.
 

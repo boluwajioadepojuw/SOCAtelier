@@ -156,10 +156,6 @@ Same count, same IPs, same window. Independent confirmation across both pipeline
 
 ### Screenshots
 
-- ![IR-005: Full timeline anchor](screenshots/IR-005-HUNT-timeline-anchor-01.png)
-- ![IR-005: ProcessGuid chain](screenshots/IR-005-HUNT-processguid-chain-01.png)
-- ![IR-005: Cross-layer EDR EID 3](screenshots/IR-005-HUNT-crosslayer-edr-eid3-01.png)
-- ![IR-005: Cross-layer NDR Suricata](screenshots/IR-005-HUNT-crosslayer-ndr-suricata-01.png)
 
 ---
 

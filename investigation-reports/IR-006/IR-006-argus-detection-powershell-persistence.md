@@ -61,7 +61,6 @@ Certutil was blocked by AppControl at stage 3. The remaining four stages produce
 
 Upstream Sysmon telemetry was processed and normalized into CASE-011 covering the 07:15-07:45 UTC window.
 
-![Case Queue and Investigation View](screenshots/IR-006-ARGUS-case-queue.png)
 
 **Case summary:**
 
@@ -83,7 +82,6 @@ Upstream Sysmon telemetry was processed and normalized into CASE-011 covering th
 
 The process tree rendered the full execution chain rooted at `powershell.exe` (pid 9160). All discovery binaries appeared as direct children. `net1.exe` appeared as a grandchild of `net.exe`.
 
-![Process Tree](screenshots/IR-006-ARGUS-process-tree.png)
 
 **Observed process chain:**
 
@@ -100,7 +98,6 @@ powershell.exe (pid 9160) — C:\Windows\System32\WindowsPowerShell\v1.0\   [EXE
 
 **net1.exe handling:** `net1.exe` appeared in raw Sysmon EID 1 telemetry and was rendered in the process tree as an "Other process" node. No behavior record matched it and it received no risk contribution. This is correct: `net1.exe` is an internal subprocess spawned by `net.exe` and is not independently malicious. Its presence in the tree confirms telemetry fidelity without inflating the case score.
 
-![Process Tree with net1.exe selected](screenshots/IR-006-ARGUS-process-tree-net1.png)
 
 ---
 
@@ -108,7 +105,6 @@ powershell.exe (pid 9160) — C:\Windows\System32\WindowsPowerShell\v1.0\   [EXE
 
 The NDR pipeline was queried for Suricata events matching the victim IP within a 15-minute window around the detected behaviors. Six events were returned, corroborating EDR-observed PowerShell HTTP activity from an independent sensor.
 
-![Cross-layer Tab](screenshots/IR-006-ARGUS-crosslayer-tab.png)
 
 **Corroboration summary:**
 
@@ -134,7 +130,6 @@ Zero Suricata alerts were generated. The 6 events are flow records, not alerts. 
 
 From the cross-layer view, the remote IP `10.0.30.10` was used as a pivot to the hunt workbench. HT-03 (Outbound connections by process) was pre-filled and executed against the case time window.
 
-![Hunt Workbench — HT-03 pivot on 10.0.30.10](screenshots/IR-006-ARGUS-hunt-workbench.png)
 
 **Hunt template:** HT-03 — Outbound connections by process  
 **Pivot source:** 10.0.30.10 from cross-layer network evidence
@@ -160,7 +155,6 @@ From the cross-layer view, the remote IP `10.0.30.10` was used as a pivot to the
 
 An ESCALATE action was logged against CASE-011 following the investigation.
 
-![Actions Log — CASE-011 ESCALATE](screenshots/IR-006-ARGUS-actions-log.png)
 
 | Field | Value |
 |---|---|

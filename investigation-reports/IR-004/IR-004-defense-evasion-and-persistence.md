@@ -104,11 +104,6 @@ None observed.
 
 ### Screenshots
 
-- ![EDR: Run key EID 13](screenshots/IR-004-EDR-runkey-eid13-01.png)
-- ![EDR: update.hta EID 11](screenshots/IR-004-EDR-updatehta-eid11-01.png)
-- ![EDR: mshta.exe EID 1](screenshots/IR-004-EDR-mshta-eid1-01.png)
-- ![EDR: mshta parent-child EID 1](screenshots/IR-004-EDR-mshta-parentchild-eid1-01.png)
-- ![EDR: Defender tamper EID 13](screenshots/IR-004-EDR-defender-tamper-eid13-01.png)
 
 ---
 

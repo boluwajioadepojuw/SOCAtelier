@@ -28,7 +28,6 @@ The central bar chart shows event volume over time across both pipelines layered
 
 Time filter: Last 24 hours. Data views: logs-* and filebeat-*.
 
-![SOC Overview](investigation-reports/dashboards/screenshots/01-soc-overview.png)
 
 ---
 
@@ -40,7 +39,6 @@ Panel 2.1 shows detection rule trigger counts by rule name. During the kill chai
 
 Time filter: Last 24 hours. Data view: logs-*.
 
-![Threat Activity Triage](investigation-reports/dashboards/screenshots/02-threat-activity.png)
 
 ---
 
@@ -54,7 +52,6 @@ A reviewer can scroll this dashboard top to bottom and follow the full attack wi
 
 Time filter: 2026-04-02 14:30 to 17:30. Data views: logs-* and filebeat-*.
 
-![Kill Chain Timeline](investigation-reports/dashboards/screenshots/03-kill-chain-timeline.png)
 
 ---
 
@@ -70,7 +67,6 @@ One sentence explains what this dashboard proves: if you can see the same event 
 
 Time filter: 2026-04-02 14:41 to 17:18. Data views: logs-* and filebeat-*.
 
-![Cross-Layer Correlation](investigation-reports/dashboards/screenshots/04-cross-layer-correlation.png)
 
 ---
 
@@ -84,7 +80,6 @@ Panel 5.4 isolates Run key writes. The single row shows the exact registry path 
 
 Time filter: 2026-04-02 16:30 to 17:30. Data view: logs-*.
 
-![Persistence and Evasion](investigation-reports/dashboards/screenshots/05-persistence-evasion.png)
 
 ---
 
