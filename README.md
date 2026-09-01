@@ -45,7 +45,7 @@ This lab demonstrates how a single network alert can be expanded into a full kil
 - Engineered custom detection rules where standard tooling had documented blind spots
 - Incident response investigations mapped to MITRE ATT&CK with detection gap analysis and remediation design
 - Pipeline engineering to solve real infrastructure limitations, not just configure existing tools
-- Built Argus, a full SOC investigation console on top of the existing Elastic Stack with AI-assisted analyst briefings, process tree reconstruction, hunt workbench, and analyst action trail
+- Built Argus, a full SOC investigation console on top of the existing Elastic Stack with automated analyst briefings, process tree reconstruction, hunt workbench, and analyst action trail
 
 ---
 

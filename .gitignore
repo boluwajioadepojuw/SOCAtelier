@@ -1,8 +1,8 @@
 .env
-CLAUDE.md
+LLM.md
 *.env
 
-CLAUDE.md
+LLM.md
 
 scripts/alerting/last_run.txt
 
