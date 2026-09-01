@@ -130,7 +130,7 @@ In this screenshot, a pivot on remote IP 10.0.30.10 from the Cross-layer tab pre
 
 ### Hunt Workbench: Claude Co-pilot
 
-![Hunt Workbench with Claude](screenshots/hunt_workbench_copilot.png)
+![Hunt Workbench co-pilot](screenshots/hunt_workbench_copilot.png)
 
 After a hunt run, clicking Ask Claude sends the results to Claude Haiku for interpretation. The co-pilot returns a structured analysis: summary of what the hunt found, findings per notable result, recommended actions, and MITRE ATT&CK references.
 
@@ -206,7 +206,7 @@ Windows 10 Victim (10.0.20.10)          pfSense OPT1
 | /api/hunt/create_behavior | POST | Manually create behavior document |
 | /api/brief | POST | Generate behavior briefing via Claude |
 | /api/brief/{behavior_id} | GET | Fetch cached briefing |
-| /api/hunt/copilot | POST | Hunt co-pilot via Claude |
+| /api/hunt/copilot | POST | Hunt co-pilot |
 
 ---
 
