@@ -341,17 +341,7 @@ async def get_process_tree(behavior_id: str):
 @app.get("/api/behaviors/{behavior_id}/network_context")
 async def get_network_context(behavior_id: str):
     """
-    Cross-layer correlation for a behavior.
-
-    Fetches Suricata EVE events in a +-15min window around the behavior timestamp,
-    filtered to victim IP (10.0.20.10) via src_ip, dest_ip, flow.src_ip, flow.dest_ip.
-
-    Returns:
-      has_network_data: bool
-      network_events: list of http/fileinfo events (url, dest_ip, dest_port, timestamp)
-      alerts:  list of Suricata alert events (signature, signature_id, severity, src/dest)
-      summary: returned, total_hits, alert_count, network_event_count, unique_ips
-    """
+    Cross-layer correlation for a behavior."""
     from datetime import timedelta
 
     # Step 1: fetch behavior timestamp + host
@@ -742,10 +732,7 @@ async def hunt_create_behavior(payload: dict):
 @app.post("/api/brief")
 async def generate_brief(payload: dict):
     """
-    Generate an AI briefing for a behavior using Claude Haiku.
-    Returns: summary (2-3 sentences), next_steps (3 items), escalate (bool).
-    Stores result in argus-briefings for caching.
-    """
+    Generate an AI briefing for a behavior using Claude Haiku."""
     import httpx, json as _json
 
     behavior_id = payload.get("behavior_id")

@@ -344,24 +344,7 @@ BUILDERS = {
 
 def run_hunt(template_id: str, **params) -> dict:
     """
-    Execute a hunt template against raw Sysmon telemetry.
-
-    Args:
-        template_id: One of HT-01 through HT-07
-        **params:    Template-specific params (host, hours, threshold, etc.)
-
-    Returns:
-        {
-            "ok":          bool,
-            "template_id": str,
-            "template":    dict,   # metadata (name, description, params)
-            "query":       str,    # rendered ES|QL — shown in UI for transparency
-            "columns":     list,   # [{name, type}, ...]
-            "rows":        list,   # [[val, val, ...], ...]
-            "total":       int,
-            "error":       str | None
-        }
-    """
+    Execute a hunt template against raw Sysmon telemetry."""
     if template_id not in TEMPLATES:
         return {
             "ok":    False,

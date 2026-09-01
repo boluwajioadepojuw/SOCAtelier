@@ -61,17 +61,7 @@ def _fmt_utc(dt: datetime) -> str:
 # ---------------------------------------------------------------------------
 def fetch_events(timestamp: str, host: str) -> tuple:
     """
-    Query Sysmon EID 1 events in ±15min window on the given host.
-    Returns (hits, window_start, window_end).
-    Empty hits list is valid — not an error.
-
-    Raises:
-      ValueError  — unparseable timestamp (fail fast, no silent shift)
-      Exception   — ES query failure (NOT masked as empty tree)
-
-    host.name uses term filter (exact, case-sensitive — must be lowercase).
-    size: 200 — accuracy over performance.
-    """
+    Query Sysmon EID 1 events in ±15min window on the given host."""
     ts = _parse_utc(timestamp)  # raises ValueError if bad
 
     window_start = _fmt_utc(ts - timedelta(minutes=15))
