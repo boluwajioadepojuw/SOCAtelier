@@ -32,7 +32,16 @@ def load(path: Path, key: str, index: str, id_field: str) -> None:
     print(f"{path.name}: {ok} docs into {index}" + (f" ({len(errors)} errors)" if errors else ""))
 
 
+def load_no_id(path: Path, key: str, index: str) -> None:
+    data = json.loads(path.read_text())
+    items = data.get(key, [])
+    actions = [{"_index": index, "_source": item} for item in items]
+    ok, errors = helpers.bulk(es, actions, refresh=True, raise_on_error=False)
+    print(f"{path.name}: {ok} docs into {index}" + (f" ({len(errors)} errors)" if errors else ""))
+
+
 load(datasets / "argus-cases-2026-05-16.json", "cases", "argus-cases", "case_id")
 for f in sorted(datasets.glob("behaviors-CASE-*.json")):
     load(f, "behaviors", "argus-behaviors", "behavior_id")
+load_no_id(datasets / "argus-actions-2026-05-16.json", "actions", "argus-actions")
 print("Import complete. Refresh the console (http://localhost:5173).")
