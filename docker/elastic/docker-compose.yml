@@ -13,7 +13,7 @@ services:
       - "9200:9200"
     volumes:
       - es-data:/usr/share/elasticsearch/data
-      - E:\SOCAtelier\snapshots:/snapshots
+      - ./snapshots:/snapshots
     networks:
       - elastic
     restart: unless-stopped
