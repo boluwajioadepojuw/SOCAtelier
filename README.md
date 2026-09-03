@@ -25,7 +25,7 @@ The lab runs a full detection-and-response stack in Docker:
 
 ## Incident reports
 
-The `investigation-reports/` directory contains eight end-to-end write-ups. Each one
+The `investigation-reports/` directory contains seven end-to-end write-ups. Each one
 walks a single alert from first detection to full kill-chain reconstruction:
 initial access, execution, persistence, lateral movement, and exfiltration --
 correlated across EDR and NDR telemetry and tied to specific ATT&CK techniques.
