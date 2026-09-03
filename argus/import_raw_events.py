@@ -40,7 +40,7 @@ for f in files:
         docs.append(obj)
         pos = end
     actions = [
-        {"_index": d.get("_index"), "_id": d.get("_id"), "_source": d.get("_source", {})}
+        {"_op_type": "create", "_index": d.get("_index"), "_id": d.get("_id"), "_source": d.get("_source", {})}
         for d in docs
     ]
     ok, errors = helpers.bulk(es, actions, refresh=True, raise_on_error=False)
