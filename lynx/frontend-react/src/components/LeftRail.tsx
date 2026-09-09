@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { fetchCases } from "../api"
-import { useArgus } from "../ArgusContext"
+import { useLynx } from "../LynxContext"
 import type { Case } from "../types"
 
 // FIX-06: sparkPath and SPARKS removed. Sparklines were hardcoded to old case IDs
@@ -15,7 +15,7 @@ const STATE_COLOR: Record<string, string> = {
 }
 
 export default function LeftRail() {
-  const { selectedCase, setSelectedCase, setSelectedBehavior } = useArgus()
+  const { selectedCase, setSelectedCase, setSelectedBehavior } = useLynx()
   const [filter, setFilter] = useState<"ALL" | "HIGH" | "MED">("ALL")
   const { data: cases = [] } = useQuery({
     queryKey: ["cases"],

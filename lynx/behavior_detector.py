@@ -12,9 +12,9 @@ es = Elasticsearch(ES_URL, basic_auth=(ES_USER, ES_PASS))
 # ---------------------------------------------------------------------------
 # BEHAVIORAL SIGNAL PROFILES
 #
-# Argus is a behavior enrichment and case correlation layer, NOT a detection
+# Lynx is a behavior enrichment and case correlation layer, NOT a detection
 # engine. Elastic/Sysmon rules handle detection. These profiles define
-# suspicious activity signals that Argus normalizes into investigation-ready
+# suspicious activity signals that Lynx normalizes into investigation-ready
 # behaviors for analyst review.
 #
 # Important: these are behavioral signals, not precise detections. They use
@@ -761,7 +761,7 @@ def run_detection_for_eid(eid):
                 "source_event_id":  doc_id,
             }
 
-            es.index(index="argus-behaviors", id=index_id, document=behavior_doc)
+            es.index(index="lynx-behaviors", id=index_id, document=behavior_doc)
             written += 1
 
     if hits:
@@ -784,7 +784,7 @@ def run_detection():
     )
 
 
-print("Argus behavior detector starting. Poll interval: 60s. Ctrl+C to stop.")
+print("Lynx behavior detector starting. Poll interval: 60s. Ctrl+C to stop.")
 print(f"Loaded {len(DETECTION_PROFILES)} detection profiles across EIDs 1, 10, 11, 13.")
 while True:
     run_detection()

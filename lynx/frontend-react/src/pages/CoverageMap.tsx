@@ -1,15 +1,15 @@
 // CoverageMap.tsx
 // Shows detection coverage across three layers:
 //   1. Elastic/Sysmon rules  — upstream detection engine (100 rules)
-//   2. Argus behavioral signals — enrichment profiles (this codebase)
+//   2. Lynx behavioral signals — enrichment profiles (this codebase)
 //   3. Cross-layer corroboration — EDR + NDR confirmed (Phase B, planned)
 //
-// Argus does NOT claim the Elastic rules as its own detections.
+// Lynx does NOT claim the Elastic rules as its own detections.
 // The distinction is intentional and architecturally honest.
 
-// ─── Argus behavioral signal profiles (mirrors behavior_detector.py) ──────────
+// ─── Lynx behavioral signal profiles (mirrors behavior_detector.py) ──────────
 // Each entry: [technique_id, tactic, description, confidence, behavior_class]
-const ARGUS_PROFILES: Array<{
+const LYNX_PROFILES: Array<{
   id: string
   technique: string
   tactic: string
@@ -73,7 +73,7 @@ const ARGUS_PROFILES: Array<{
 ]
 
 // ─── Elastic/Sysmon rules — upstream detection engine ─────────────────────────
-// These are real rules exported from Kibana. Argus does not own these detections.
+// These are real rules exported from Kibana. Lynx does not own these detections.
 // Source: rules exported from Elastic Security (Sysmon + Suricata).
 const ELASTIC_TECHNIQUES: Record<string, { count: number; description: string }> = {
   "T1059":     { count: 8,  description: "Command and Scripting Interpreter" },
@@ -177,7 +177,7 @@ function groupByTactic<T extends { tactic: string }>(items: T[]): Record<string,
   return out
 }
 
-function dedupeTechniques(profiles: typeof ARGUS_PROFILES) {
+function dedupeTechniques(profiles: typeof LYNX_PROFILES) {
   const seen = new Set<string>()
   return profiles.filter(p => {
     if (seen.has(p.technique)) return false
@@ -188,16 +188,16 @@ function dedupeTechniques(profiles: typeof ARGUS_PROFILES) {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function CoverageMap() {
-  const argusUnique    = dedupeTechniques(ARGUS_PROFILES)
-  const argusCount     = ARGUS_PROFILES.length
-  const techniqueCount = argusUnique.length
+  const lynxUnique    = dedupeTechniques(LYNX_PROFILES)
+  const lynxCount     = LYNX_PROFILES.length
+  const techniqueCount = lynxUnique.length
   const elasticCount   = 100
-  const argusGrouped   = groupByTactic(ARGUS_PROFILES)
+  const lynxGrouped   = groupByTactic(LYNX_PROFILES)
   const elasticTids    = new Set(Object.keys(ELASTIC_TECHNIQUES))
 
-  const highCount   = ARGUS_PROFILES.filter(p => p.confidence === "high").length
-  const mediumCount = ARGUS_PROFILES.filter(p => p.confidence === "medium").length
-  const lowCount    = ARGUS_PROFILES.filter(p => p.confidence === "low").length
+  const highCount   = LYNX_PROFILES.filter(p => p.confidence === "high").length
+  const mediumCount = LYNX_PROFILES.filter(p => p.confidence === "medium").length
+  const lowCount    = LYNX_PROFILES.filter(p => p.confidence === "low").length
 
   return (
     <div style={{
@@ -211,8 +211,8 @@ export default function CoverageMap() {
           COVERAGE MAP
         </div>
         <div style={{ fontSize: 10, color: "var(--t3)", fontFamily: "var(--mono)" }}>
-          Detection coverage across Elastic/Sysmon upstream rules and Argus behavioral signal profiles.
-          Argus enriches and correlates — it does not replace the underlying detection engine.
+          Detection coverage across Elastic/Sysmon upstream rules and Lynx behavioral signal profiles.
+          Lynx enriches and correlates — it does not replace the underlying detection engine.
         </div>
       </div>
 
@@ -220,8 +220,8 @@ export default function CoverageMap() {
       <div style={{ display: "flex", gap: 10 }}>
         {[
           { label: "Elastic Rules",          value: elasticCount,   sub: "Sysmon · Suricata",           color: "var(--teal)" },
-          { label: "Argus Signal Profiles",  value: argusCount,     sub: "EID 1 · 10 · 11 · 13",       color: "var(--amb)"  },
-          { label: "ATT&CK Techniques",      value: techniqueCount, sub: "unique IDs, Argus layer",     color: "var(--t2)"   },
+          { label: "Lynx Signal Profiles",  value: lynxCount,     sub: "EID 1 · 10 · 11 · 13",       color: "var(--amb)"  },
+          { label: "ATT&CK Techniques",      value: techniqueCount, sub: "unique IDs, Lynx layer",     color: "var(--t2)"   },
           { label: "High Confidence",        value: highCount,      sub: "precise signal profiles",     color: "rgba(229,83,75,0.9)" },
           { label: "Medium Confidence",      value: mediumCount,    sub: "context-dependent signals",   color: "rgba(240,140,50,0.9)" },
           { label: "Low Confidence (Recon)", value: lowCount,       sub: "weak signal, analyst review", color: "rgba(255,255,255,0.3)" },
@@ -243,8 +243,8 @@ export default function CoverageMap() {
         padding: "12px 16px", display: "flex", gap: 0,
       }}>
         {[
-          { layer: "Layer 1", title: "Elastic Detection Engine", desc: "Sysmon and Suricata rules. Source of truth for raw detections. Argus does not own these.", color: "var(--teal)", icon: "◈" },
-          { layer: "Layer 2", title: "Argus Behavioral Signals", desc: `${argusCount} profiles across EID 1/10/11/13. Command-line context enrichment. Confidence-weighted. Max 3 per event.`, color: "var(--amb)", icon: "◉" },
+          { layer: "Layer 1", title: "Elastic Detection Engine", desc: "Sysmon and Suricata rules. Source of truth for raw detections. Lynx does not own these.", color: "var(--teal)", icon: "◈" },
+          { layer: "Layer 2", title: "Lynx Behavioral Signals", desc: `${lynxCount} profiles across EID 1/10/11/13. Command-line context enrichment. Confidence-weighted. Max 3 per event.`, color: "var(--amb)", icon: "◉" },
           { layer: "Layer 3", title: "Cross-Layer Corroboration", desc: "EDR + NDR signal in same ±15min window. Sysmon behavior + Suricata alert = corroborated case. Phase B.", color: "rgba(123,109,212,0.9)", icon: "◎" },
         ].map(({ layer, title, desc, color, icon }, i) => (
           <div key={layer} style={{
@@ -261,14 +261,14 @@ export default function CoverageMap() {
         ))}
       </div>
 
-      {/* Tactic grid — Argus profiles grouped by tactic */}
+      {/* Tactic grid — Lynx profiles grouped by tactic */}
       <div>
         <div style={{ fontSize: 10, color: "var(--t3)", fontFamily: "var(--mono)", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.08em" }}>
-          Argus Behavioral Signals by Tactic
+          Lynx Behavioral Signals by Tactic
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {TACTIC_ORDER.map(tactic => {
-            const profiles = argusGrouped[tactic]
+            const profiles = lynxGrouped[tactic]
             if (!profiles || profiles.length === 0) return null
             return (
               <div key={tactic} style={{

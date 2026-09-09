@@ -1,8 +1,8 @@
-# osTicket — alert-to-ticket pipeline for Argus.
+# osTicket — alert-to-ticket pipeline for Lynx.
 #
-# The Argus osticket_bridge module POSTs OPEN cases to this instance's HTTP
+# The Lynx osticket_bridge module POSTs OPEN cases to this instance's HTTP
 # API; analysts work tickets in the osTicket UI and the close status lives
-# on the Argus case document.
+# on the Lynx case document.
 #
 #   docker compose -f docker/osticket/docker-compose.yml up -d
 #   -> web:    http://localhost:8080  (first-run installer)

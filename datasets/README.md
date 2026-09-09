@@ -1,6 +1,6 @@
-# Replayable Datasets — Argus SOC Homelab
+# Replayable Datasets — Lynx SOC Homelab
 
-Sanitized JSON exports from live Elasticsearch telemetry generated during Argus stress test on 2026-05-16.
+Sanitized JSON exports from live Elasticsearch telemetry generated during Lynx stress test on 2026-05-16.
 
 ---
 
@@ -41,11 +41,11 @@ Sanitized JSON exports from live Elasticsearch telemetry generated during Argus 
 
 | File | Description | Behaviors | Size |
 |---|---|---|---|
-| argus-cases-2026-05-16.json | All 6 cases from case_builder.py output | 6 cases | 4.4KB |
+| lynx-cases-2026-05-16.json | All 6 cases from case_builder.py output | 6 cases | 4.4KB |
 | behaviors-CASE-004-2026-05-16.json | Primary demo case. 251 behaviors, full kill chain, cross-layer corroborated | 251 | 155KB |
 | behaviors-CASE-005-2026-05-16.json | 53 behaviors. EXECUTION + DEFENSE_EVASION + DISCOVERY | 53 | 33KB |
 | behaviors-CASE-006-2026-05-16.json | 52 behaviors. EXECUTION + PERSISTENCE + DISCOVERY | 52 | 32KB |
-| argus-actions-2026-05-16.json | Analyst actions audit trail from investigation session | — | 1.4KB |
+| lynx-actions-2026-05-16.json | Analyst actions audit trail from investigation session | — | 1.4KB |
 
 ---
 
@@ -61,27 +61,27 @@ Suricata EVE (NDR) data is not included in this dataset. The cross-layer corrobo
 
 ## Replaying the Dataset
 
-To load this data into a fresh Argus instance:
+To load this data into a fresh Lynx instance:
 
 ```bash
 # 1. Import cases
-curl -X POST "http://localhost:9200/argus-cases/_bulk" \
+curl -X POST "http://localhost:9200/lynx-cases/_bulk" \
   -H "Content-Type: application/json" \
-  --data-binary @argus-cases-2026-05-16.json
+  --data-binary @lynx-cases-2026-05-16.json
 
 # 2. Import behaviors (repeat for each file)
-curl -X POST "http://localhost:9200/argus-behaviors/_bulk" \
+curl -X POST "http://localhost:9200/lynx-behaviors/_bulk" \
   -H "Content-Type: application/json" \
   --data-binary @behaviors-CASE-004-2026-05-16.json
 
 # 3. Restart case_builder.py to re-form case relationships
 python case_builder.py
 
-# 4. Open Argus frontend
+# 4. Open Lynx frontend
 # http://localhost:5173
 ```
 
-Note: The exported JSON is in Argus API response format, not ES bulk format. You will need to transform it before bulk import. The cases and behaviors are fully self-contained and do not require the original Sysmon pipeline to be active.
+Note: The exported JSON is in Lynx API response format, not ES bulk format. You will need to transform it before bulk import. The cases and behaviors are fully self-contained and do not require the original Sysmon pipeline to be active.
 
 ---
 
@@ -91,5 +91,5 @@ Note: The exported JSON is in Argus API response format, not ES bulk format. You
 |---|---|
 | IR-006 investigation report | `investigation-reports/IR-006/` |
 | Sigma detection rules | `sigma-rules/` |
-| Argus behavioral profiles | `argus/behavior_detector.py` |
-| Attack scenario script | `argus/IR-001-Scenario.ps1` (excluded from repo via .gitignore) |
+| Lynx behavioral profiles | `lynx/behavior_detector.py` |
+| Attack scenario script | `lynx/IR-001-Scenario.ps1` (excluded from repo via .gitignore) |

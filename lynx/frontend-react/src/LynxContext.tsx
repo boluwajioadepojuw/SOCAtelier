@@ -11,7 +11,7 @@ export interface HuntPivot {
   sourceBehavior?: string // originating behavior ID
 }
 
-interface ArgusState {
+interface LynxState {
   selectedCase: Case | null
   setSelectedCase: (c: Case | null) => void
   selectedBehavior: Behavior | null
@@ -28,9 +28,9 @@ interface ArgusState {
   setHuntPivot: (p: HuntPivot | null) => void
 }
 
-const Ctx = createContext<ArgusState>(null!)
+const Ctx = createContext<LynxState>(null!)
 
-export function ArgusProvider({ children }: { children: ReactNode }) {
+export function LynxProvider({ children }: { children: ReactNode }) {
   const [selectedCase, setSelectedCase] = useState<Case | null>(null)
   const [selectedBehavior, setSelectedBehavior] = useState<Behavior | null>(null)
   const [hoveredNodeId, setHoveredNodeId] = useState<number | null>(null)
@@ -51,4 +51,4 @@ export function ArgusProvider({ children }: { children: ReactNode }) {
   )
 }
 
-export const useArgus = () => useContext(Ctx)
+export const useLynx = () => useContext(Ctx)

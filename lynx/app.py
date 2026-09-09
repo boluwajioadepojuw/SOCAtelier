@@ -1,5 +1,5 @@
 """
-app.py - Argus FastAPI Backend
+app.py - Lynx FastAPI Backend
 
 Routes:
 - GET /api/cases                        - all cases sorted by risk_score desc
@@ -17,7 +17,7 @@ Routes:
 - POST /api/hunt/create_behavior        - create behavior doc from hunt result row (4.11)
 - POST /api/hunt/copilot               - LLM interpretation of hunt results (4.10)
 - POST /api/brief                       - generate LLM briefing for a behavior
-- GET /api/brief/{behavior_id}          - fetch cached briefing from argus-briefings
+- GET /api/brief/{behavior_id}          - fetch cached briefing from lynx-briefings
 
 Run:
     python -m uvicorn app:app --host 0.0.0.0 --port 8000
@@ -39,7 +39,7 @@ es = Elasticsearch(
     request_timeout=30
 )
 
-app = FastAPI(title="Argus SOC Console")
+app = FastAPI(title="Lynx SOC Console")
 
 app.add_middleware(
     CORSMiddleware,
@@ -57,7 +57,7 @@ async def get_cases():
     """All cases sorted by risk_score descending."""
     try:
         resp = es.search(
-            index="argus-cases",
+            index="lynx-cases",
             body={
                 "size": 100,
                 "sort": [{"risk_score": {"order": "desc"}}],
@@ -87,7 +87,7 @@ async def get_case_behaviors(case_id: str):
     """
     try:
         resp = es.search(
-            index="argus-behaviors",
+            index="lynx-behaviors",
             body={
                 "size": 1000,
                 "query": {"term": {"case_id.keyword": case_id}},
@@ -124,7 +124,7 @@ async def get_case_summary(case_id: str):
     # Fetch case doc
     try:
         resp = es.search(
-            index="argus-cases",
+            index="lynx-cases",
             body={
                 "size": 1,
                 "query": {"term": {"case_id.keyword": case_id}},
@@ -164,16 +164,16 @@ Case data:
 
 Write 1-2 sentences only. Start with what happened, end with why it matters. No bullet points. No headers. No preamble."""
 
-    ARGUS_LLM_API_KEY = os.environ.get("ARGUS_LLM_API_KEY", "")
-    if not ARGUS_LLM_API_KEY:
-        return {"ok": False, "error": "ARGUS_LLM_API_KEY not set"}
+    LYNX_LLM_API_KEY = os.environ.get("LYNX_LLM_API_KEY", "")
+    if not LYNX_LLM_API_KEY:
+        return {"ok": False, "error": "LYNX_LLM_API_KEY not set"}
 
     try:
         async with httpx.AsyncClient(timeout=20) as client:
             r = await client.post(
                 "https://api.anthropic.com/v1/messages",
                 headers={
-                    "x-api-key":         ARGUS_LLM_API_KEY,
+                    "x-api-key":         LYNX_LLM_API_KEY,
                     "anthropic-version": "2023-06-01",
                     "content-type":      "application/json"
                 },
@@ -191,7 +191,7 @@ Write 1-2 sentences only. Start with what happened, end with why it matters. No 
     # Write back to case doc so next load is instant (cached)
     try:
         es.update_by_query(
-            index="argus-cases",
+            index="lynx-cases",
             body={
                 "script": {
                     "source": "ctx._source.case_summary = params.summary",
@@ -220,11 +220,11 @@ async def get_behavior(behavior_id: str):
     - case_id to make the separate /api/cases/{id}/behaviors call for timeline
 
     NOTE: Process tree comes from /api/behaviors/{id}/process_tree
-    Raw Sysmon logs are the source for tree, not argus-behaviors.
+    Raw Sysmon logs are the source for tree, not lynx-behaviors.
     """
     try:
         resp = es.search(
-            index="argus-behaviors",
+            index="lynx-behaviors",
             body={
                 "size": 1,
                 "query": {"term": {"behavior_id.keyword": behavior_id}}
@@ -241,7 +241,7 @@ async def get_behavior(behavior_id: str):
         case_id = behavior.get("case_id")
         if case_id and case_id != "NOISE":
             case_resp = es.search(
-                index="argus-cases",
+                index="lynx-cases",
                 body={
                     "size": 1,
                     "query": {"term": {"case_id.keyword": case_id}},
@@ -266,7 +266,7 @@ async def get_behavior(behavior_id: str):
 
 # ---------------------------------------------------------------------------
 # GET /api/behaviors/{behavior_id}/process_tree
-# Queries raw Sysmon EID 1 — NOT argus-behaviors
+# Queries raw Sysmon EID 1 — NOT lynx-behaviors
 # Source: logs-winlog.winlog-default
 # ---------------------------------------------------------------------------
 @app.get("/api/behaviors/{behavior_id}/process_tree")
@@ -285,7 +285,7 @@ async def get_process_tree(behavior_id: str):
     # Step 1 — get timestamp + host from behavior doc
     try:
         resp = es.search(
-            index="argus-behaviors",
+            index="lynx-behaviors",
             body={
                 "size": 1,
                 "query": {"term": {"behavior_id.keyword": behavior_id}},
@@ -347,7 +347,7 @@ async def get_network_context(behavior_id: str):
     # Step 1: fetch behavior timestamp + host
     try:
         resp = es.search(
-            index="argus-behaviors",
+            index="lynx-behaviors",
             body={
                 "size": 1,
                 "query": {"term": {"behavior_id.keyword": behavior_id}},
@@ -520,7 +520,7 @@ async def get_network_context(behavior_id: str):
 
 # ---------------------------------------------------------------------------
 # PATCH /api/behaviors/{behavior_id}/status
-# Panel F — update behavior status in argus-behaviors
+# Panel F — update behavior status in lynx-behaviors
 # ---------------------------------------------------------------------------
 @app.patch("/api/behaviors/{behavior_id}/status")
 async def update_behavior_status(behavior_id: str, payload: dict):
@@ -530,7 +530,7 @@ async def update_behavior_status(behavior_id: str, payload: dict):
             return {"ok": False, "error": "Missing status"}
 
         resp = es.update_by_query(
-            index="argus-behaviors",
+            index="lynx-behaviors",
             body={
                 "script": {
                     "source": "ctx._source.status = params.status",
@@ -561,7 +561,7 @@ async def get_actions(limit: int = 200):
     """All analyst actions, newest first. Used by Screen 3 Actions Log."""
     try:
         resp = es.search(
-            index="argus-actions",
+            index="lynx-actions",
             body={
                 "size": limit,
                 "sort": [
@@ -587,7 +587,7 @@ async def get_actions(limit: int = 200):
 
 # ---------------------------------------------------------------------------
 # POST /api/actions
-# Panel F — write analyst action to argus-actions index (audit trail)
+# Panel F — write analyst action to lynx-actions index (audit trail)
 # ---------------------------------------------------------------------------
 @app.post("/api/actions")
 async def create_action(payload: dict):
@@ -607,7 +607,7 @@ async def create_action(payload: dict):
             "timestamp":   datetime.utcnow().isoformat() + "Z",
         }
 
-        resp = es.index(index="argus-actions", document=doc)
+        resp = es.index(index="lynx-actions", document=doc)
         if resp.get("result") not in ("created", "updated"):
             return {"ok": False, "error": f"Unexpected ES result: {resp.get('result')}"}
 
@@ -713,7 +713,7 @@ async def hunt_create_behavior(payload: dict):
             "fire_reasons":  [f"Hunt result from {payload.get('hunt_template', 'unknown')}"],
         }
 
-        resp = es.index(index="argus-behaviors", document=doc)
+        resp = es.index(index="lynx-behaviors", document=doc)
         if resp.get("result") not in ("created", "updated"):
             return {"ok": False, "error": f"Unexpected ES result: {resp.get('result')}"}
 
@@ -727,7 +727,7 @@ async def hunt_create_behavior(payload: dict):
 # POST /api/brief
 # Investigation screen — generate LLM AI briefing for a behavior.
 # Narration only. LLM never scores, labels, or classifies.
-# Caches result in argus-briefings index so repeat loads are instant.
+# Caches result in lynx-briefings index so repeat loads are instant.
 # ---------------------------------------------------------------------------
 @app.post("/api/brief")
 async def generate_brief(payload: dict):
@@ -742,7 +742,7 @@ async def generate_brief(payload: dict):
     # Fetch behavior doc from ES
     try:
         resp = es.search(
-            index="argus-behaviors",
+            index="lynx-behaviors",
             body={
                 "size": 1,
                 "query": {"term": {"behavior_id.keyword": behavior_id}}
@@ -756,7 +756,7 @@ async def generate_brief(payload: dict):
         return {"ok": False, "error": f"ES fetch failed: {str(e)}"}
 
     # Build prompt — deterministic engine fields only, no scoring
-    prompt = f"""You are an analyst assistant inside a SOC investigation console called Argus.
+    prompt = f"""You are an analyst assistant inside a SOC investigation console called Lynx.
 A detection engine has flagged a suspicious behavior. Explain it clearly to a SOC analyst.
 
 Behavior details:
@@ -783,9 +783,9 @@ Respond in exactly this JSON format with no extra text, no markdown, no backtick
 
 escalate should be true if severity is HIGH or CRITICAL, false otherwise."""
 
-    ARGUS_LLM_API_KEY = os.environ.get("ARGUS_LLM_API_KEY", "")
-    if not ARGUS_LLM_API_KEY:
-        return {"ok": False, "error": "ARGUS_LLM_API_KEY not set in environment"}
+    LYNX_LLM_API_KEY = os.environ.get("LYNX_LLM_API_KEY", "")
+    if not LYNX_LLM_API_KEY:
+        return {"ok": False, "error": "LYNX_LLM_API_KEY not set in environment"}
 
     # Call LLM Haiku — fast and cheap for narration
     try:
@@ -793,7 +793,7 @@ escalate should be true if severity is HIGH or CRITICAL, false otherwise."""
             r = await client.post(
                 "https://api.anthropic.com/v1/messages",
                 headers={
-                    "x-api-key":            ARGUS_LLM_API_KEY,
+                    "x-api-key":            LYNX_LLM_API_KEY,
                     "anthropic-version":    "2023-06-01",
                     "content-type":         "application/json"
                 },
@@ -819,7 +819,7 @@ escalate should be true if severity is HIGH or CRITICAL, false otherwise."""
         except Exception:
             return {"ok": False, "error": "LLM response was not valid JSON", "raw": raw}
 
-    # Cache in argus-briefings — failure is non-fatal, still return briefing
+    # Cache in lynx-briefings — failure is non-fatal, still return briefing
     try:
         doc = {
             "behavior_id":  behavior_id,
@@ -829,7 +829,7 @@ escalate should be true if severity is HIGH or CRITICAL, false otherwise."""
             "generated_at": datetime.utcnow().isoformat() + "Z",
             "model":        "claude-haiku-4-5-20251001"
         }
-        es.index(index="argus-briefings", document=doc)
+        es.index(index="lynx-briefings", document=doc)
     except Exception:
         pass
 
@@ -842,10 +842,10 @@ escalate should be true if severity is HIGH or CRITICAL, false otherwise."""
 # ---------------------------------------------------------------------------
 @app.get("/api/brief/{behavior_id}")
 async def get_brief(behavior_id: str):
-    """Fetch the most recent cached LLM briefing from argus-briefings."""
+    """Fetch the most recent cached LLM briefing from lynx-briefings."""
     try:
         resp = es.search(
-            index="argus-briefings",
+            index="lynx-briefings",
             body={
                 "size": 1,
                 "query": {"term": {"behavior_id.keyword": behavior_id}},
@@ -895,9 +895,9 @@ async def hunt_copilot(payload: dict):
     """
     import httpx, json as _json
 
-    api_key = os.environ.get("ARGUS_LLM_API_KEY", "")
+    api_key = os.environ.get("LYNX_LLM_API_KEY", "")
     if not api_key:
-        return {"ok": False, "error": "ARGUS_LLM_API_KEY not set"}
+        return {"ok": False, "error": "LYNX_LLM_API_KEY not set"}
 
     template_id          = payload.get("template_id", "unknown")
     template_name        = payload.get("template_name", template_id)

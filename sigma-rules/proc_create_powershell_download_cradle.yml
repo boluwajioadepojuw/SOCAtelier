@@ -1,7 +1,7 @@
 title: PowerShell Download Cradle via Invoke-WebRequest
-id: a1b2c3d4-0002-4e5f-a002-argus00000002
+id: a1b2c3d4-0002-4e5f-a002-lynx00000002
 status: test
-description: Detects PowerShell downloading content via Invoke-WebRequest or its aliases (iwr, wget, curl). Observed in Argus stress test and IR-006 scenario — powershell.exe retrieved staged payloads from Kali HTTP server at 10.0.30.10:8080. Corroborated independently by Suricata NDR pipeline.
+description: Detects PowerShell downloading content via Invoke-WebRequest or its aliases (iwr, wget, curl). Observed in Lynx stress test and IR-006 scenario — powershell.exe retrieved staged payloads from Kali HTTP server at 10.0.30.10:8080. Corroborated independently by Suricata NDR pipeline.
 references:
     - https://attack.mitre.org/techniques/T1059/001/
     - https://attack.mitre.org/techniques/T1105/

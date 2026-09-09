@@ -1,7 +1,7 @@
 title: Discovery Tool Burst from Scripted Parent
-id: a1b2c3d4-0005-4e5f-a005-argus00000005
+id: a1b2c3d4-0005-4e5f-a005-lynx00000005
 status: test
-description: Detects discovery tools (whoami, systeminfo, ipconfig, net, netstat) spawned from PowerShell or cmd.exe. In isolation these are low signal. Spawned from a scripted parent in rapid succession they indicate automated post-exploitation reconnaissance. Pattern confirmed in Argus stress test across T1033, T1082, T1016, T1049.
+description: Detects discovery tools (whoami, systeminfo, ipconfig, net, netstat) spawned from PowerShell or cmd.exe. In isolation these are low signal. Spawned from a scripted parent in rapid succession they indicate automated post-exploitation reconnaissance. Pattern confirmed in Lynx stress test across T1033, T1082, T1016, T1049.
 references:
     - https://attack.mitre.org/techniques/T1033/
     - https://attack.mitre.org/techniques/T1082/

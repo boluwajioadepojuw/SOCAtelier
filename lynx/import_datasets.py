@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Import the replayable Argus datasets into a fresh Elasticsearch.
+"""Import the replayable Lynx datasets into a fresh Elasticsearch.
 
 Usage:
     ES_PASS='<elastic password>' python3 import_datasets.py
@@ -40,8 +40,8 @@ def load_no_id(path: Path, key: str, index: str) -> None:
     print(f"{path.name}: {ok} docs into {index}" + (f" ({len(errors)} errors)" if errors else ""))
 
 
-load(datasets / "argus-cases-2026-05-16.json", "cases", "argus-cases", "case_id")
+load(datasets / "lynx-cases-2026-05-16.json", "cases", "lynx-cases", "case_id")
 for f in sorted(datasets.glob("behaviors-CASE-*.json")):
-    load(f, "behaviors", "argus-behaviors", "behavior_id")
-load_no_id(datasets / "argus-actions-2026-05-16.json", "actions", "argus-actions")
+    load(f, "behaviors", "lynx-behaviors", "behavior_id")
+load_no_id(datasets / "lynx-actions-2026-05-16.json", "actions", "lynx-actions")
 print("Import complete. Refresh the console (http://localhost:5173).")

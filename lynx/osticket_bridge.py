@@ -1,15 +1,15 @@
 """
-osticket_bridge.py — push OPEN Argus cases to osTicket as tickets.
+osticket_bridge.py — push OPEN Lynx cases to osTicket as tickets.
 
-The alert-to-ticket loop a SOC L1 runs daily: a case opens in Argus,
+The alert-to-ticket loop a SOC L1 runs daily: a case opens in Lynx,
 a ticket appears in osTicket, the analyst works it, and the close
 synchronizes back. This module is the bridge.
 
 Design:
   * Reads osTicket API settings from the environment (no secrets in repo).
   * Idempotent: a case already exported is never re-exported (tracked by
-    an `osticket_ticket_id` field on the Argus case document).
-  * Fail-open on the Argus side: if osTicket is unreachable, the case stays
+    an `osticket_ticket_id` field on the Lynx case document).
+  * Fail-open on the Lynx side: if osTicket is unreachable, the case stays
     OPEN and the bridge logs the failure — it never deletes or mutates a
     case it could not export.
   * Reads only OPEN cases without a ticket id (the same "unassigned"
@@ -19,10 +19,10 @@ Usage:
     OSTICKET_URL=https://tickets.example.com/api/http.php/tickets.json \
     OSTICKET_API_KEY=xxxx \
     OSTICKET_DEPT_ID=1 \
-    python -m argus.osticket_bridge            # one pass
-    python -m argus.osticket_bridge --every 60  # loop
+    python -m lynx.osticket_bridge            # one pass
+    python -m lynx.osticket_bridge --every 60  # loop
 
-Requires: requests (installed with the rest of Argus).
+Requires: requests (installed with the rest of Lynx).
 """
 
 import argparse
@@ -46,13 +46,13 @@ OSTICKET_DEPT_ID = os.environ.get("OSTICKET_DEPT_ID", "1")
 OSTICKET_PRIORITY_ID = os.environ.get("OSTICKET_PRIORITY_ID", "2")
 OSTICKET_TOPIC_ID = os.environ.get("OSTICKET_TOPIC_ID", "1")
 
-CASES_INDEX = "argus-cases"
+CASES_INDEX = "lynx-cases"
 
 es = Elasticsearch(ES_URL, basic_auth=(ES_USER, ES_PASS))
 
 
 def open_cases_without_ticket(limit=20):
-    """List OPEN Argus cases that have no osTicket ticket id yet."""
+    """List OPEN Lynx cases that have no osTicket ticket id yet."""
     query = {
         "query": {
             "bool": {
@@ -68,20 +68,20 @@ def open_cases_without_ticket(limit=20):
 
 
 def ticket_payload(case_id, case):
-    """Build the osTicket API payload from an Argus case document."""
-    title = case.get("title") or f"Argus case {case_id}"
+    """Build the osTicket API payload from an Lynx case document."""
+    title = case.get("title") or f"Lynx case {case_id}"
     tactics = case.get("tactics", [])
     host = case.get("host") or case.get("grouped_by", {}).get("host", "unknown")
 
     body = (
-        f"Argus case {case_id}\n"
+        f"Lynx case {case_id}\n"
         f"Severity: {case.get('highest_severity', 'MEDIUM')}\n"
         f"Host: {host}\n"
         f"Tactics: {', '.join(tactics) if tactics else 'n/a'}\n"
         f"Blast radius: {case.get('blast_radius')}\n\n"
         f"Behaviors: {case.get('behavior_count', len(case.get('behavior_ids', [])))}\n"
         f"Risk score: {case.get('risk_score')}\n\n"
-        f"Full case: {ES_URL}/argus-cases/_doc/{case_id}"
+        f"Full case: {ES_URL}/lynx-cases/_doc/{case_id}"
     )
 
     return {
@@ -90,7 +90,7 @@ def ticket_payload(case_id, case):
         "source": "API",
         "name": title,
         "email": "soc@localhost",
-        "subject": f"[Argus {case.get('highest_severity', 'MED')}] {title}",
+        "subject": f"[Lynx {case.get('highest_severity', 'MED')}] {title}",
         "phone": "",
         "message": body,
         "dept_id": OSTICKET_DEPT_ID,
@@ -126,7 +126,7 @@ def export_case(case_id, case):
 
 
 def mark_exported(case_id, ticket_id):
-    """Record the ticket id on the Argus case (idempotency marker)."""
+    """Record the ticket id on the Lynx case (idempotency marker)."""
     es.update(
         index=CASES_INDEX,
         id=case_id,
@@ -151,7 +151,7 @@ def run_once():
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Push OPEN Argus cases to osTicket as tickets.")
+        description="Push OPEN Lynx cases to osTicket as tickets.")
     parser.add_argument("--every", type=int, default=0,
                         help="run continuously every N seconds (0 = one pass)")
     args = parser.parse_args()

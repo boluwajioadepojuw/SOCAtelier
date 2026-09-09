@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
-import { useArgus } from "../ArgusContext"
+import { useLynx } from "../LynxContext"
 // FIX-05: fetchNetworkContext now imported from api.ts — single source of truth.
 // Previously defined as a local function here and duplicated in CrossLayerTab.tsx.
 import { fetchBriefing, fetchCaseSummary, fetchNetworkContext } from "../api"
@@ -196,7 +196,7 @@ function BriefingPanel({ data }: { data: any }) {
 }
 
 export default function RightRail() {
-  const { selectedCase, selectedBehavior, activeRailTab, setActiveRailTab } = useArgus()
+  const { selectedCase, selectedBehavior, activeRailTab, setActiveRailTab } = useLynx()
 
   const briefQuery = useQuery({
     queryKey: ["brief", selectedBehavior?.behavior_id],

@@ -185,7 +185,7 @@ An ESCALATE action was logged against CASE-011 following the investigation.
 | 07:40:xx | Sysmon EDR | 13 | Registry Run key written | n/a | T1547.001 |
 | 07:44:xx | Sysmon EDR | 1 | schtasks.exe /create executed | n/a | T1053.005 |
 | 07:44:xx | Sysmon EDR | 11 | Scheduled task file created under System32\Tasks | n/a | T1053.005 |
-| 12:37:09 | Argus | n/a | Analyst logs ESCALATE on CASE-011 | n/a | n/a |
+| 12:37:09 | Lynx | n/a | Analyst logs ESCALATE on CASE-011 | n/a | n/a |
 
 Note: Sub-minute timestamps within the 07:15-07:20 discovery stage are approximate. Exact values are available in raw Sysmon EID 1 records under `raw-events/`.
 

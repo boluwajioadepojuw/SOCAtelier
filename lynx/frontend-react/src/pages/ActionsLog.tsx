@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { fetchActions } from "../api"
-import { useArgus } from "../ArgusContext"
+import { useLynx } from "../LynxContext"
 
 type FilterType = "ALL" | "ESCALATE" | "BLOCK_IP" | "NOTE" | "RESOLVED" | "CONFIRMED_MALICIOUS" | "FALSE_POSITIVE"
 
@@ -24,7 +24,7 @@ interface Props {
 
 export default function ActionsLog({ onNavigateToInvestigation }: Props) {
   const [filter, setFilter] = useState<FilterType>("ALL")
-  const { setSelectedBehavior } = useArgus()
+  const { setSelectedBehavior } = useLynx()
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["actions"],

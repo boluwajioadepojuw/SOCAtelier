@@ -15,7 +15,7 @@ const queryClient = new QueryClient({
   },
 })
 
-const argusTheme = {
+const lynxTheme = {
   algorithm: theme.darkAlgorithm,
   token: {
     colorBgBase: '#0d1117',
@@ -94,7 +94,7 @@ const argusTheme = {
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <ConfigProvider theme={argusTheme}>
+      <ConfigProvider theme={lynxTheme}>
         <BrowserRouter>
           <App />
         </BrowserRouter>

@@ -1,6 +1,6 @@
-# Sigma Rules — Argus SOC Homelab
+# Sigma Rules — Lynx SOC Homelab
 
-12 Sigma detection rules derived from live attack telemetry generated during Argus stress testing on 2026-05-16. All rules are based on actual command lines and process chains observed in Elasticsearch across 6 cases (CASE-001 through CASE-006) formed by the Argus behavioral detection engine.
+12 Sigma detection rules derived from live attack telemetry generated during Lynx stress testing on 2026-05-16. All rules are based on actual command lines and process chains observed in Elasticsearch across 6 cases (CASE-001 through CASE-006) formed by the Lynx behavioral detection engine.
 
 ---
 
@@ -58,5 +58,5 @@ These rules use standard Sigma log source categories. For this homelab the mappi
 ## Related
 
 - IR-006 report: `investigation-reports/IR-006/`
-- Argus behavioral profiles: `argus/behavior_detector.py`
-- MITRE ATT&CK coverage map: Argus Coverage Map screen
+- Lynx behavioral profiles: `lynx/behavior_detector.py`
+- MITRE ATT&CK coverage map: Lynx Coverage Map screen

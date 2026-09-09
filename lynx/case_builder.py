@@ -1,11 +1,11 @@
 """
 case_builder.py
 
-Reads argus-behaviors-*, groups behaviors into cases.
+Reads lynx-behaviors-*, groups behaviors into cases.
 Grouping rule: behaviors sharing host + 10min window = one case.
 
 Run once, processes all behaviors without case_id assigned.
-Writes to argus-cases-* index.
+Writes to lynx-cases-* index.
 
 USAGE:
     python case_builder.py
@@ -29,10 +29,10 @@ es = Elasticsearch(
 )
 
 def get_last_case_number():
-    """Query argus-cases for highest case number, return as int."""
+    """Query lynx-cases for highest case number, return as int."""
     try:
         resp = es.search(
-            index="argus-cases",
+            index="lynx-cases",
             body={
                 "size": 1,
                 "sort": [{"created_at": {"order": "desc"}}],
@@ -53,7 +53,7 @@ def get_last_case_number():
 def get_unassigned_behaviors():
     """Get all behaviors without case_id assigned."""
     resp = es.search(
-        index="argus-behaviors",
+        index="lynx-behaviors",
         body={
             "size": 1000,
             "query": {
@@ -177,7 +177,7 @@ def compute_grouped_by(behaviors):
 def create_case(group, case_id):
     """Create one case document from a group of behaviors."""
     # Idempotency check - skip if case already exists
-    if es.exists(index="argus-cases", id=case_id):
+    if es.exists(index="lynx-cases", id=case_id):
         print(f"[SKIP] {case_id} already exists")
         return case_id
     
@@ -228,15 +228,15 @@ def create_case(group, case_id):
         "case_summary": ""  # Placeholder — LLM generates this later
     }
     
-    # Write case to argus-cases
-    es.index(index="argus-cases", id=case_id, document=case_doc)
+    # Write case to lynx-cases
+    es.index(index="lynx-cases", id=case_id, document=case_doc)
     print(f"[CREATED] {case_id}: {len(behavior_ids)} behaviors, grouped_by={grouped_by}")
     print(f"[DEBUG] behaviors: {behavior_ids}")
     
     # Update behaviors with case_id
     for doc_id, beh in items:
         es.update(
-            index="argus-behaviors",
+            index="lynx-behaviors",
             id=doc_id,
             body={"doc": {"case_id": case_id}}
         )
@@ -310,7 +310,7 @@ def run_once():
         for group in noise_groups:
             for doc_id, beh in group['items']:
                 es.update(
-                    index="argus-behaviors",
+                    index="lynx-behaviors",
                     id=doc_id,
                     body={"doc": {"case_id": "NOISE", "status": "NOISE"}}
                 )
@@ -328,7 +328,7 @@ def run_once():
     print(f"[DONE] Created {len(valid_groups)} cases")
 
 def main():
-    print("[START] Argus case_builder daemon (polling every 60s)")
+    print("[START] Lynx case_builder daemon (polling every 60s)")
     print("Press Ctrl+C to stop")
     
     while True:

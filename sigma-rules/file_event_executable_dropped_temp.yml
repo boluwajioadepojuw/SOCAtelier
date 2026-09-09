@@ -1,7 +1,7 @@
 title: Executable Dropped in Temp Directory
-id: a1b2c3d4-0010-4e5f-a010-argus00000010
+id: a1b2c3d4-0010-4e5f-a010-lynx00000010
 status: test
-description: Detects executable files written to user or system temp directories. Observed repeatedly in Argus stress test (T1105) — Atomic Red Team drops payloads to %TEMP% before execution. Sysmon EID 11 (file creation) captures these writes. High volume of this event in a short window indicates staged payload delivery.
+description: Detects executable files written to user or system temp directories. Observed repeatedly in Lynx stress test (T1105) — Atomic Red Team drops payloads to %TEMP% before execution. Sysmon EID 11 (file creation) captures these writes. High volume of this event in a short window indicates staged payload delivery.
 references:
     - https://attack.mitre.org/techniques/T1105/
     - https://github.com/Adepoju/SOCAtelier

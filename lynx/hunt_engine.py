@@ -1,5 +1,5 @@
 """
-hunt_engine.py — Argus Hunt Workbench Engine
+hunt_engine.py — Lynx Hunt Workbench Engine
 
 Seven ES|QL hunt templates targeting raw Sysmon telemetry.
 Each template is a parameterized ES|QL query that the analyst
@@ -161,7 +161,7 @@ def _ts_range(hours: int) -> str:
 
 def _host_clause(host) -> str:
     # ES|QL equality on host.name (TEXT field) is unreliable — use LIKE for exact
-    # lowercase match. host.name is stored lowercase in argus-* and raw logs.
+    # lowercase match. host.name is stored lowercase in lynx-* and raw logs.
     if host:
         return f' AND host.name LIKE "{host.lower()}"'
     return ""
@@ -419,7 +419,7 @@ def list_templates() -> list:
 # Usage: python hunt_engine.py
 # ---------------------------------------------------------------------------
 if __name__ == "__main__":
-    print("=== Argus Hunt Engine — smoke test ===\n")
+    print("=== Lynx Hunt Engine — smoke test ===\n")
     for tid in TEMPLATES:
         print(f"Testing {tid}: {TEMPLATES[tid]['name']}")
         result = run_hunt(tid, hours=24)

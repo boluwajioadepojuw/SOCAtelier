@@ -1,4 +1,4 @@
-import { useArgus } from "../ArgusContext"
+import { useLynx } from "../LynxContext"
 
 type View = "investigation" | "actions" | "hunt" | "coverage"
 
@@ -15,7 +15,7 @@ const NAV_TABS: { key: View; label: string }[] = [
 ]
 
 export default function TopBar({ view, setView }: Props) {
-  const { selectedCase, selectedBehavior, setSelectedCase, setSelectedBehavior } = useArgus()
+  const { selectedCase, selectedBehavior, setSelectedCase, setSelectedBehavior } = useLynx()
 
   return (
     <div style={{
@@ -26,7 +26,7 @@ export default function TopBar({ view, setView }: Props) {
         fontFamily: "var(--mono)", fontSize: 11, fontWeight: 700,
         letterSpacing: "0.16em", color: "var(--teal)",
         paddingRight: 14, borderRight: "1px solid var(--ln2)",
-      }}>ARGUS</span>
+      }}>LYNX</span>
 
       {/* FIX-03: Static system labels — no fake health dots */}
       <div style={{

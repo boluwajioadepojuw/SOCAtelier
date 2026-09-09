@@ -1,8 +1,8 @@
-"""Smoke tests: Argus core logic (pure functions, no live Elasticsearch)."""
+"""Smoke tests: Lynx core logic (pure functions, no live Elasticsearch)."""
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "argus"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "lynx"))
 
 import case_builder
 import hunt_engine
@@ -19,7 +19,7 @@ def _behavior(host, ts, sig="test-signal"):
 
 
 def _behavior_docs(*items):
-    """Argus passes behaviors as [(doc_id, _source)] pairs."""
+    """Lynx passes behaviors as [(doc_id, _source)] pairs."""
     return [(f"doc-{i}", b) for i, b in enumerate(items)]
 
 

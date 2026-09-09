@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
-import { useArgus } from "../ArgusContext"
+import { useLynx } from "../LynxContext"
 // FIX-05: fetchNetworkContext imported from api.ts — no longer duplicated here.
 import { fetchNetworkContext } from "../api"
 
@@ -131,7 +131,7 @@ interface PivotEntityProps {
 
 function PivotEntity({ value, templateId, params, label, sourceCase, style }: PivotEntityProps) {
   const [hovered, setHovered] = useState(false)
-  const { setHuntPivot, setActiveView } = useArgus()
+  const { setHuntPivot, setActiveView } = useLynx()
 
   function handlePivot() {
     setHuntPivot({

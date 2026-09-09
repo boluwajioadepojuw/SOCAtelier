@@ -1,5 +1,5 @@
-import { ArgusProvider } from "./ArgusContext"
-import { useArgus } from "./ArgusContext"
+import { LynxProvider } from "./LynxContext"
+import { useLynx } from "./LynxContext"
 import TopBar from "./components/TopBar"
 import LeftRail from "./components/LeftRail"
 import RightRail from "./components/RightRail"
@@ -10,7 +10,7 @@ import CoverageMap from "./pages/CoverageMap"
 
 // Inner component reads view from context — no prop drilling
 function AppInner() {
-  const { activeView, setActiveView } = useArgus()
+  const { activeView, setActiveView } = useLynx()
   return (
     <div style={{ height: "100vh", display: "flex", flexDirection: "column", overflow: "hidden", background: "var(--bg0)" }}>
       <TopBar view={activeView} setView={setActiveView} />
@@ -28,8 +28,8 @@ function AppInner() {
 
 export default function App() {
   return (
-    <ArgusProvider>
+    <LynxProvider>
       <AppInner />
-    </ArgusProvider>
+    </LynxProvider>
   )
 }

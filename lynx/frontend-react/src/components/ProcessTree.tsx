@@ -1,5 +1,5 @@
 import { useRef, useEffect, useCallback } from "react"
-import { useArgus } from "../ArgusContext"
+import { useLynx } from "../LynxContext"
 
 // Shape from the actual API response
 interface ApiNode {
@@ -173,7 +173,7 @@ export default function ProcessTree({ treeData, behaviors = [] }: { treeData?: A
     dragging: false, lastX: 0, lastY: 0,
     hovered: -1, selected: -1,
   })
-  const { setSelectedBehavior, setHoveredNodeId } = useArgus()
+  const { setSelectedBehavior, setHoveredNodeId } = useLynx()
 
   // FIX-07: No demo fallback. If treeData is missing or empty, graph is null.
   const graph = treeData ? buildGraph(treeData) : null

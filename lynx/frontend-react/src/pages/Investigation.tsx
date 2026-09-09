@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
-import { useArgus } from "../ArgusContext"
+import { useLynx } from "../LynxContext"
 import { fetchCaseBehaviors, fetchProcessTree } from "../api"
 import ProcessTree from "../components/ProcessTree"
 import CrossLayerTab from "./CrossLayerTab"
@@ -24,7 +24,7 @@ const TL_COLORS: Record<string, string> = {
 const TABS = ["Process tree", "Cross-layer", "Timeline", "Detection logic", "Raw events"]
 
 export default function Investigation() {
-  const { selectedCase, selectedBehavior } = useArgus()
+  const { selectedCase, selectedBehavior } = useLynx()
   const [activeTab, setActiveTab] = useState(0)
 
   const behaviorsQuery = useQuery({

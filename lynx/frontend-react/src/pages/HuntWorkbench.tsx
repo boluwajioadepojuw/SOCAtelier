@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { useArgus } from "../ArgusContext"
+import { useLynx } from "../LynxContext"
 import { useQuery } from "@tanstack/react-query"
 import { fetchHuntTemplates } from "../api"
 import type { HuntTemplate } from "../types"
@@ -20,7 +20,7 @@ export default function HuntWorkbench() {
   const [copilot, setCopilot] = useState<Record<string, any> | null>(null)
   const [copilotLoading, setCopilotLoading] = useState(false)
 
-  const { huntPivot, setHuntPivot } = useArgus()
+  const { huntPivot, setHuntPivot } = useLynx()
 
   const { data: templates = [], isLoading } = useQuery({
     queryKey: ["hunt-templates"],
