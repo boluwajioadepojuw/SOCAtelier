@@ -61,7 +61,7 @@ export interface DetectionReason {
   detail?: string
 }
 
-// FIX-14: Action union extended to include closure states used in RightRail and ActionsLog.
+// Action union extended to include closure states used in RightRail and ActionsLog.
 // Previously only ESCALATE | BLOCK_IP | NOTE — caused type errors on closure actions.
 export interface Action {
   action_id?: string
@@ -99,7 +99,7 @@ export interface ProcessNode {
   children?: ProcessNode[]
 }
 
-// FIX-14: Network context types — previously defined locally in CrossLayerTab.tsx only.
+// Network context types — previously defined locally in CrossLayerTab.tsx only.
 export interface NetworkContext {
   ok: boolean
   has_network_data: boolean

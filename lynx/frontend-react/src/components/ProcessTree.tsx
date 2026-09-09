@@ -64,7 +64,7 @@ function getTier(node: ApiNode): "root" | "red" | "blue" | "disc" {
   return "root"
 }
 
-// FIX-07: buildGraph no longer falls back to demo nodes when data is empty.
+// buildGraph no longer falls back to demo nodes when data is empty.
 // Returns null instead — the component renders a proper empty state.
 // Demo nodes were silently misleading: analyst could not tell real from synthetic.
 function buildGraph(data: ApiTreeData): { flatNodes: FlatNode[]; edges: Edge[] } | null {
@@ -175,12 +175,12 @@ export default function ProcessTree({ treeData, behaviors = [] }: { treeData?: A
   })
   const { setSelectedBehavior, setHoveredNodeId } = useLynx()
 
-  // FIX-07: No demo fallback. If treeData is missing or empty, graph is null.
+  // No demo fallback. If treeData is missing or empty, graph is null.
   const graph = treeData ? buildGraph(treeData) : null
   const flatNodes = graph?.flatNodes ?? []
   const edges = graph?.edges ?? []
 
-  // FIX-07: Empty state — shown when no real process lineage exists.
+  // Empty state — shown when no real process lineage exists.
   // This is the correct behaviour: tell the analyst there is no data,
   // rather than silently rendering synthetic nodes.
   if (!graph) {

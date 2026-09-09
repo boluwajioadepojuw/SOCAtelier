@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { useLynx } from "../LynxContext"
-// FIX-05: fetchNetworkContext now imported from api.ts — single source of truth.
+// fetchNetworkContext now imported from api.ts — single source of truth.
 // Previously defined as a local function here and duplicated in CrossLayerTab.tsx.
 import { fetchBriefing, fetchCaseSummary, fetchNetworkContext } from "../api"
 
@@ -20,7 +20,7 @@ function ActionsPanel({ selectedCase }: ActionsPanelProps) {
     setLoading(true)
     setStatus(null)
     try {
-      // FIX-10: Case-level actions correctly pass behavior_id as null.
+      // Case-level actions correctly pass behavior_id as null.
       // Previously passed selectedCase.case_id as behavior_id — wrong field.
       // behavior_id is only relevant for behavior-level actions, not case closures.
       const body: any = {
@@ -285,7 +285,7 @@ export default function RightRail() {
               Entities
             </div>
 
-            {/* FIX-09: Static entity rows — arrows removed. These rows are informational,
+            {/* Static entity rows — arrows removed. These rows are informational,
                 not interactive. The arrow implied clickability that did not exist. */}
             {[
               ["◈", selectedCase.case_id, "case"],
@@ -309,7 +309,7 @@ export default function RightRail() {
               </div>
             ))}
 
-            {/* FIX-09: Hint shown when no behavior is selected.
+            {/* Hint shown when no behavior is selected.
                 Guides analyst to click a process node to load network context. */}
             {!selectedBehavior?.behavior_id && (
               <div style={{

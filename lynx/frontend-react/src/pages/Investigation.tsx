@@ -18,7 +18,7 @@ const TL_COLORS: Record<string, string> = {
   pers: "#c47a8a",
 }
 
-// FIX-08: Cross-layer moved to tab 1 (was tab 4).
+// Cross-layer moved to tab 1 (was tab 4).
 // It is the strongest screen and was buried last. Most viewers never reached it.
 // New order: Process tree | Cross-layer | Timeline | Detection logic | Raw events
 const TABS = ["Process tree", "Cross-layer", "Timeline", "Detection logic", "Raw events"]
@@ -63,7 +63,7 @@ export default function Investigation() {
   const tactics = [...new Set(selectedCase.tactics_seen || [])]
   const behaviors = behaviorsQuery.data || []
 
-  // FIX-11: Timeline dots positioned by actual timestamp delta, not array index.
+  // Timeline dots positioned by actual timestamp delta, not array index.
   // Previously: pct = (i / behaviors.length) * 92 + 3 — evenly spaced regardless of time.
   // Now: pct derived from (ts - minTs) / timeRange — burst activity clusters correctly.
   const tlBehaviors = behaviors.slice(0, 16)
@@ -147,7 +147,7 @@ export default function Investigation() {
       </div>
 
       {/* Panel tabs */}
-      {/* FIX-08: Tab order changed. Cross-layer is now i=1, purple tint updated accordingly. */}
+      {/* Tab order changed. Cross-layer is now i=1, purple tint updated accordingly. */}
       <div style={{
         height: 30, background: "var(--bg0)", borderBottom: "1px solid var(--ln)",
         display: "flex", alignItems: "flex-end", padding: "0 14px", flexShrink: 0,
@@ -174,7 +174,7 @@ export default function Investigation() {
       {/* Tab 0: Process tree */}
       {activeTab === 0 && <ProcessTree key={treeData ? "real" : "empty"} treeData={treeData} behaviors={behaviors} />}
 
-      {/* Tab 1: Cross-layer — FIX-08: was tab 4, now tab 1 */}
+      {/* Tab 1: Cross-layer — was tab 4, now tab 1 */}
       {activeTab === 1 && (
         <CrossLayerTab
           behaviorId={targetBehavior?.behavior_id || ""}
@@ -183,7 +183,7 @@ export default function Investigation() {
         />
       )}
 
-      {/* Tab 2: Timeline — FIX-08: was tab 1, now tab 2 */}
+      {/* Tab 2: Timeline — was tab 1, now tab 2 */}
       {activeTab === 2 && (
         <div style={{ flex: 1, padding: "16px 20px", overflow: "auto" }}>
           <div style={{ fontSize: 9, fontFamily: "var(--mono)", color: "var(--t3)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12 }}>
@@ -212,7 +212,7 @@ export default function Investigation() {
         </div>
       )}
 
-      {/* Tab 3: Detection logic — FIX-08: was tab 2, now tab 3 */}
+      {/* Tab 3: Detection logic — was tab 2, now tab 3 */}
       {activeTab === 3 && (() => {
         // Group behaviors by description (same profile firing multiple times)
         const grouped = behaviors.reduce((acc: Record<string, any[]>, b) => {
@@ -328,7 +328,7 @@ export default function Investigation() {
         )
       })()}
 
-      {/* Tab 4: Raw events — FIX-08: was tab 3, now tab 4 */}
+      {/* Tab 4: Raw events — was tab 3, now tab 4 */}
       {activeTab === 4 && (
         <div style={{ flex: 1, padding: "16px 20px", overflow: "auto" }}>
           <div style={{ fontSize: 9, fontFamily: "var(--mono)", color: "var(--t3)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12 }}>

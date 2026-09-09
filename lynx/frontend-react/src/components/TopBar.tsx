@@ -34,7 +34,7 @@ export default function TopBar({ view, setView }: Props) {
         }}>LYNX</span>
       </div>
 
-      {/* FIX-03: Static system labels — no fake health dots */}
+      {/* Static system labels — no fake health dots */}
       <div style={{
         display: "flex", alignItems: "center", gap: 10,
         padding: "0 14px", borderRight: "1px solid var(--ln2)",
@@ -85,9 +85,9 @@ export default function TopBar({ view, setView }: Props) {
 
       <div style={{ flex: 1 }} />
 
-      {/* FIX-01: Dead search bar removed */}
+      {/* Dead search bar removed */}
 
-      {/* FIX-13: Avatar changed from FE to AN (Analyst — neutral) */}
+      {/* Avatar changed from FE to AN (Analyst — neutral) */}
       <div style={{
         width: 22, height: 22, borderRadius: "50%", background: "var(--amb2)",
         border: "1px solid var(--amb3)", display: "flex", alignItems: "center",

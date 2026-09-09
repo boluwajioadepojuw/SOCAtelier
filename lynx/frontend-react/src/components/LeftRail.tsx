@@ -4,7 +4,7 @@ import { fetchCases } from "../api"
 import { useLynx } from "../LynxContext"
 import type { Case } from "../types"
 
-// FIX-06: sparkPath and SPARKS removed. Sparklines were hardcoded to old case IDs
+// sparkPath and SPARKS removed. Sparklines were hardcoded to old case IDs
 // and fell back to [1,2,3,4,3,2,1] for every new case — fake telemetry.
 // Replaced with tactic tag row which uses real data from the case document.
 
@@ -69,7 +69,7 @@ export default function LeftRail() {
           const sel = selectedCase?.case_id === c.case_id
           const stateCol = STATE_COLOR[c.status?.toLowerCase()] || "var(--t3)"
 
-          // FIX-12: Date prefix on timestamp. created_at comes from the API.
+          // Date prefix on timestamp. created_at comes from the API.
           // Falls back gracefully if field is missing.
           const datePrefix = c.created_at
             ? new Date(c.created_at).toLocaleDateString("en-GB", { day: "2-digit", month: "short" }) + " · "
@@ -94,7 +94,7 @@ export default function LeftRail() {
                 </span>
               </div>
 
-              {/* FIX-12: Date prefix added before time window */}
+              {/* Date prefix added before time window */}
               <div style={{ fontSize: 11, color: "var(--t2)", marginBottom: 4, fontWeight: 500 }}>
                 {c.behavior_count} behaviors · {datePrefix}{c.grouped_by.time_window || "window"}
               </div>
@@ -111,7 +111,7 @@ export default function LeftRail() {
                 </span>
               </div>
 
-              {/* FIX-06: Tactic tag row replaces fake sparklines */}
+              {/* Tactic tag row replaces fake sparklines */}
               <div style={{ display: "flex", gap: 3, flexWrap: "wrap", marginTop: 2 }}>
                 {(c.tactics_seen || []).slice(0, 3).map((t: string) => (
                   <span key={t} style={{

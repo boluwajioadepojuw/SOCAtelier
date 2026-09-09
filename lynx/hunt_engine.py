@@ -233,7 +233,8 @@ def build_HT02(host=None, hours=24) -> str:
     hc = _host_clause(host)
     # Primary filter: *EncodedCommand* catches -EncodedCommand and abbreviated forms.
     # Secondary: *hidden* catches -WindowStyle Hidden often paired with encoded payloads.
-    # Note: *-enc* has tokenization issues in this ES build — do not use (LLM_v38 lesson 138).
+    # Note: the *-enc* wildcard does not match on this Elastic build because of
+    # field tokenization. Use *hidden* as the working query.
     return (
         f'FROM logs-winlog.winlog-default '
         f'| WHERE @timestamp >= "{ts}"{hc} '

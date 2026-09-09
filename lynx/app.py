@@ -962,7 +962,7 @@ Interpret these results for a SOC analyst."""
         resp.raise_for_status()
         raw = resp.json()["content"][0]["text"].strip()
 
-        # Two-pass JSON parse — Haiku occasionally wraps in backticks despite instructions (Lesson 167)
+        # Two-pass JSON parse: the model sometimes wraps the response in backticks.
         try:
             copilot = _json.loads(raw)
         except _json.JSONDecodeError:

@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { useLynx } from "../LynxContext"
-// FIX-05: fetchNetworkContext imported from api.ts — no longer duplicated here.
+// fetchNetworkContext imported from api.ts — no longer duplicated here.
 import { fetchNetworkContext } from "../api"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -77,7 +77,7 @@ function deltaSeconds(a: string, b: string): number {
   return (new Date(b).getTime() - new Date(a).getTime()) / 1000
 }
 
-// FIX-15: VICTIM_IP was hardcoded as "10.0.20.10" — wrong in any other environment.
+// VICTIM_IP was hardcoded as "10.0.20.10" — wrong in any other environment.
 // Direction is now derived dynamically: the victim is the src of outbound (GET) traffic.
 // unique_ips from the API already excludes the victim, so remote IPs are always correct.
 // For display purposes, use the src_ip of the first outbound event, or fall back to
