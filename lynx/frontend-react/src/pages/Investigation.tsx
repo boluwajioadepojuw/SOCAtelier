@@ -168,6 +168,8 @@ export default function Investigation() {
                 letterSpacing: "0.02em",
                 transition: "color 0.12s, background 0.12s",
               }}
+              onMouseEnter={(e) => { if (activeTab !== i) (e.currentTarget as HTMLElement).style.color = "var(--t2)" }}
+              onMouseLeave={(e) => { if (activeTab !== i) (e.currentTarget as HTMLElement).style.color = "var(--t3)" }}
             >
               <span style={{ fontSize: 8, fontFamily: "var(--mono)", color: activeTab === i ? "var(--amb)" : "var(--t4)" }}>
                 {String(i + 1).padStart(2, "0")}

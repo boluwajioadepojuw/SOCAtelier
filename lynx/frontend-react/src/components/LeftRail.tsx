@@ -81,11 +81,13 @@ export default function LeftRail() {
               onClick={() => select(c)}
               style={{
                 padding: "9px 12px 8px", cursor: "pointer",
-                borderLeft: `2px solid ${sel ? "var(--teal)" : "transparent"}`,
+                borderLeft: `2px solid ${sel ? "var(--amb)" : "transparent"}`,
                 borderBottom: "1px solid var(--ln)",
-                background: sel ? "var(--bg3)" : "transparent",
-                transition: "background 0.1s",
+                background: sel ? "var(--amb2)" : "transparent",
+                transition: "background 0.12s",
               }}
+              onMouseEnter={(e) => { if (!sel) (e.currentTarget as HTMLElement).style.background = "var(--bg3)" }}
+              onMouseLeave={(e) => { if (!sel) (e.currentTarget as HTMLElement).style.background = "transparent" }}
             >
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 2 }}>
                 <span style={{ fontSize: 9, fontFamily: "var(--mono)", color: "var(--t3)" }}>{c.case_id}</span>

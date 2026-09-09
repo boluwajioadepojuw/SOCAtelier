@@ -41,3 +41,11 @@ html, body, #root {
   color: var(--t1);
   font-family: system-ui, sans-serif;
 }
+
+/* Scrollbars, selection, focus -- quiet amber accents */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--bg5); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--amb3); }
+::selection { background: var(--amb3); color: var(--t1); }
+:focus-visible { outline: 1px solid var(--amb3); outline-offset: 1px; }

@@ -32,7 +32,10 @@ export default function NavRail() {
               color: active ? "var(--amb)" : "var(--t3)",
               background: active ? "var(--amb2)" : "transparent",
               border: active ? "1px solid var(--amb3)" : "1px solid transparent",
-              transition: "color 0.12s, background 0.12s",
+              transition: "color 0.12s, background 0.12s, border-color 0.12s",
+            }}
+            onMouseEnter={(e) => { if (!active) (e.currentTarget as HTMLElement).style.color = "var(--t2)" }}
+            onMouseLeave={(e) => { if (!active) (e.currentTarget as HTMLElement).style.color = "var(--t3)" }}
             }}
           >
             <Icon style={{ fontSize: 15 }} />
