@@ -1,6 +1,7 @@
 import { LynxProvider } from "./LynxContext"
 import { useLynx } from "./LynxContext"
 import TopBar from "./components/TopBar"
+import NavRail from "./components/NavRail"
 import LeftRail from "./components/LeftRail"
 import RightRail from "./components/RightRail"
 import Investigation from "./pages/Investigation"
@@ -13,8 +14,9 @@ function AppInner() {
   const { activeView, setActiveView } = useLynx()
   return (
     <div style={{ height: "100vh", display: "flex", flexDirection: "column", overflow: "hidden", background: "var(--bg0)" }}>
-      <TopBar view={activeView} setView={setActiveView} />
+      <TopBar />
       <div style={{ flex: 1, display: "flex", overflow: "hidden", minHeight: 0 }}>
+        <NavRail />
         <LeftRail />
         {activeView === "investigation" && <Investigation />}
         {activeView === "actions"       && <ActionsLog onNavigateToInvestigation={() => setActiveView("investigation")} />}

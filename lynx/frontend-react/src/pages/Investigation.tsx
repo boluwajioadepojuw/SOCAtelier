@@ -146,28 +146,39 @@ export default function Investigation() {
         </div>
       </div>
 
-      {/* Panel tabs */}
-      {/* Tab order changed. Cross-layer is now i=1, purple tint updated accordingly. */}
-      <div style={{
-        height: 30, background: "var(--bg0)", borderBottom: "1px solid var(--ln)",
-        display: "flex", alignItems: "flex-end", padding: "0 14px", flexShrink: 0,
-      }}>
-        {TABS.map((tab, i) => (
-          <div
-            key={tab}
-            onClick={() => setActiveTab(i)}
-            style={{
-              fontSize: 10,
-              color: activeTab === i ? "var(--t1)" : i === 1 && activeTab !== 1 ? "#7b6dd488" : "var(--t3)",
-              padding: "0 10px", height: 30, display: "flex", alignItems: "center",
-              cursor: "pointer",
-              borderBottom: `1.5px solid ${activeTab === i ? (i === 1 ? "#7b6dd4" : "var(--teal)") : "transparent"}`,
-              letterSpacing: "0.02em",
-              transition: "color 0.12s",
-            }}
-          >{tab}</div>
-        ))}
-      </div>
+      {/* Left vertical panel rail + content */}
+      <div style={{ flex: 1, display: "flex", overflow: "hidden", minHeight: 0 }}>
+
+        {/* Vertical panel rail */}
+        <div style={{
+          width: 138, flexShrink: 0, background: "var(--bg1)",
+          borderRight: "1px solid var(--ln)", padding: "8px 0",
+          display: "flex", flexDirection: "column",
+        }}>
+          {TABS.map((tab, i) => (
+            <div
+              key={tab}
+              onClick={() => setActiveTab(i)}
+              style={{
+                padding: "10px 12px", cursor: "pointer", display: "flex", gap: 8, alignItems: "center",
+                fontSize: 10,
+                color: activeTab === i ? "var(--amb)" : "var(--t3)",
+                borderLeft: `2px solid ${activeTab === i ? "var(--amb)" : "transparent"}`,
+                background: activeTab === i ? "var(--amb2)" : "transparent",
+                letterSpacing: "0.02em",
+                transition: "color 0.12s, background 0.12s",
+              }}
+            >
+              <span style={{ fontSize: 8, fontFamily: "var(--mono)", color: activeTab === i ? "var(--amb)" : "var(--t4)" }}>
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              {tab}
+            </div>
+          ))}
+        </div>
+
+        {/* Panel content */}
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", minWidth: 0 }}>
 
       {/* Tab content */}
 
@@ -383,6 +394,9 @@ export default function Investigation() {
           </div>
         </div>
       )}
+
+        </div>
+      </div>
 
     </div>
   )

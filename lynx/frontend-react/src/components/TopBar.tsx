@@ -1,22 +1,8 @@
 import { useLynx } from "../LynxContext"
 import LynxEye from "./LynxEye"
 
-type View = "investigation" | "actions" | "hunt" | "coverage"
-
-interface Props {
-  view: View
-  setView: (v: View) => void
-}
-
-const NAV_TABS: { key: View; label: string }[] = [
-  { key: "investigation", label: "Investigation" },
-  { key: "actions",       label: "Actions Log" },
-  { key: "hunt",          label: "Hunt Workbench" },
-  { key: "coverage",      label: "Coverage Map" },
-]
-
-export default function TopBar({ view, setView }: Props) {
-  const { selectedCase, selectedBehavior, setSelectedCase, setSelectedBehavior } = useLynx()
+export default function TopBar() {
+  const { activeView, selectedCase, selectedBehavior, setSelectedCase, setSelectedBehavior } = useLynx()
 
   return (
     <div style={{
@@ -46,25 +32,10 @@ export default function TopBar({ view, setView }: Props) {
         ))}
       </div>
 
-      {/* Nav tabs */}
-      <div style={{ display: "flex", alignItems: "center", height: "100%" }}>
-        {NAV_TABS.map(tab => (
-          <div
-            key={tab.key}
-            onClick={() => setView(tab.key)}
-            style={{
-              height: "100%", display: "flex", alignItems: "center",
-              padding: "0 14px", cursor: "pointer", fontSize: 10,
-              color: view === tab.key ? "var(--amb)" : "var(--t3)",
-              borderBottom: `1.5px solid ${view === tab.key ? "var(--amb)" : "transparent"}`,
-              letterSpacing: "0.02em", transition: "color 0.12s",
-            }}
-          >{tab.label}</div>
-        ))}
-      </div>
+      {/* View nav lives in the vertical rail; this bar is status + breadcrumb */}
 
       {/* Breadcrumb — only on investigation view */}
-      {view === "investigation" && (selectedCase || selectedBehavior) && (
+      {activeView === "investigation" && (selectedCase || selectedBehavior) && (
         <div style={{ display: "flex", alignItems: "center", gap: 5, padding: "0 14px", borderLeft: "1px solid var(--ln2)" }}>
           <span
             style={{ fontSize: 10, fontFamily: "var(--mono)", color: "var(--t3)", cursor: "pointer", padding: "2px 4px" }}
