@@ -4,16 +4,15 @@ Thanks for your interest in this project.
 
 ## Support posture
 
-This project is published as-is, and pull requests are welcome. It was built
-for real security operations and is shared because good open-source tools in
-this space are rare. Issues are read; response time is best-effort, not an SLA.
+The project is published as-is. Pull requests are welcome. Issues are read,
+but response time is best-effort, not an SLA.
 
 ## What makes a good pull request
 
 - **Bug fixes** come with a test in the style of the existing suite.
 - **Features** are scoped, documented, and add no unnecessary runtime
   dependencies.
-- **Safe-direction rule**: changes that affect detection or response logic
+- **Safe-direction rule**: changes that touch detection or response logic
   must err toward more visibility and safety, never silently toward less.
   Changes that trade correctness for tidiness will be declined.
 

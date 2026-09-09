@@ -1,18 +1,19 @@
-# Sigma Rules — Lynx SOC Homelab
+# Sigma Rules
 
-12 Sigma detection rules derived from live attack telemetry generated during Lynx stress testing on 2026-05-16. All rules are based on actual command lines and process chains observed in Elasticsearch across 6 cases (CASE-001 through CASE-006) formed by the Lynx behavioral detection engine.
+12 Sigma detection rules written from real attack telemetry captured during a
+lab stress test on 16/05/2026. Every rule comes from actual command lines and
+process chains seen in Elasticsearch across 6 cases (CASE-001 through
+CASE-006) formed by the Lynx behavior engine.
 
----
+## Source telemetry
 
-## Source Telemetry
-
-- **Host:** DESKTOP-MM1REM9 (Windows 10, 10.0.20.10)
-- **Attack framework:** Atomic Red Team (330 atomics installed)
-- **Detection pipeline:** Sysmon  Elastic Agent  Elasticsearch (logs-winlog.winlog-default)
-- **Cases formed:** 6 cases, 708 total behaviors, 16:45-17:16 UTC window
-- **Tactics observed:** EXECUTION, PERSISTENCE, DISCOVERY, DEFENSE_EVASION, CREDENTIAL_ACCESS
-
----
+- Host: DESKTOP-MM1REM9 (Windows 10, 10.0.20.10)
+- Attack framework: Atomic Red Team (330 atomics installed)
+- Detection pipeline: Sysmon via Elastic Agent into Elasticsearch
+  (logs-winlog.winlog-default)
+- Cases formed: 6 cases, 708 total behaviors, 16:45-17:16 UTC window
+- Tactics seen: EXECUTION, PERSISTENCE, DISCOVERY, DEFENSE_EVASION,
+  CREDENTIAL_ACCESS
 
 ## Rules
 
@@ -31,11 +32,10 @@
 | proc_create_atomic_red_team_execution.yml | T1059.001 | Execution | High |
 | proc_create_powershell_discovery_persistence_chain.yml | T1059.001, T1033, T1053.005, T1547.001 | Multi-stage | High |
 
----
+## Log source mapping
 
-## Log Source Mapping
-
-These rules use standard Sigma log source categories. For this homelab the mapping is:
+These rules use standard Sigma log source categories. For this lab the
+mapping is:
 
 | Sigma category | Sysmon EID | Elasticsearch index |
 |---|---|---|
@@ -44,19 +44,18 @@ These rules use standard Sigma log source categories. For this homelab the mappi
 | file_event | EID 11 | logs-winlog.winlog-default |
 | registry_set | EID 13 | logs-winlog.winlog-default |
 
----
-
 ## Notes
 
-- Rules marked `status: test` have been validated against homelab telemetry but not production-hardened
-- False positive sections reflect observed environment — tune filters for your environment before production use
-- Rule 12 (chain correlation) requires timeframe correlation in your SIEM to be fully effective — standalone it detects individual child process patterns
-- All rules follow [Sigma specification](https://github.com/SigmaHQ/sigma)
-
----
+- Rules marked `status: test` were validated against lab telemetry but not
+  hardened for production.
+- The false positive sections describe what was observed in this lab. Tune
+  the filters for any other environment before use.
+- Rule 12 (chain correlation) needs timeframe correlation in the SIEM to be
+  fully effective. Standalone, it detects the individual child process
+  patterns.
 
 ## Related
 
 - IR-006 report: `investigation-reports/IR-006/`
-- Lynx behavioral profiles: `lynx/behavior_detector.py`
-- MITRE ATT&CK coverage map: Lynx Coverage Map screen
+- Lynx behavior profiles: `lynx/behavior_detector.py`
+- MITRE ATT&CK coverage map: the Coverage Map screen in Lynx

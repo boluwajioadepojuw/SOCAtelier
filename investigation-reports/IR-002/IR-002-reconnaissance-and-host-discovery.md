@@ -2,87 +2,107 @@
 
 **Classification:** Controlled Simulation
 **Analyst:** Boluwaji Oluwaseyi Adepoju
-**Date:** 2026-04-02
+**Date:** 02/04/2026
 **Status:** Closed
 **Severity:** Medium
 **Host:** DESKTOP-MM1REM9 (10.0.20.10), Windows 10 Pro 22H2
 **MITRE ATT&CK:** T1046, T1082, T1033, T1016
-**Connected Narrative:** This report begins the IR-002 through IR-005 kill chain. It establishes T=0 for the full attack timeline and documents the initial external and internal reconnaissance phase that precedes execution and persistence activity documented in IR-003 and IR-004.
+**Connected Narrative:** This report starts the IR-002 through IR-005 kill
+chain. It sets T=0 for the full attack timeline and covers the
+reconnaissance phase that leads into the execution and persistence activity
+in IR-003 and IR-004.
 
 ---
 
-## 1. Executive Summary
+## 1. Summary
 
-On 2026-04-02, network scanning activity originating from an internal attack host (10.0.30.10) was detected against a Windows 10 endpoint (DESKTOP-MM1REM9, 10.0.20.10). The scan triggered a custom Suricata detection rule (SID 9000001) within seconds of initiation, providing the earliest timestamp anchor for this investigation.
+On 02/04/2026 a network scan from the internal attack host (10.0.30.10)
+hit the Windows 10 endpoint (DESKTOP-MM1REM9, 10.0.20.10). The custom
+Suricata rule SID 9000001 fired within seconds, which gave me the earliest
+timestamp anchor for this investigation.
 
-Following the external scan, a burst of native Windows reconnaissance binaries was executed on the victim host across a seven-minute window. Commands included `whoami`, `net user`, `systeminfo`, `ipconfig`, `route print`, `arp`, `tasklist`, and `netstat`, all executed from a single elevated PowerShell session, consistent with deliberate manual enumeration after initial access.
+After the scan, a burst of native Windows recon binaries ran on the victim
+across a seven-minute window: whoami, net user, systeminfo, ipconfig,
+route print, arp, tasklist, and netstat. All nine came from a single
+elevated PowerShell session. That pattern says manual enumeration after
+initial access, not a script.
 
-No lateral movement or data exfiltration was observed. This activity represents the reconnaissance phase of a broader attack sequence that continues in IR-003.
+No lateral movement, no exfiltration. This was the recon phase of a wider
+sequence that continues in IR-003.
 
-**Worst case if real:** An attacker with this level of host and network visibility has sufficient information to identify high-value targets, plan lateral movement, and establish persistence. This phase typically precedes credential access and C2 establishment in pre-ransomware intrusions.
+**Worst case if real:** An attacker with this much host and network
+visibility can pick high-value targets, plan lateral movement, and set up
+persistence. In pre-ransomware intrusions this phase comes right before
+credential access and C2.
 
 ---
 
 ## 2. Technical Detail
 
-**Audience:** IR team and detection engineers
-
----
-
 ### Methodology
 
-**Collection:**
-NDR telemetry collected via Suricata on pfSense OPT1 interface, shipped to Elasticsearch via Filebeat (filebeat-* index). EDR telemetry collected via Sysmon v15.20 and Elastic Agent 8.17.0 on the victim host (logs-winlog.winlog-default index). Analysis performed in Kibana Discover using field-based KQL queries against `winlog.event_data.*` fields.
+**Collection:** NDR telemetry from Suricata on the pfSense OPT1 interface,
+shipped to Elasticsearch by Filebeat (filebeat-* index). EDR telemetry from
+Sysmon v15.20 and Elastic Agent 8.17.0 on the victim
+(logs-winlog.winlog-default index). Analysis in Kibana Discover with KQL
+queries against `winlog.event_data.*`.
 
-**Analysis:**
-NDR alert timestamp used as T=0. EDR events correlated forward from T=0 using `agent.name: "DESKTOP-MM1REM9"`. Recon binary burst identified within a seven-minute window starting at 14:45. All nine recon commands traced to a single parent PowerShell session via shared ParentProcessGuid.
+**Analysis:** I used the NDR alert timestamp as T=0 and correlated EDR
+events forward from there with `agent.name: "DESKTOP-MM1REM9"`. The recon
+burst sat in a seven-minute window starting at 14:45. All nine commands
+share one ParentProcessGuid, so they came from one PowerShell session.
 
 **Enrichment:**
-- `whoami`, `net user`, `net localgroup` -> T1033 (System Owner/User Discovery)
-- `systeminfo` -> T1082 (System Information Discovery)
-- `ipconfig`, `route print`, `arp` -> T1016 (System Network Configuration Discovery)
-- `tasklist`, `netstat` -> T1057, T1049
-- Nmap SYN/connect scan -> T1046 (Network Service Discovery)
 
-**Conclusion:**
-Two-stage reconnaissance confirmed. External network scan detected at NDR layer. Internal host enumeration detected at EDR layer. Both stages traceable to the same operator session.
+- whoami, net user, net localgroup: T1033 (System Owner/User Discovery)
+- systeminfo: T1082 (System Information Discovery)
+- ipconfig, route print, arp: T1016 (System Network Configuration
+  Discovery)
+- tasklist, netstat: T1057, T1049
+- Nmap SYN/connect scan: T1046 (Network Service Discovery)
 
----
+**Conclusion:** Two-stage recon confirmed. The external network scan was
+caught at the NDR layer, the internal host enumeration at the EDR layer.
+Both trace back to the same operator session.
 
 ### Baseline and Tripwires
 
-**Network baseline:**
-Suricata deployed on pfSense OPT1 monitors traffic between the attack network (10.0.30.0/24) and victim network (10.0.20.0/24). Standard ET SCAN rules do not fire on internal traffic. SID 9000001 is a custom rule written specifically for this environment. It fired within 5 seconds of scan initiation.
+**Network baseline:** Suricata on pfSense OPT1 monitors traffic between
+the attack network (10.0.30.0/24) and the victim network (10.0.20.0/24).
+The default ET SCAN rules do not fire on internal traffic. SID 9000001 is
+a custom rule I wrote for this environment. It fired within 5 seconds of
+the scan starting.
 
-**Endpoint baseline:**
-Sysmon with SwiftOnSecurity configuration active on victim. All nine recon binaries are native Windows executables, none are blocked by Defender. Detection relies entirely on process creation telemetry and behavioral density analysis.
+**Endpoint baseline:** Sysmon with the SwiftOnSecurity configuration is
+active on the victim. All nine recon binaries are native Windows tools and
+Defender does not block them. Detection has to come from process creation
+telemetry and behavioral density.
 
-**Investigation type:**
-Proactive detection via NDR alert, correlated with EDR telemetry.
-
----
+**Investigation type:** Proactive. NDR alert first, then EDR correlation.
 
 ### Breach Chain
 
-**Initial access:**
-Out of scope. Assumed via existing elevated session (IntegrityLevel: High confirmed on all recon processes).
+**Initial access:** Out of scope. Assumed via an existing elevated session
+(all recon processes ran with IntegrityLevel High).
 
-**First observed activity:**
-2026-04-02T14:41:40 — Suricata SID 9000001 fires on Nmap SYN scan from 10.0.30.10 targeting 10.0.20.10 ports 1-1000.
+**First observed activity:** 02/04/2026 14:41:40 UTC. Suricata SID 9000001
+fires on an Nmap SYN scan from 10.0.30.10 against 10.0.20.10, ports
+1-1000.
 
-**External reconnaissance:**
-Two Nmap scans executed from Kali (10.0.30.10): SYN scan (-sS, ports 1-1000) and connect scan (-sT, ports 22/80/443/445/3389). NDR generated 26 alert records across both scans.
+**External reconnaissance:** Two Nmap scans from Kali (10.0.30.10): a SYN
+scan (-sS, ports 1-1000) and a connect scan (-sT, ports 22/80/443/445/
+3389). NDR generated 26 alert records across both.
 
-**Internal reconnaissance:**
-Nine native recon commands executed on victim from a single elevated PowerShell session (ParentProcessGuid: {c466df0a-c199-69cc-5006-000000000a00}) between 14:45 and 14:52. Commands spaced 30-60 seconds apart, consistent with deliberate manual enumeration rather than scripted batch execution.
+**Internal reconnaissance:** Nine native recon commands ran on the victim
+from one elevated PowerShell session (ParentProcessGuid:
+{c466df0a-c199-69cc-5006-000000000a00}) between 14:45 and 14:52. Commands
+were 30-60 seconds apart. That spacing means a person typing, not a batch
+script.
 
-**Privilege context:**
-All processes executed at High integrity level under `DESKTOP-MM1REM9\victim`. No privilege escalation observed.
+**Privilege context:** All processes ran at High integrity under
+DESKTOP-MM1REM9\victim. No privilege escalation.
 
-**Data exfiltration:**
-None observed.
-
----
+**Data exfiltration:** None observed.
 
 ### Timeline (UTC)
 
@@ -99,19 +119,19 @@ None observed.
 | 2026-04-02T14:52:16 | 1 | Sysmon (EDR) | Image: tasklist.exe, CommandLine: tasklist /v | T1057 |
 | 2026-04-02T14:52:30 | 1 | Sysmon (EDR) | Image: netstat.exe, CommandLine: netstat -ano | T1049 |
 
----
-
 ### Notable Observations
 
-- All nine recon binaries share an identical ParentProcessGuid (`{c466df0a-c199-69cc-5006-000000000a00}`), confirming execution from a single operator-controlled PowerShell session. This GUID serves as the operator session anchor for IR-005 cross-IR correlation.
-- Command spacing of 30-60 seconds between binaries is consistent with deliberate manual enumeration. Scripted batch execution would produce sub-second spacing. This behavioral pattern has implications for detection tuning, as density thresholds must account for human-paced execution.
-- The external scan (NDR) and internal recon (EDR) are separated by approximately four minutes, consistent with an operator reviewing scan results before proceeding to host enumeration.
-- Nmap connect scan (-sT) on ports 22/80/443/445/3389 reveals specific service interest: RDP (3389) and SMB (445) are typical lateral movement prerequisites.
-
----
-
-### Screenshots
-
+* All nine recon binaries share ParentProcessGuid
+  {c466df0a-c199-69cc-5006-000000000a00}. One operator-controlled
+  PowerShell session spawned all of them. This GUID becomes the operator
+  session anchor for the IR-005 correlation.
+* 30-60 second gaps between commands means deliberate manual work. A
+  scripted run would be sub-second. Density thresholds in detection rules
+  have to account for human pace.
+* Four minutes passed between the network scan and the host recon. That
+  looks like an operator reading scan results before moving on.
+* The connect scan ports (22/80/443/445/3389) show interest in RDP (3389)
+  and SMB (445), the usual prerequisites for lateral movement.
 
 ---
 
@@ -119,44 +139,57 @@ None observed.
 
 ### Detection Gaps
 
-**Gap 1: No alert on internal Nmap connect scan**
-SID 9000001 fires on SYN scan behavior. The subsequent connect scan (-sT) on specific ports generated Suricata flow records but no dedicated alert. An analyst reviewing only alerts would miss the second scan pass.
+**Gap 1: No alert on the internal Nmap connect scan**
+
+SID 9000001 catches SYN scans. The later connect scan (-sT) on specific
+ports produced flow records but no alert. An analyst reading alerts only
+would miss the second pass.
 
 **Fix:**
+
 ```
 alert tcp 10.0.30.0/24 any -> 10.0.20.0/24 [22,80,443,445,3389] (msg:"LOCAL Targeted port scan victim network"; flags:S; threshold: type threshold, track by_src, count 3, seconds 10; sid:9000003; rev:1;)
 ```
 
 **Gap 2: No behavioral alert on recon binary density**
-Nine native recon binaries executed within seven minutes from a single parent session generates no alert by default. Individual binary executions are legitimate in isolation. The detection signal is density and sequence, not any single event.
 
-**Fix:**
-Detection rule targeting recon binary burst from same parent within short window:
+Nine recon binaries in seven minutes from one parent session generates no
+alert by default. Each binary is legitimate on its own. The signal is the
+density and the sequence, not any single event.
+
+**Fix:** A detection rule for a recon burst from one parent in a short
+window:
+
 ```
 agent.name: "DESKTOP-MM1REM9" AND event.code: "1" AND winlog.event_data.Image: (*whoami.exe* OR *net.exe* OR *systeminfo.exe* OR *ipconfig.exe* OR *arp.exe* OR *netstat.exe* OR *route.exe* OR *tasklist.exe*)
 ```
-Threshold: 4+ hits within 5 minutes from same ParentProcessGuid = alert.
 
-**Gap 3: No NDR visibility into internal host enumeration**
-Suricata sees network traffic only. The internal recon commands (whoami, systeminfo, etc.) generate no network traffic and are invisible to NDR. Detection is EDR-dependent for this stage.
+Threshold: 4+ hits within 5 minutes from the same ParentProcessGuid =
+alert.
 
-**Fix:**
-No NDR fix possible for host-local enumeration. Ensure EDR coverage is maintained and Sysmon ProcessCreate rules cover all relevant binaries. Document as architectural limitation.
+**Gap 3: NDR is blind to host-local enumeration**
 
----
+Suricata only sees network traffic. whoami, systeminfo, and the rest
+produce no network traffic, so NDR cannot see this stage at all.
+Detection here depends entirely on the EDR.
+
+**Fix:** None possible at the NDR layer. Keep EDR coverage intact and make
+sure Sysmon ProcessCreate rules cover all the recon binaries. Documented
+as an architectural limitation.
 
 ### Remediation
 
-- No immediate remediation required in controlled environment
-- Revert victim VM to clean snapshot before next IR phase if needed
-- Ensure SID 9000001 remains active in Suricata ruleset
-
----
+* No immediate remediation needed in the lab
+* Revert the victim VM to a clean snapshot before the next IR phase if
+  needed
+* Keep SID 9000001 active in the Suricata ruleset
 
 ### Mitigation
 
-- Implement recon binary density alerting as described in Gap 2
-- Add targeted port scan rule as described in Gap 1
-- Restrict `net.exe`, `whoami.exe`, `systeminfo.exe` execution via AppLocker or ASR rules in production environments
-- Monitor for elevated PowerShell sessions spawning multiple enumeration binaries in short succession
-- Enforce network segmentation to limit cross-network scanning visibility
+* Implement the recon density alerting from Gap 2
+* Add the targeted port scan rule from Gap 1
+* In production, restrict net.exe, whoami.exe, systeminfo.exe via
+  AppLocker or ASR rules
+* Monitor elevated PowerShell sessions that spawn many enumeration
+  binaries in a short time
+* Keep network segmentation so cross-network scanning is visible
