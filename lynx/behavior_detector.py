@@ -964,9 +964,10 @@ def run_detection():
     )
 
 
-print("Lynx behavior detector starting. Poll interval: 60s. Ctrl+C to stop.")
-print(f"Loaded {len(DETECTION_PROFILES)} Windows profiles (EIDs 1, 10, 11, 13) "
-      f"and {len(LINUX_PROFILES)} Linux profiles (Elastic Defend ECS).")
-while True:
-    run_detection()
-    time.sleep(60)
+if __name__ == "__main__":
+    print("Lynx behavior detector starting. Poll interval: 60s. Ctrl+C to stop.")
+    print(f"Loaded {len(DETECTION_PROFILES)} Windows profiles (EIDs 1, 10, 11, 13) "
+          f"and {len(LINUX_PROFILES)} Linux profiles (Elastic Defend ECS).")
+    while True:
+        run_detection()
+        time.sleep(60)

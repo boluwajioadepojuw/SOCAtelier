@@ -76,7 +76,7 @@ def fetch_events(timestamp: str, host: str) -> tuple:
                 "bool": {
                     "must": [
                         {"term":  {"event.code": "1"}},
-                        {"term":  {"host.name.keyword": host}},
+                        {"term":  {"host.name": host}},
                         {"range": {"@timestamp": {
                             "gte": window_start,
                             "lte": window_end
@@ -293,7 +293,7 @@ def build_linux_process_tree(behavior_id: str, timestamp: str, host: str,
             "query": {
                 "bool": {
                     "must": [
-                        {"term":  {"host.name.keyword": host}},
+                        {"term":  {"host.name": host}},
                         {"range": {"@timestamp": {
                             "gte": window_start,
                             "lte": window_end

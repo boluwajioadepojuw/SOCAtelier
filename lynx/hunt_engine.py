@@ -6,7 +6,7 @@ Each template is a parameterized ES|QL query that the analyst
 can run from Screen 4, optionally refined by the built-in hunt co-pilot.
 
 Index:  logs-winlog.winlog-default  (raw Sysmon EID 1/3/11/13)
-Fields: winlog.event_data.* + host.name.keyword + @timestamp
+Fields: winlog.event_data.* + host.name + @timestamp
 
 Template catalogue:
   HT-01  Rare parent-child pairs         — unusual process spawn relationships

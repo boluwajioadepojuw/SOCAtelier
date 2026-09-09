@@ -1,0 +1,110 @@
+{
+  "hits": {
+    "total": {
+      "value": 1,
+      "relation": "eq"
+    },
+    "hits": [
+      {
+        "_index": ".ds-logs-winlog.winlog-default-2026.09.03-000001",
+        "_id": "1FsLTp0BuL2Ov6TVInlM",
+        "_score": 2.4816046,
+        "_source": {
+          "input": {
+            "type": "winlog"
+          },
+          "agent": {
+            "name": "DESKTOP-MM1REM9",
+            "id": "23b63155-d5a7-4c98-ba2f-6eb495833877",
+            "ephemeral_id": "fb428c44-a56b-4417-83a3-d061abc3e7a5",
+            "type": "filebeat",
+            "version": "8.17.0"
+          },
+          "@timestamp": "2026-04-02T11:53:54.087Z",
+          "winlog": {
+            "computer_name": "DESKTOP-MM1REM9",
+            "process": {
+              "pid": 2276,
+              "thread": {
+                "id": 3884
+              }
+            },
+            "channel": "Microsoft-Windows-Sysmon/Operational",
+            "event_data": {
+              "User": "DESKTOP-MM1REM9\\victim",
+              "Details": "C:\\Windows\\System32\\cmd.exe /c whoami > C:\\Users\\Public\\out.txt",
+              "EventType": "SetValue",
+              "ProcessId": "7788",
+              "Image": "C:\\Windows\\system32\\reg.exe",
+              "RuleName": "T1060,RunKey",
+              "ProcessGuid": "{c466df0a-58d2-69ce-530a-000000000a00}",
+              "TargetObject": "HKU\\S-1-5-21-3653511100-4210277373-1638563163-1001\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\\WindowsUpdate",
+              "UtcTime": "2026-04-02 11:53:54.078"
+            },
+            "opcode": "Info",
+            "version": 2,
+            "record_id": 13019,
+            "task": "Registry value set (rule: RegistryEvent)",
+            "event_id": "13",
+            "provider_guid": "{5770385f-c22a-43e0-bf4c-06f5698ffbd9}",
+            "api": "wineventlog",
+            "provider_name": "Microsoft-Windows-Sysmon",
+            "user": {
+              "identifier": "S-1-5-18",
+              "domain": "NT AUTHORITY",
+              "name": "SYSTEM",
+              "type": "User"
+            }
+          },
+          "ecs": {
+            "version": "8.0.0"
+          },
+          "log": {
+            "level": "information"
+          },
+          "data_stream": {
+            "namespace": "default",
+            "type": "logs",
+            "dataset": "winlog.winlog"
+          },
+          "host": {
+            "hostname": "DESKTOP-MM1REM9",
+            "os": {
+              "build": "19045.6466",
+              "kernel": "10.0.19041.6456 (WinBuild.160101.0800)",
+              "name": "Windows 10 Pro",
+              "family": "windows",
+              "type": "windows",
+              "version": "10.0",
+              "platform": "windows"
+            },
+            "ip": [
+              "fe80::5e29:4f96:fa0a:5d6",
+              "10.0.20.10"
+            ],
+            "name": "desktop-mm1rem9",
+            "id": "c466df0a-5a17-4b86-8ff6-4d8edbf647a8",
+            "mac": [
+              "BC-24-11-9F-45-75"
+            ],
+            "architecture": "x86_64"
+          },
+          "elastic_agent": {
+            "id": "23b63155-d5a7-4c98-ba2f-6eb495833877",
+            "version": "8.17.0",
+            "snapshot": false
+          },
+          "message": "Registry value set:\nRuleName: T1060,RunKey\nEventType: SetValue\nUtcTime: 2026-04-02 11:53:54.078\nProcessGuid: {c466df0a-58d2-69ce-530a-000000000a00}\nProcessId: 7788\nImage: C:\\Windows\\system32\\reg.exe\nTargetObject: HKU\\S-1-5-21-3653511100-4210277373-1638563163-1001\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\\WindowsUpdate\nDetails: C:\\Windows\\System32\\cmd.exe /c whoami > C:\\Users\\Public\\out.txt\nUser: DESKTOP-MM1REM9\\victim",
+          "event": {
+            "code": "13",
+            "provider": "Microsoft-Windows-Sysmon",
+            "kind": "event",
+            "created": "2026-04-02T11:53:55.805Z",
+            "action": "Registry value set (rule: RegistryEvent)",
+            "dataset": "winlog.winlog"
+          }
+        }
+      }
+    ]
+  }
+}
