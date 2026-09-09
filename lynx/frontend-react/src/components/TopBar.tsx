@@ -1,4 +1,5 @@
 import { useLynx } from "../LynxContext"
+import LynxEye from "./LynxEye"
 
 type View = "investigation" | "actions" | "hunt" | "coverage"
 
@@ -22,11 +23,16 @@ export default function TopBar({ view, setView }: Props) {
       height: 36, background: "var(--bg1)", borderBottom: "1px solid var(--ln2)",
       display: "flex", alignItems: "center", padding: "0 14px", gap: 0, flexShrink: 0,
     }}>
-      <span style={{
-        fontFamily: "var(--mono)", fontSize: 11, fontWeight: 700,
-        letterSpacing: "0.16em", color: "var(--teal)",
+      <div style={{
+        display: "flex", alignItems: "center", gap: 7,
         paddingRight: 14, borderRight: "1px solid var(--ln2)",
-      }}>LYNX</span>
+      }}>
+        <LynxEye size={15} />
+        <span style={{
+          fontFamily: "var(--mono)", fontSize: 11, fontWeight: 700,
+          letterSpacing: "0.16em", color: "var(--amb)",
+        }}>LYNX</span>
+      </div>
 
       {/* FIX-03: Static system labels — no fake health dots */}
       <div style={{
@@ -49,8 +55,8 @@ export default function TopBar({ view, setView }: Props) {
             style={{
               height: "100%", display: "flex", alignItems: "center",
               padding: "0 14px", cursor: "pointer", fontSize: 10,
-              color: view === tab.key ? "var(--t1)" : "var(--t3)",
-              borderBottom: `1.5px solid ${view === tab.key ? "var(--teal)" : "transparent"}`,
+              color: view === tab.key ? "var(--amb)" : "var(--t3)",
+              borderBottom: `1.5px solid ${view === tab.key ? "var(--amb)" : "transparent"}`,
               letterSpacing: "0.02em", transition: "color 0.12s",
             }}
           >{tab.label}</div>
@@ -83,9 +89,9 @@ export default function TopBar({ view, setView }: Props) {
 
       {/* FIX-13: Avatar changed from FE to AN (Analyst — neutral) */}
       <div style={{
-        width: 22, height: 22, borderRadius: "50%", background: "var(--teal2)",
-        border: "1px solid var(--teal3)", display: "flex", alignItems: "center",
-        justifyContent: "center", fontSize: 9, fontWeight: 700, color: "var(--teal)",
+        width: 22, height: 22, borderRadius: "50%", background: "var(--amb2)",
+        border: "1px solid var(--amb3)", display: "flex", alignItems: "center",
+        justifyContent: "center", fontSize: 9, fontWeight: 700, color: "var(--amb)",
         marginLeft: 10,
       }}>AN</div>
     </div>

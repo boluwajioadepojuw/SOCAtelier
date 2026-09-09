@@ -298,12 +298,13 @@ export default function CoverageMap() {
                             color: "var(--teal)",
                           }}>{p.technique}</span>
                           {/* Confidence dot */}
-                          <span style={{
-                            width: 5, height: 5, borderRadius: "50%",
-                            background: CONFIDENCE_COLOR[p.confidence],
-                            flexShrink: 0,
-                            title: p.confidence,
-                          }} />
+                          <span
+                            title={p.confidence}
+                            style={{
+                              width: 5, height: 5, borderRadius: "50%",
+                              background: CONFIDENCE_COLOR[p.confidence],
+                              flexShrink: 0,
+                            }} />
                           {/* Elastic coverage indicator */}
                           {elasticCovers && (
                             <span style={{

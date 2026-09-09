@@ -263,8 +263,7 @@ interface Assessment {
 
 function buildAssessment(
   networkEvents: NetworkEvent[],
-  alerts: AlertEvent[],
-  behavior: BehaviorContext
+  alerts: AlertEvent[]
 ): Assessment {
   const httpEvents = networkEvents.filter(e => e.event_type === "http")
   const uas = [...new Set(networkEvents.map(e => e.user_agent).filter(Boolean))]
@@ -594,7 +593,6 @@ function AnalystAssessment({ assessment }: { assessment: Assessment }) {
 
 function AggregatedEventGroup({
   events,
-  alerts,
   expanded,
   onToggle,
 }: {
@@ -754,7 +752,7 @@ function AlertCard({ alert }: { alert: AlertEvent }) {
 
 // ─── Intel sidebar ────────────────────────────────────────────────────────────
 
-function IntelPanel({ networkEvents, alerts, summary, behavior }: {
+function IntelPanel({ networkEvents, alerts, summary }: {
   networkEvents: NetworkEvent[]
   alerts: AlertEvent[]
   summary: NetworkContextResponse["summary"]
@@ -985,7 +983,7 @@ interface CrossLayerTabProps {
   behavior?: BehaviorContext
 }
 
-export default function CrossLayerTab({ behaviorId, behaviorTs, behavior }: CrossLayerTabProps) {
+export default function CrossLayerTab({ behaviorId, behavior }: CrossLayerTabProps) {
   const [eventsExpanded, setEventsExpanded] = useState(false)
 
   const { data, isLoading, isError } = useQuery<NetworkContextResponse>({
@@ -1026,7 +1024,7 @@ export default function CrossLayerTab({ behaviorId, behaviorTs, behavior }: Cros
     : []
 
   const assessment = behavior
-    ? buildAssessment(data.network_events, data.alerts, behavior)
+    ? buildAssessment(data.network_events, data.alerts)
     : null
 
   return (
