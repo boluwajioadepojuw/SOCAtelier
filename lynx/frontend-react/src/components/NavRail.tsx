@@ -36,7 +36,6 @@ export default function NavRail() {
             }}
             onMouseEnter={(e) => { if (!active) (e.currentTarget as HTMLElement).style.color = "var(--t2)" }}
             onMouseLeave={(e) => { if (!active) (e.currentTarget as HTMLElement).style.color = "var(--t3)" }}
-            }}
           >
             <Icon style={{ fontSize: 15 }} />
             <span style={{ fontSize: 8, fontFamily: "var(--mono)", letterSpacing: "0.04em" }}>{label}</span>
