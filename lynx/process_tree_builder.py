@@ -262,3 +262,125 @@ def build_process_tree(behavior_id: str, timestamp: str, host: str,
         "behavior_pid": behavior_pid,
         "window":       {"start": window_start, "end": window_end}
     }
+
+
+# ---------------------------------------------------------------------------
+# LINUX PROCESS TREE
+#
+# Same output contract as build_process_tree, but sourced from Elastic
+# Defend process events (logs-endpoint.events.process-*). Trees are built
+# from process.entity_id / process.parent.entity_id, which is immune to
+# PID reuse. Field facts:
+#   process.name, process.executable, process.args (list),
+#   process.entity_id, process.parent.entity_id, event.action
+# ---------------------------------------------------------------------------
+
+LINUX_TREE_INDEX = "logs-endpoint.events.process-*"
+
+
+def build_linux_process_tree(behavior_id: str, timestamp: str, host: str,
+                             behavior_image: str = None) -> dict:
+    """Build a process tree from Linux process events. Same output contract."""
+    ts = _parse_utc(timestamp)  # raises ValueError on bad ts
+
+    window_start = _fmt_utc(ts - timedelta(minutes=15))
+    window_end   = _fmt_utc(ts + timedelta(minutes=15))
+
+    resp = es.search(
+        index=LINUX_TREE_INDEX,
+        body={
+            "size": 200,
+            "query": {
+                "bool": {
+                    "must": [
+                        {"term":  {"host.name.keyword": host}},
+                        {"range": {"@timestamp": {
+                            "gte": window_start,
+                            "lte": window_end
+                        }}}
+                    ]
+                }
+            },
+            "sort": [{"@timestamp": {"order": "asc"}}],
+            "_source": [
+                "process.name",
+                "process.executable",
+                "process.args",
+                "process.entity_id",
+                "process.parent.entity_id",
+                "@timestamp"
+            ]
+        }
+    )
+
+    hits = resp["hits"]["hits"]
+    if not hits:
+        result = dict(EMPTY_TREE)
+        result["window"] = {"start": window_start, "end": window_end}
+        return result
+
+    # entity_id map, first occurrence wins (asc sort)
+    pid_map = {}
+    for hit in hits:
+        src = hit.get("_source", {})
+        proc = src.get("process") or {}
+        eid = proc.get("entity_id")
+        if not eid:
+            continue
+        if eid in pid_map:
+            continue
+
+        name = proc.get("name") or "unknown"
+        full_path = proc.get("executable") or name
+        args = proc.get("args") or []
+        cmd = " ".join(str(a) for a in args) if isinstance(args, list) else str(args)
+
+        ts_str = src.get("@timestamp", "")
+        try:
+            ts_dt = _parse_utc(ts_str)
+        except ValueError:
+            ts_dt = datetime.min.replace(tzinfo=timezone.utc)
+
+        pid_map[eid] = {
+            "id":        eid,
+            "name":      name,
+            "full_path": full_path,
+            "cmd":       cmd,
+            "ts":        ts_str,
+            "ts_dt":     ts_dt,   # internal, stripped before response
+            "ppid":      proc.get("parent.entity_id") or "",
+        }
+
+    if not pid_map:
+        result = dict(EMPTY_TREE)
+        result["window"] = {"start": window_start, "end": window_end}
+        return result
+
+    nodes, edges = link_parent_child(pid_map)
+    root = select_root(nodes, pid_map)
+
+    behavior_pid = root
+    if behavior_image:
+        bname = (behavior_image or "").split("/")[-1].lower()
+        try:
+            behavior_ts = _parse_utc(timestamp)
+        except ValueError:
+            behavior_ts = None
+
+        candidates = [n for n in nodes if n["name"].lower() == bname]
+        if candidates and behavior_ts:
+            candidates.sort(key=lambda n: abs((n["ts_dt"] - behavior_ts).total_seconds()))
+            behavior_pid = candidates[0]["id"]
+        elif candidates:
+            behavior_pid = candidates[0]["id"]
+
+    clean_nodes = _strip_internal_fields(nodes)
+
+    return {
+        "nodes":        clean_nodes,
+        "edges":        edges,
+        "root":         root,
+        "node_count":   len(clean_nodes),
+        "behavior_pid": behavior_pid,
+        "window":       {"start": window_start, "end": window_end}
+    }

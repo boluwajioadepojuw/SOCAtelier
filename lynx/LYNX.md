@@ -7,12 +7,15 @@ needs process chains, network correlation, and a place to hunt, all in one
 screen.
 
 Lynx sits on top of Elasticsearch and reads the lab's telemetry pipelines:
-Sysmon for the endpoint, Suricata for the network.
+Sysmon for the Windows endpoint, Elastic Defend for the Linux endpoint,
+and Suricata for the network.
 
 ## What it does
 
-- groups raw events into cases, each behavior mapped to MITRE ATT&CK
-- rebuilds process trees from Sysmon data, parent and child chains
+- groups raw events into cases, each behavior mapped to MITRE ATT&CK,
+  from Windows (Sysmon) and Linux (Elastic Defend) telemetry
+- rebuilds process trees from the raw endpoint events, parent and child
+  chains on both platforms
 - pulls Suricata flows from the same time window and puts them next to the
   endpoint findings
 - writes an analyst action trail on every case: who did what, when

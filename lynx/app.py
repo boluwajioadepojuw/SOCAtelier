@@ -280,16 +280,16 @@ async def get_process_tree(behavior_id: str):
     3. Build adjacency JSON (nodes + links)
     4. Score nodes: grey=normal, orange=suspicious, red=malicious
     """
-    from process_tree_builder import build_process_tree
+    from process_tree_builder import build_process_tree, build_linux_process_tree
 
-    # Step 1 — get timestamp + host from behavior doc
+    # Step 1 — get timestamp + host + platform from behavior doc
     try:
         resp = es.search(
             index="lynx-behaviors",
             body={
                 "size": 1,
                 "query": {"term": {"behavior_id.keyword": behavior_id}},
-                "_source": ["timestamp", "host", "image"]
+                "_source": ["timestamp", "host", "image", "platform"]
             }
         )
         hits = resp["hits"]["hits"]
@@ -300,6 +300,7 @@ async def get_process_tree(behavior_id: str):
         timestamp = src.get("timestamp")
         host      = src.get("host")
         image     = src.get("image")  # for behavior_pid identification in tree
+        platform  = src.get("platform", "windows")
 
         if not timestamp or not host:
             raise HTTPException(status_code=422, detail="Behavior missing timestamp or host")
@@ -309,14 +310,22 @@ async def get_process_tree(behavior_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-    # Step 2 — build tree from raw logs
+    # Step 2 — build tree from raw logs, source depends on platform
     try:
-        tree = build_process_tree(
-            behavior_id=behavior_id,
-            timestamp=timestamp,
-            host=host,
-            behavior_image=image
-        )
+        if platform == "linux":
+            tree = build_linux_process_tree(
+                behavior_id=behavior_id,
+                timestamp=timestamp,
+                host=host,
+                behavior_image=image
+            )
+        else:
+            tree = build_process_tree(
+                behavior_id=behavior_id,
+                timestamp=timestamp,
+                host=host,
+                behavior_image=image
+            )
         return {"ok": True, **tree}
 
     except Exception as e:

@@ -3,6 +3,12 @@ import os
 import time
 from datetime import datetime, timezone
 
+from linux_profiles import (
+    LINUX_PROFILES,
+    LINUX_PROCESS_INDEX,
+    LINUX_FILE_INDEX,
+)
+
 ES_URL  = os.environ.get("ES_URL", "http://localhost:9200")
 ES_USER = os.environ.get("ES_USER", "elastic")
 ES_PASS = os.environ.get("ES_PASS", "")
@@ -743,6 +749,7 @@ def run_detection_for_eid(eid):
             behavior_doc = {
                 "behavior_id":      behavior_id,
                 "profile":          profile_name,
+                "platform":         "windows",
                 "host":             host,
                 "timestamp":        ts,
                 "detected_at":      datetime.now(timezone.utc).isoformat(),
@@ -770,6 +777,175 @@ def run_detection_for_eid(eid):
     return len(hits), written
 
 
+# ---------------------------------------------------------------------------
+# LINUX PIPELINE
+#
+# Reads Elastic Defend (ECS) telemetry instead of Sysmon:
+#   process events from logs-endpoint.events.process-*
+#   file events    from logs-endpoint.events.file-*
+# Profiles live in linux_profiles.py. Behaviors go to the same
+# lynx-behaviors index as the Windows ones, tagged platform=linux.
+# ---------------------------------------------------------------------------
+
+linux_last_seen = {"process": None, "file": None}
+
+
+def _join_args(args_value) -> str:
+    """ECS process.args is a list. Join it for substring matching."""
+    if isinstance(args_value, list):
+        return " ".join(str(a) for a in args_value if a)
+    if args_value:
+        return str(args_value)
+    return ""
+
+
+def match_linux_profile(profile, src):
+    """Return (matched, fire_reasons) for a Linux profile and event source."""
+    proc = src.get("process") or {}
+    file_obj = src.get("file") or {}
+
+    name = (proc.get("name") or "").lower()
+    args = _join_args(proc.get("args")).lower()
+    file_path = (file_obj.get("path") or "").lower()
+    file_ext = (file_obj.get("extension") or "").lower()
+    action = (src.get("event") or {}).get("action") or ""
+
+    reasons = []
+
+    names = profile.get("names") or []
+    if names:
+        if name not in names:
+            return False, []
+        reasons.append(f"Process matched: {name}")
+
+    args_any = profile.get("args_any") or []
+    if args_any:
+        hit = next((a for a in args_any if a.lower() in args), None)
+        if not hit:
+            return False, []
+        reasons.append(f"Arguments contain: {hit}")
+
+    file_paths = profile.get("file_paths") or []
+    if file_paths:
+        if not any(p.lower() in file_path for p in file_paths):
+            return False, []
+        reasons.append(f"File in suspicious path: {file_path}")
+
+    file_exts = profile.get("file_exts") or []
+    if file_exts:
+        if not any(file_ext == e.lower() for e in file_exts):
+            return False, []
+        reasons.append(f"Suspicious file extension: {file_ext}")
+
+    event_actions = profile.get("event_actions") or []
+    if event_actions:
+        if action not in event_actions:
+            return False, []
+        reasons.append(f"Event action: {action}")
+
+    return True, reasons
+
+
+def _linux_source_fields(src):
+    """Extract the display fields shared with Windows behavior docs."""
+    proc = src.get("process") or {}
+    host = (src.get("host") or {}).get("name", "unknown")
+    ts = src.get("@timestamp", "")
+    image = proc.get("executable") or proc.get("name") or "unknown"
+    cmd = _join_args(proc.get("args"))
+    action = (src.get("event") or {}).get("action") or ""
+    return host, ts, image, cmd, action
+
+
+def run_linux_detection_for_index(index, last_key, profiles):
+    global linux_last_seen
+
+    gte = linux_last_seen[last_key] if linux_last_seen[last_key] else "now-1h"
+
+    try:
+        resp = es.search(
+            index=index,
+            size=200,
+            sort=[{"@timestamp": {"order": "asc"}}],
+            query={
+                "bool": {
+                    "filter": {"range": {"@timestamp": {"gt": gte}}}
+                }
+            }
+        )
+    except Exception as exc:
+        # Index does not exist yet on a fresh cluster: skip quietly.
+        print(f"[linux] skip {index}: {exc}")
+        return 0, 0
+
+    hits = resp["hits"]["hits"]
+    written = 0
+
+    for hit in hits:
+        doc_id = hit["_id"]
+        src = hit["_source"]
+        host, ts, image, cmd, action = _linux_source_fields(src)
+
+        matches = []
+        for profile_name, profile in profiles.items():
+            matched, reasons = match_linux_profile(profile, src)
+            if matched:
+                matches.append((profile_name, profile, reasons))
+
+        matches.sort(key=lambda x: x[1].get("priority_score", 0), reverse=True)
+        matches = matches[:MAX_BEHAVIORS_PER_EVENT]
+
+        for profile_name, profile, reasons in matches:
+            technique = profile["technique"]
+            tactic = profile["tactic"]
+            description = profile["description"]
+            severity = profile.get("severity") or TACTIC_WEIGHTS.get(tactic, {}).get("severity", "LOW")
+            priority = profile.get("priority_score") or TACTIC_WEIGHTS.get(tactic, {}).get("priority_score", 50)
+            confidence = profile.get("confidence", "low")
+            beh_class = profile.get("behavior_class", "unknown")
+
+            behavior_id = f"BEH-{doc_id[:8].upper()}-{profile_name[:8].upper()}"
+            index_id = f"{doc_id}-{profile_name}"
+
+            behavior_doc = {
+                "behavior_id":      behavior_id,
+                "profile":          profile_name,
+                "platform":         "linux",
+                "host":             host,
+                "timestamp":        ts,
+                "detected_at":      datetime.now(timezone.utc).isoformat(),
+                "event_code":       action,
+                "image":            image,
+                "command_line":     cmd,
+                "tactic":           tactic,
+                "mitre_technique":  technique,
+                "description":      description,
+                "severity":         severity,
+                "priority_score":   priority,
+                "confidence":       confidence,
+                "behavior_class":   beh_class,
+                "status":           "NEW",
+                "fire_reasons":     reasons + [f"MITRE {technique} pattern matched"],
+                "source_event_id":  doc_id,
+            }
+
+            es.index(index="lynx-behaviors", id=index_id, document=behavior_doc)
+            written += 1
+
+    if hits:
+        linux_last_seen[last_key] = hits[-1]["_source"]["@timestamp"]
+
+    return len(hits), written
+
+
+def run_linux_detection():
+    scanned_p, written_p = run_linux_detection_for_index(
+        LINUX_PROCESS_INDEX, "process", LINUX_PROFILES)
+    scanned_f, written_f = run_linux_detection_for_index(
+        LINUX_FILE_INDEX, "file", LINUX_PROFILES)
+    return scanned_p + scanned_f, written_p + written_f
+
+
 def run_detection():
     total_scanned = 0
     total_written = 0
@@ -778,14 +954,19 @@ def run_detection():
         total_scanned += scanned
         total_written += written
 
+    scanned_linux, written_linux = run_linux_detection()
+    total_scanned += scanned_linux
+    total_written += written_linux
+
     print(
         f"[{datetime.now(timezone.utc).isoformat()}] "
-        f"Cycle done. Scanned: {total_scanned} | Behaviors written: {total_written}"
+        f"Cycle done. Scanned: {total_scanned} (win+linux) | Behaviors written: {total_written}"
     )
 
 
 print("Lynx behavior detector starting. Poll interval: 60s. Ctrl+C to stop.")
-print(f"Loaded {len(DETECTION_PROFILES)} detection profiles across EIDs 1, 10, 11, 13.")
+print(f"Loaded {len(DETECTION_PROFILES)} Windows profiles (EIDs 1, 10, 11, 13) "
+      f"and {len(LINUX_PROFILES)} Linux profiles (Elastic Defend ECS).")
 while True:
     run_detection()
     time.sleep(60)

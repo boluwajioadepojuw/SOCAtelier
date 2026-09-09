@@ -144,6 +144,47 @@ TEMPLATES = {
             "threshold": {"type": "int", "default": 5,    "label": "Min child count"},
         },
     },
+
+    # ── HT-08 — Linux encoded payload execution ──────────────────────────────
+    # Base64 chains in shell/python args. Equivalent of HT-02 for the
+    # Elastic Defend pipeline (logs-endpoint.events.process-*).
+    "HT-08": {
+        "id":          "HT-08",
+        "name":        "Linux encoded payload executions",
+        "description": "Finds bash/python process events whose arguments contain "
+                       "base64 decoding chains. Nearly always suspicious on servers.",
+        "params": {
+            "host":  {"type": "str", "default": None, "label": "Host (leave blank for all)"},
+            "hours": {"type": "int", "default": 24,   "label": "Lookback hours"},
+        },
+    },
+
+    # ── HT-09 — Linux persistence writes ─────────────────────────────────────
+    # File events targeting cron dirs, systemd unit dirs, or authorized_keys.
+    "HT-09": {
+        "id":          "HT-09",
+        "name":        "Linux persistence file writes",
+        "description": "Finds file events under cron directories, systemd unit "
+                       "directories, and .ssh/authorized_keys. Persistence surface.",
+        "params": {
+            "host":  {"type": "str", "default": None, "label": "Host (leave blank for all)"},
+            "hours": {"type": "int", "default": 72,   "label": "Lookback hours"},
+        },
+    },
+
+    # ── HT-10 — Linux outbound connections by process ────────────────────────
+    # Network events from Elastic Defend, aggregated per process.
+    "HT-10": {
+        "id":          "HT-10",
+        "name":        "Linux outbound connections by process",
+        "description": "Aggregates network events by initiating process. "
+                       "Unexpected processes with outbound connections = C2 candidate.",
+        "params": {
+            "host":         {"type": "str",  "default": None,  "label": "Host (leave blank for all)"},
+            "hours":        {"type": "int",  "default": 24,    "label": "Lookback hours"},
+            "exclude_local":{"type": "bool", "default": True,  "label": "Exclude RFC-1918 destinations"},
+        },
+    },
 }
 
 
@@ -328,6 +369,63 @@ def build_HT07(host=None, hours=24, threshold=5) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Linux query builders — Elastic Defend ECS indices
+# ---------------------------------------------------------------------------
+
+def build_HT08(host=None, hours=24) -> str:
+    ts = _ts_range(hours)
+    hc = _host_clause(host)
+    return (
+        f'FROM logs-endpoint.events.process-* '
+        f'| WHERE @timestamp >= "{ts}"{hc} '
+        f'| WHERE process.name IN ("bash", "sh", "dash", "python3", "python", "base64") '
+        f'| WHERE process.args LIKE "*base64*" '
+        f'| KEEP @timestamp, host.name, process.name, process.args, process.executable '
+        f'| SORT @timestamp DESC '
+        f'| LIMIT 200'
+    )
+
+
+def build_HT09(host=None, hours=72) -> str:
+    ts = _ts_range(hours)
+    hc = _host_clause(host)
+    return (
+        f'FROM logs-endpoint.events.file-* '
+        f'| WHERE @timestamp >= "{ts}"{hc} '
+        f'| WHERE file.path LIKE "/etc/cron*" '
+        f'   OR file.path LIKE "/etc/systemd/system/*" '
+        f'   OR file.path LIKE "*/.ssh/authorized_keys" '
+        f'| KEEP @timestamp, host.name, file.path, process.name, event.action '
+        f'| SORT @timestamp DESC '
+        f'| LIMIT 100'
+    )
+
+
+def build_HT10(host=None, hours=24, exclude_local=True) -> str:
+    ts = _ts_range(hours)
+    hc = _host_clause(host)
+    local_filter = (
+        ' AND NOT destination.ip LIKE "10.*"'
+        ' AND NOT destination.ip LIKE "192.168.*"'
+        ' AND NOT destination.ip LIKE "172.1[6-9].*"'
+        ' AND NOT destination.ip LIKE "172.2[0-9].*"'
+        ' AND NOT destination.ip LIKE "172.3[0-1].*"'
+        ' AND NOT destination.ip LIKE "127.*"'
+    ) if exclude_local else ""
+    return (
+        f'FROM logs-endpoint.events.network-* '
+        f'| WHERE @timestamp >= "{ts}"{hc} '
+        f'| WHERE destination.ip IS NOT NULL{local_filter} '
+        f'| STATS '
+        f'    connection_count = COUNT(*), '
+        f'    unique_ips       = COUNT_DISTINCT(destination.ip) '
+        f'    BY process = process.name '
+        f'| SORT connection_count DESC '
+        f'| LIMIT 50'
+    )
+
+
+# ---------------------------------------------------------------------------
 # Query dispatcher
 # ---------------------------------------------------------------------------
 
@@ -339,6 +437,9 @@ BUILDERS = {
     "HT-05": build_HT05,
     "HT-06": build_HT06,
     "HT-07": build_HT07,
+    "HT-08": build_HT08,
+    "HT-09": build_HT09,
+    "HT-10": build_HT10,
 }
 
 
