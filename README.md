@@ -11,8 +11,8 @@ The lab runs a full detection and response stack in Docker:
 - **Elasticsearch + Kibana** as the SIEM core
 - **Suricata** for network intrusion detection
 - **Sysmon / Elastic Agent** for endpoint telemetry
-- a investigation console (FastAPI + React) for opening cases, walking
-  process trees, and rebuilding kill chains
+- an investigation console (FastAPI + React), called Lynx, for opening
+  cases, walking process trees, and rebuilding kill chains
 - **osTicket** as the alert-to-ticket bridge, the same loop a real SOC L1
   works every day
 
