@@ -124,7 +124,7 @@ LINUX_PROFILES = {
         "behavior_class": "persistence",
     },
     "linux_systemd_unit_create": {
-        "file_paths": ["/etc/systemd/system", "/lib/systemd/system", "/usr/lib/systemd/system"],
+        "file_paths": ["/etc/systemd/system", "/lib/systemd/system", "/usr/lib/systemd/system", ".config/systemd/user"],
         "file_exts": [".service", ".timer"],
         "technique": "T1543.002",
         "tactic": "PERSISTENCE",
@@ -199,7 +199,7 @@ LINUX_PROFILES = {
         "behavior_class": "recon",
     },
     "linux_system_info": {
-        "names": ["uname", "lscpu", "hostnamectl"],
+        "names": ["uname", "lscpu", "hostnamectl", "hostname"],
         "technique": "T1082",
         "tactic": "DISCOVERY",
         "description": "System Information Discovery",
@@ -210,7 +210,7 @@ LINUX_PROFILES = {
     },
     "linux_network_config": {
         "names": ["ip", "ifconfig", "route"],
-        "args_any": ["a", "addr", "-a"],
+        "args_any": ["a", "addr", "-a", "route"],
         "technique": "T1016",
         "tactic": "DISCOVERY",
         "description": "Network Configuration Discovery",
@@ -242,7 +242,7 @@ LINUX_PROFILES = {
     },
     "linux_account_enum": {
         "names": ["cat", "getent", "grep"],
-        "args_any": ["/etc/passwd", "/etc/group", "passwd"],
+        "args_any": ["/etc/passwd", "/etc/group", "passwd", "group"],
         "technique": "T1087.001",
         "tactic": "DISCOVERY",
         "description": "Local Account Enumeration",

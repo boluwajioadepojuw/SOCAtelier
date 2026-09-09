@@ -914,7 +914,7 @@ def run_linux_detection_for_index(index, last_key, profiles):
                 "host":             host,
                 "timestamp":        ts,
                 "detected_at":      datetime.now(timezone.utc).isoformat(),
-                "event_code":       action,
+                "event_action":     action,
                 "image":            image,
                 "command_line":     cmd,
                 "tactic":           tactic,
