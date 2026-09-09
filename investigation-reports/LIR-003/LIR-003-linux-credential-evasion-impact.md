@@ -100,3 +100,11 @@ exfiltration, rm -rf, and firewall disable attempts all detected from
 real telemetry, several of them on failed attempts. With LIR-001 and
 LIR-002, CASE-010 is the first Linux-native case of the lab: 43
 behaviors, risk 8,152, host boluwaji.
+
+## 7. Evidence
+
+The hunt workbench with the Linux hunt templates. HT-09 (persistence
+file writes) returned the real authorized_keys event from this case,
+and HT-08 (encoded payload executions) returned the real base64 chain:
+
+![Hunt workbench with the Linux templates](screenshots/10-lir-hunt-workbench.png)

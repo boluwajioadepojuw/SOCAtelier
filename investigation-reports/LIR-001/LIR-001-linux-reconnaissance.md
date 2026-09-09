@@ -98,3 +98,15 @@ after the run.
 The Linux detection layer caught every meaningful recon technique from
 real telemetry, and the run improved three profiles. Together with
 LIR-002 and LIR-003 this forms the first Linux-native case in the lab.
+
+## 7. Evidence
+
+CASE-010 as it appears in the Lynx queue (risk 8,152, host boluwaji,
+window 20:46-20:47):
+
+![CASE-010 in the case queue](screenshots/07-lir-case010-queue.png)
+
+The detection logic view for the case, showing the Linux profiles that
+fired with their MITRE mappings and confidence levels:
+
+![Detection logic for the Linux recon behaviors](screenshots/09-lir-detection-logic.png)

@@ -90,6 +90,7 @@ def run_command(shell_cmd, label):
         "process": {
             "name": name,
             "executable": exe,
+            "command_line": " ".join(argv) if not needs_shell else shell_cmd,
             "args": argv if not needs_shell else ["bash", "-c", shell_cmd],
             "pid": pid,
             "entity_id": str(pid),

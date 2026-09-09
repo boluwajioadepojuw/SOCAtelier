@@ -92,3 +92,11 @@ authorized_keys (CRITICAL), systemd unit (HIGH), shell profile (HIGH),
 and payload drops in /tmp (HIGH). The one miss (piped crontab) is
 documented with its fix path. This closes the persistence half of the
 Linux case.
+
+## 7. Evidence
+
+The process tree rebuilt from the raw Linux process events of the case.
+Every node is a real execution on the lab machine, parented under the
+recorder process that spawned the scenario:
+
+![Process tree from the Linux telemetry](screenshots/08-lir-case010-tree.png)

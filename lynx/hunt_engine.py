@@ -380,8 +380,8 @@ def build_HT08(host=None, hours=24) -> str:
         f'FROM logs-endpoint.events.process-* '
         f'| WHERE @timestamp >= "{ts}"{hc} '
         f'| WHERE process.name IN ("bash", "sh", "dash", "python3", "python", "base64") '
-        f'| WHERE process.args LIKE "*base64*" '
-        f'| KEEP @timestamp, host.name, process.name, process.args, process.executable '
+        f'| WHERE process.command_line LIKE "*base64*" '
+        f'| KEEP @timestamp, host.name, process.name, process.command_line, process.executable '
         f'| SORT @timestamp DESC '
         f'| LIMIT 200'
     )
