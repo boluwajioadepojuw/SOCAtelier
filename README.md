@@ -27,7 +27,7 @@ The lab runs a full detection and response stack in Docker:
 
 ## Incident reports
 
-The `investigation-reports/` directory has seven full write-ups. Each one
+The `investigation-reports/` directory has eleven full write-ups: six Windows cases (case-IR-001..006), one osTicket workflow (IR-007), and four live Linux runs (LIR-001..004). Each one
 follows a single alert from first detection to the full kill chain. Every
 report correlates EDR and NDR telemetry and ties each step to its ATT&CK
 technique.
