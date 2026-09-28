@@ -19,7 +19,7 @@ entire kill chain from one starting alert, using three pivots. It is the
 pure-analysis exercise of the portfolio.
 
 The chain ran 14:41 to 17:18 on one host — 2 hours 37 minutes of dwell —
-with Defender and UAC on the whole time, and every technique using native
+with Defender and UAC active throughout, and every technique using native
 Windows binaries. No malware in the scenario at all.
 
 ## The three pivots

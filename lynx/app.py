@@ -731,7 +731,7 @@ async def hunt_create_behavior(payload: dict):
 # ---------------------------------------------------------------------------
 # POST /api/brief
 # Investigation screen — generate LLM AI briefing for a behavior.
-# Narration only. LLM never scores, labels, or classifies.
+# Advisory only. The LLM never scores, labels, or classifies.
 # Caches result in lynx-briefings index so repeat loads are instant.
 # ---------------------------------------------------------------------------
 @app.post("/api/brief")
