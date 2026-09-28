@@ -63,7 +63,7 @@ the whole chain is real end to end.
    profile requires (`.service`). Both fixes confirmed by re-running the
    detector over the same file events.
 
-## 5. Gaps and remediation
+## 5. Gaps and Fixes
 
 **Gap 1: crontab installed through a pipe is not covered**
 

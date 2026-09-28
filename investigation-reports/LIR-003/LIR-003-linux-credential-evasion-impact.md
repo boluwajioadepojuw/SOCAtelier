@@ -69,7 +69,7 @@ collected.tgz was written to disk and indexed as a file event before
 being uploaded, so both halves of the exfiltration chain are in
 telemetry: collection (tar) and transfer (curl -T).
 
-## 5. Gaps and remediation
+## 5. Gaps and Fixes
 
 **Gap 1: piped commands surface as bash (same limitation as LIR-001
 and LIR-002)**

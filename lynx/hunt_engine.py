@@ -233,7 +233,7 @@ def build_HT02(host=None, hours=24) -> str:
     hc = _host_clause(host)
     # Primary filter: *EncodedCommand* catches -EncodedCommand and abbreviated forms.
     # Secondary: *hidden* catches -WindowStyle Hidden often paired with encoded payloads.
-    # Note: *-enc* does not match here (field tokenization on this build);
+    # Note: *-enc* does not match here (field indexing behavior on this build);
     # *hidden* is the working query.
     return (
         f'FROM logs-winlog.winlog-default '

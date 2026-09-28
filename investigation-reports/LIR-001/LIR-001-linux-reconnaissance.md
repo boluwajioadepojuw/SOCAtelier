@@ -76,7 +76,7 @@ logged the real connection tuple (127.0.0.1:34348 to 127.0.0.1:8099).
 All three fixes were validated by re-running the detector over the same
 raw events: the fixed profiles fired on the same telemetry.
 
-## 5. Gaps and remediation
+## 5. Gaps and Fixes
 
 **Gap 1: piped commands surface as bash, not as the inner binary**
 

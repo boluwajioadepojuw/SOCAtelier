@@ -19,18 +19,18 @@ CASE-006) formed by the Lynx behavior engine.
 
 | File | Technique | Tactic | Level |
 |---|---|---|---|
-| proc_create_powershell_execution_policy_bypass.yml | T1059.001 | Execution | Medium |
-| proc_create_powershell_download_cradle.yml | T1059.001, T1105 | Execution, C2 | High |
-| proc_create_schtasks_persistence.yml | T1053.005 | Persistence | High |
-| registry_set_run_key_persistence.yml | T1547.001 | Persistence | High |
-| proc_create_discovery_tool_scripted_parent.yml | T1033, T1082, T1016, T1049 | Discovery | Medium |
-| proc_access_lsass_credential_dump.yml | T1003.001 | Credential Access | Critical |
-| proc_create_tasklist_lsass_discovery.yml | T1057, T1003.001 | Discovery | High |
-| proc_create_cmd_wmic_process_enum.yml | T1047, T1057 | Discovery | Medium |
-| proc_create_reg_query_disk_enum.yml | T1012, T1082 | Discovery | Low |
-| file_event_executable_dropped_temp.yml | T1105 | Execution | Medium |
-| proc_create_atomic_red_team_execution.yml | T1059.001 | Execution | High |
-| proc_create_powershell_discovery_persistence_chain.yml | T1059.001, T1033, T1053.005, T1547.001 | Multi-stage | High |
+| lynx-ps1-execution-policy-bypass.yml | T1059.001 | Execution | Medium |
+| lynx-ps1-download-cradle.yml | T1059.001, T1105 | Execution, C2 | High |
+| lynx-schtasks-persistence.yml | T1053.005 | Persistence | High |
+| lynx-runkey-persistence.yml | T1547.001 | Persistence | High |
+| lynx-discovery-scripted-parent.yml | T1033, T1082, T1016, T1049 | Discovery | Medium |
+| lynx-lsass-credential-dump.yml | T1003.001 | Credential Access | Critical |
+| lynx-tasklist-lsass-discovery.yml | T1057, T1003.001 | Discovery | High |
+| lynx-wmic-process-enum.yml | T1047, T1057 | Discovery | Medium |
+| lynx-regquery-disk-enum.yml | T1012, T1082 | Discovery | Low |
+| lynx-exe-dropped-temp.yml | T1105 | Execution | Medium |
+| lynx-art-execution.yml | T1059.001 | Execution | High |
+| lynx-ps1-discovery-persistence-chain.yml | T1059.001, T1033, T1053.005, T1547.001 | Multi-stage | High |
 
 ## Log source mapping
 

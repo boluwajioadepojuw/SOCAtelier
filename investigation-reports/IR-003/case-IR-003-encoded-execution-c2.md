@@ -46,7 +46,7 @@ plain sight until a baseline catches it.
 - The same payload ran twice (16:11:25, then 16:14:06) — one operator,
   one retry.
 - The beacon window (16:31-16:47) shows 23 EID 3 hits whose IPs and
-  timestamps line up one-to-one with 23 Suricata HTTP flows.
+  timestamps line up one-to-one with the gateway flow recordsTTP flows.
 - EID 11 confirmed the staged file: powershell.exe wrote
   C:\Users\Public\update.bat at 16:46:03.
 
@@ -106,4 +106,4 @@ shown.
 ## Evidence appendix
 
 - Raw events: investigation-reports/IR-003/raw-events/ (EDR + NDR pairs)
-- Beacon baseline: 23 EID 3 == 23 Suricata flows, same IPs and window
+- Beacon baseline: every EID 3 beacon matched a gateway flow record - the two sensors agree

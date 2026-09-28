@@ -1,8 +1,8 @@
-# Create-SysmonDetectionRules.ps1
+# deploy-lynx-rules.ps1
 # Creates 100 custom Sysmon-based detection rules in Kibana via API
 # Target: Elastic 8.17 | Index: logs-* | Dataset: windows.sysmon_operational
 # Run as Administrator from E:\SOCAtelier
-# Usage: .\Create-SysmonDetectionRules.ps1
+# Usage: .\deploy-lynx-rules.ps1
 
 $KibanaUrl  = "http://localhost:5601"
 $Username   = "elastic"

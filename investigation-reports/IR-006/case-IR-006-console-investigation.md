@@ -62,7 +62,7 @@ NDR query around the case window returned six Suricata records for the
 victim IP: three HTTP 200 responses to GET /payload.txt plus flow and
 fileinfo entries, User-Agent WindowsPowerShell/5.1. The EDR saw the same
 three retrievals as EID 3 events. Same IPs, same window, two pipelines
-with no shared data path — dual-source confirmation.
+with collected by two independent sensors — dual-source confirmation.
 
 Zero Suricata alerts: the traffic was visible as flow records but no
 rule matched PowerShell HTTP to an internal host on 8080. Gap noted.

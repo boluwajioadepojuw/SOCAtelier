@@ -103,5 +103,5 @@ typing the next command, not an automated script.
 ## Evidence appendix
 
 - Raw events: kept in the lab's Elasticsearch indices (logs-winlog.winlog-default)
-- Detection rules: detection-rules/sysmon-custom-rules.ndjson
+- Detection rules: detection-rules/lynx-detection-rules.ndjson
 - Network context: Suricata EVE on the gateway

@@ -83,7 +83,7 @@ python -m lynx.osticket_bridge --every 60
 
 ---
 
-## 3. Gaps and Remediation
+## 3. Gaps and Fixes
 
 | # | Gap | Finding | Remediation | Status |
 |---|-----|---------|-------------|--------|

@@ -31,7 +31,7 @@ Windows binaries. No malware in the scenario at all.
    parent-child spine confirmed.
 3. **Cross-layer match.** Sysmon EID 3 (23 events to 10.77.30.10:8080)
    against Suricata HTTP flows (23 GETs from 10.77.20.10) — identical
-   IPs, identical window, two sensors with no shared data path.
+   IPs, identical window, two sensors with collected by two independent sensors.
 
 ## Chain reconstruction
 
@@ -59,7 +59,7 @@ in a real case, that gap is where you hunt for what was NOT captured.
 
 ### Stage 4 — Beaconing (16:31-16:47, EDR + NDR)
 
-23 Sysmon EID 3 events and 23 Suricata HTTP GETs, both to
+every Sysmon EID 3 beacon matched a gateway HTTP flow recordETs, both to
 10.77.30.10:8080, 25-45 second jitter, browser-style User-Agent. The
 23/23 match is the strongest evidence in the case: the C2 channel is not
 an artifact of one sensor.

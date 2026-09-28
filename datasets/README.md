@@ -1,7 +1,7 @@
 # Replayable Datasets
 
 Sanitized JSON exports of live Elasticsearch telemetry from the lab stress
-test on 16/05/2026. The purpose is simple: the console can be rehydrated on
+test on 10/06/2026. The purpose is simple: the console can be rehydrated on
 a fresh machine without the original lab hardware.
 
 ## Source
@@ -10,7 +10,7 @@ a fresh machine without the original lab hardware.
 |---|---|
 | Host | WIN-SOC-01 (Windows 10, 10.77.20.10) |
 | Attack framework | Atomic Red Team (330 atomics installed) |
-| Execution window | 16:45-17:16 UTC, 16/05/2026 |
+| Execution window | 16:45-17:16 UTC, 10/06/2026 |
 | Cases formed | 6 (CASE-001 through CASE-006) |
 | Total behaviors | 708 across all cases |
 | EDR pipeline | Sysmon EID 1/10/11/13 via Elastic Agent into Elasticsearch |
