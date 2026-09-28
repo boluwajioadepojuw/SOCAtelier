@@ -4,6 +4,7 @@ import TopBar from "./components/TopBar"
 import NavRail from "./components/NavRail"
 import LeftRail from "./components/LeftRail"
 import RightRail from "./components/RightRail"
+import StatusBar from "./components/StatusBar"
 import Investigation from "./pages/Investigation"
 import ActionsLog from "./pages/ActionsLog"
 import HuntWorkbench from "./pages/HuntWorkbench"
@@ -24,6 +25,7 @@ function AppInner() {
         {activeView === "coverage"      && <CoverageMap />}
         {activeView === "investigation" && <RightRail />}
       </div>
+      <StatusBar />
     </div>
   )
 }
