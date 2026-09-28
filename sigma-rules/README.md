@@ -7,7 +7,7 @@ CASE-006) formed by the Lynx behavior engine.
 
 ## Source telemetry
 
-- Host: DESKTOP-MM1REM9 (Windows 10, 10.0.20.10)
+- Host: WIN-SOC-01 (Windows 10, 10.77.20.10)
 - Attack framework: Atomic Red Team (330 atomics installed)
 - Detection pipeline: Sysmon via Elastic Agent into Elasticsearch
   (logs-winlog.winlog-default)

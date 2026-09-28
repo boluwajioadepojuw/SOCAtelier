@@ -45,7 +45,7 @@ export interface Behavior {
   is_lolbin?: boolean
   raw_event?: Record<string, unknown>
   detection_reasons?: DetectionReason[]
-  // Fields from behavior_detector.py (schema locked 2026-05-16)
+  // Fields from behavior_detector.py (schema locked 2026-06-10)
   confidence?: string
   behavior_class?: string
   fire_reasons?: string[]

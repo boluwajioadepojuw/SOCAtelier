@@ -164,27 +164,18 @@ Case data:
 
 Write 1-2 sentences only. Start with what happened, end with why it matters. No bullet points. No headers. No preamble."""
 
-    LYNX_LLM_API_KEY = os.environ.get("LYNX_LLM_API_KEY", "")
-    if not LYNX_LLM_API_KEY:
-        return {"ok": False, "error": "LYNX_LLM_API_KEY not set"}
-
     try:
         async with httpx.AsyncClient(timeout=20) as client:
             r = await client.post(
-                "https://api.anthropic.com/v1/messages",
-                headers={
-                    "x-api-key":         LYNX_LLM_API_KEY,
-                    "anthropic-version": "2023-06-01",
-                    "content-type":      "application/json"
-                },
+                "http://localhost:11434/api/chat",
                 json={
-                    "model":      "claude-haiku-4-5-20251001",
-                    "max_tokens": 120,
-                    "messages":   [{"role": "user", "content": prompt}]
+                    "model":    "qwen2.5:7b",
+                    "stream":   False,
+                    "messages": [{"role": "user", "content": prompt}]
                 }
             )
             r.raise_for_status()
-            summary = r.json()["content"][0]["text"].strip()
+            summary = r.json()["message"]["content"].strip()
     except Exception as e:
         return {"ok": False, "error": f"LLM API failed: {str(e)}"}
 
@@ -336,13 +327,13 @@ async def get_process_tree(behavior_id: str):
 # GET /api/behaviors/{behavior_id}/network_context
 # CL-1 — Cross-layer correlation: Sysmon behavior + Suricata NDR
 #
-# Field facts (confirmed 2026-05-16 against filebeat-7.14.0-2026.05.16):
+# Field facts (confirmed 2026-06-10 against filebeat-*):
 #   - Suricata EVE is ingested raw (module not loaded), fields are FLAT not nested
 #   - IP fields:  src_ip.keyword, dest_ip.keyword, flow.src_ip.keyword, flow.dest_ip.keyword
 #   - Time field: timestamp (Suricata event time, mapped as date) — NOT @timestamp (ingest time)
 #   - Event types present: alert, http, fileinfo
 #   - Alert fields: alert.signature, alert.signature_id, alert.severity, alert.category
-#   - Victim IP filter: 10.0.20.10 (DESKTOP-MM1REM9) via src/dest, not host.name
+#   - Victim IP filter: 10.77.20.10 (WIN-SOC-01) via src/dest, not host.name
 #   - Window: +-15min around behavior timestamp (consistent with process_tree_builder.py)
 #   - Index: filebeat-* (old indices have broken text mappings, query still works on new)
 #   - Empty result is valid data: return has_network_data=False, never raise error
@@ -390,7 +381,7 @@ async def get_network_context(behavior_id: str):
     # Step 3: query Suricata data from filebeat-*
     # Use Suricata `timestamp` field (real event time), NOT `@timestamp` (Filebeat ingest time)
     # Both top-level and flow.* IPs required — some events only have context inside flow
-    VICTIM_IP = "10.0.20.10"
+    VICTIM_IP = "10.77.20.10"
 
     try:
         ndr_resp = es.search(
@@ -741,7 +732,7 @@ async def hunt_create_behavior(payload: dict):
 @app.post("/api/brief")
 async def generate_brief(payload: dict):
     """
-    Generate an AI briefing for a behavior using LLM Haiku."""
+    Generate an AI briefing for a behavior using a local LLM (Ollama)."""
     import httpx, json as _json
 
     behavior_id = payload.get("behavior_id")
@@ -792,28 +783,19 @@ Respond in exactly this JSON format with no extra text, no markdown, no backtick
 
 escalate should be true if severity is HIGH or CRITICAL, false otherwise."""
 
-    LYNX_LLM_API_KEY = os.environ.get("LYNX_LLM_API_KEY", "")
-    if not LYNX_LLM_API_KEY:
-        return {"ok": False, "error": "LYNX_LLM_API_KEY not set in environment"}
-
-    # Call LLM Haiku — fast and cheap for narration
+    # Call local Ollama — free, offline, no cloud API key
     try:
         async with httpx.AsyncClient(timeout=30) as client:
             r = await client.post(
-                "https://api.anthropic.com/v1/messages",
-                headers={
-                    "x-api-key":            LYNX_LLM_API_KEY,
-                    "anthropic-version":    "2023-06-01",
-                    "content-type":         "application/json"
-                },
+                "http://localhost:11434/api/chat",
                 json={
-                    "model":      "claude-haiku-4-5-20251001",
-                    "max_tokens": 500,
-                    "messages":   [{"role": "user", "content": prompt}]
+                    "model":    "qwen2.5:7b",
+                    "stream":   False,
+                    "messages": [{"role": "user", "content": prompt}]
                 }
             )
             r.raise_for_status()
-            raw = r.json()["content"][0]["text"].strip()
+            raw = r.json()["message"]["content"].strip()
     except Exception as e:
         return {"ok": False, "error": f"LLM API failed: {str(e)}"}
 
@@ -821,7 +803,7 @@ escalate should be true if severity is HIGH or CRITICAL, false otherwise."""
     try:
         briefing = _json.loads(raw)
     except Exception:
-        # Haiku occasionally wraps in backticks despite instructions — strip and retry
+        # The local model occasionally wraps output in backticks — strip and retry
         try:
             clean    = raw.replace("```json", "").replace("```", "").strip()
             briefing = _json.loads(clean)
@@ -836,7 +818,7 @@ escalate should be true if severity is HIGH or CRITICAL, false otherwise."""
             "next_steps":   briefing.get("next_steps", []),
             "escalate":     briefing.get("escalate", False),
             "generated_at": datetime.utcnow().isoformat() + "Z",
-            "model":        "claude-haiku-4-5-20251001"
+            "model":        "local-ollama/qwen2.5:7b"
         }
         es.index(index="lynx-briefings", document=doc)
     except Exception:
@@ -904,9 +886,6 @@ async def hunt_copilot(payload: dict):
     """
     import httpx, json as _json
 
-    api_key = os.environ.get("LYNX_LLM_API_KEY", "")
-    if not api_key:
-        return {"ok": False, "error": "LYNX_LLM_API_KEY not set"}
 
     template_id          = payload.get("template_id", "unknown")
     template_name        = payload.get("template_name", template_id)
@@ -946,21 +925,16 @@ Interpret these results for a SOC analyst."""
     try:
         async with httpx.AsyncClient(timeout=25.0) as client:
             resp = await client.post(
-                "https://api.anthropic.com/v1/messages",
-                headers={
-                    "x-api-key":         api_key,
-                    "anthropic-version": "2023-06-01",
-                    "content-type":      "application/json",
-                },
+                "http://localhost:11434/api/chat",
                 json={
-                    "model":      "claude-haiku-4-5-20251001",
-                    "max_tokens": 800,
-                    "system":     COPILOT_PROMPT_SYSTEM,
-                    "messages":   [{"role": "user", "content": user_prompt}],
+                    "model":    "qwen2.5:7b",
+                    "stream":   False,
+                    "system":   COPILOT_PROMPT_SYSTEM,
+                    "messages": [{"role": "user", "content": user_prompt}],
                 },
             )
         resp.raise_for_status()
-        raw = resp.json()["content"][0]["text"].strip()
+        raw = resp.json()["message"]["content"].strip()
 
         # Two-pass JSON parse: the model sometimes wraps the response in backticks.
         try:

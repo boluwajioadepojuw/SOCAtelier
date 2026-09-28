@@ -18,11 +18,11 @@ The lab runs a full detection and response stack in Docker:
 
 ## Detection content
 
-- 96 detection rules mapped to MITRE ATT&CK, covering the tactics in the
+- 97 detection rules mapped to MITRE ATT&CK, covering the tactics in the
   incident reports
 - 12 Sigma rules, portable versions of the same detections
-- custom Suricata rules that cover internal RFC1918 traffic, which the
-  default ET ruleset misses
+- a custom Suricata rule (SID 9000077) catching internal RFC1918 SYN sweeps
+  the stock ET ruleset ignores
 - detections validated with Atomic Red Team runs, >90% detection rate
 
 ## Incident reports

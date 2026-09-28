@@ -5,11 +5,11 @@
 **Date:** 02/04/2026
 **Status:** Closed
 **Severity:** High
-**Host:** DESKTOP-MM1REM9 (10.0.20.10), Windows 10 Pro 22H2
+**Host:** WIN-SOC-01 (10.77.20.10), Windows 10 Pro 22H2
 **MITRE ATT&CK:** T1059.001, T1071.001, T1027, T1105
 **Connected Narrative:** Continues from IR-002. After the host enumeration,
 the operator moved to execution with encoded PowerShell and set up a
-jittered HTTP C2 channel to the attack host (10.0.30.10). A staged file
+jittered HTTP C2 channel to the attack host (10.77.30.10). A staged file
 (update.bat) was downloaded to disk. Defense evasion and persistence
 follow in IR-004.
 
@@ -18,12 +18,12 @@ follow in IR-004.
 ## 1. Summary
 
 On 02/04/2026, about 79 minutes after the recon activity in IR-002,
-encoded PowerShell ran on DESKTOP-MM1REM9. The operator used the
+encoded PowerShell ran on WIN-SOC-01. The operator used the
 `-w hidden -nop -enc` flags, the standard pattern for hiding the
 PowerShell window and getting past command-line string matching.
 
 After execution, the host started jittered HTTP beaconing to an internal
-attack server (10.0.30.10:8080) with a browser-mimicking User-Agent.
+attack server (10.77.30.10:8080) with a browser-mimicking User-Agent.
 Sysmon recorded 23 outbound connections (EID 3). Suricata independently
 recorded 23 HTTP flow records of the same traffic. Two separate sensors,
 same channel.
@@ -71,7 +71,7 @@ specific process on the victim host with high confidence.
 ### Baseline and Tripwires
 
 **Network baseline:** Suricata on pfSense OPT1 recorded 23 HTTP GET
-requests from 10.0.20.10 to 10.0.30.10:8080. No alert fired. Suricata has
+requests from 10.77.20.10 to 10.77.30.10:8080. No alert fired. Suricata has
 no rule for internal HTTP to port 8080. The NDR detection here was
 investigator-initiated, not alert-driven. Documented gap.
 
@@ -97,15 +97,15 @@ dwBoAG8A...`).
 the base64 payload and bypasses plain-text command-line matching.
 
 **C2 beaconing:** A WebClient loop sent HTTP GET requests to
-http://10.0.30.10:8080 with User-Agent `Mozilla/5.0 (Windows NT 10.0;
+http://10.77.30.10:8080 with User-Agent `Mozilla/5.0 (Windows NT 10.0;
 Win64; x64)`. Beacon interval jittered between 25-45 seconds. 23
 connections recorded on both EDR and NDR before the loop stopped.
 
 **File staging:** WebClient DownloadFile pulled the index page from
-http://10.0.30.10:8080 and wrote it to C:\Users\Public\update.bat at
+http://10.77.30.10:8080 and wrote it to C:\Users\Public\update.bat at
 16:46:03. EID 11 captured the full target path.
 
-**Privilege context:** All activity under DESKTOP-MM1REM9\victim, High
+**Privilege context:** All activity under WIN-SOC-01\victim, High
 integrity.
 
 **Data exfiltration:** None beyond the initial encoded command output
@@ -115,12 +115,12 @@ integrity.
 
 | Timestamp | Event ID | Source | Key Fields | MITRE |
 |---|---|---|---|---|
-| 2026-04-02T16:11:25 | 1 | Sysmon (EDR) | Image: powershell.exe, CommandLine: -w hidden -nop -enc dwBoAG8A... | T1027, T1059.001 |
-| 2026-04-02T16:14:06 | 1 | Sysmon (EDR) | Image: powershell.exe, CommandLine: -w hidden -nop -enc dwBoAG8A... (second execution) | T1027, T1059.001 |
-| 2026-04-02T16:31:41 | 3 | Sysmon (EDR) | Image: powershell.exe, DestinationIp: 10.0.30.10, DestinationPort: 8080 | T1071.001 |
-| 2026-04-02T16:31:41 | Flow | Suricata (NDR) | src: 10.0.20.10, dest: 10.0.30.10:8080, http.method: GET, User-Agent: Mozilla/5.0 | T1071.001 |
-| 2026-04-02T16:32:16 | 3 | Sysmon (EDR) | DestinationIp: 10.0.30.10, DestinationPort: 8080 (beacon interval ~35s) | T1071.001 |
-| 2026-04-02T16:46:03 | 11 | Sysmon (EDR) | TargetFilename: C:\Users\Public\update.bat, Image: powershell.exe | T1105 |
+| 2026.05.02T16:11:25 | 1 | Sysmon (EDR) | Image: powershell.exe, CommandLine: -w hidden -nop -enc dwBoAG8A... | T1027, T1059.001 |
+| 2026.05.02T16:14:06 | 1 | Sysmon (EDR) | Image: powershell.exe, CommandLine: -w hidden -nop -enc dwBoAG8A... (second execution) | T1027, T1059.001 |
+| 2026.05.02T16:31:41 | 3 | Sysmon (EDR) | Image: powershell.exe, DestinationIp: 10.77.30.10, DestinationPort: 8080 | T1071.001 |
+| 2026.05.02T16:31:41 | Flow | Suricata (NDR) | src: 10.77.20.10, dest: 10.77.30.10:8080, http.method: GET, User-Agent: Mozilla/5.0 | T1071.001 |
+| 2026.05.02T16:32:16 | 3 | Sysmon (EDR) | DestinationIp: 10.77.30.10, DestinationPort: 8080 (beacon interval ~35s) | T1071.001 |
+| 2026.05.02T16:46:03 | 11 | Sysmon (EDR) | TargetFilename: C:\Users\Public\update.bat, Image: powershell.exe | T1105 |
 
 *23 total EID 3 beacon events between 16:31 and 16:47. Only representative
 entries shown.*
@@ -130,7 +130,7 @@ entries shown.*
 * The encoded PowerShell command ran twice (16:11:25 and 16:14:06),
   probably an operator retry. Both runs carry the same base64 payload,
   confirming one operator session.
-* The KQL wildcard `*-enc*` returns nothing against
+* The `*-enc*` KQL wildcard returns nothing against
   winlog.event_data.CommandLine on this Elastic build because of field
   tokenization. The working query uses `*hidden*` instead. Rules that
   rely on matching `-enc` can silently fail on certain Elastic configs.
@@ -159,7 +159,7 @@ non-standard ports from the victim network.
 **Fix:**
 
 ```
-alert http 10.0.20.0/24 any -> 10.0.30.0/24 !80 (msg:"LOCAL HTTP outbound on non-standard port victim to attack network"; sid:9000004; rev:1;)
+alert http 10.77.20.0/24 any -> 10.77.30.0/24 !80 (msg:"LOCAL HTTP outbound on non-standard port victim to attack network"; sid:9000004; rev:1;)
 ```
 
 **Gap 2: No alert on encoded PowerShell execution**
@@ -171,7 +171,7 @@ CommandLine field.
 **Fix:**
 
 ```
-agent.name: "DESKTOP-MM1REM9" AND event.code: "1" AND winlog.event_data.CommandLine: *hidden*
+agent.name: "WIN-SOC-01" AND event.code: "1" AND winlog.event_data.CommandLine: *hidden*
 ```
 
 Note: the `*-enc*` wildcard does not work on this Elastic build. Use
@@ -186,7 +186,7 @@ world-writable staging paths by PowerShell.
 **Fix:**
 
 ```
-agent.name: "DESKTOP-MM1REM9" AND event.code: "11" AND winlog.event_data.TargetFilename: *Public* AND winlog.event_data.Image: *powershell*
+agent.name: "WIN-SOC-01" AND event.code: "11" AND winlog.event_data.TargetFilename: *Public* AND winlog.event_data.Image: *powershell*
 ```
 
 ### Remediation

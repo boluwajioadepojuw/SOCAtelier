@@ -5,7 +5,7 @@
 **Date:** 02/04/2026
 **Status:** Closed
 **Severity:** Critical
-**Host:** DESKTOP-MM1REM9 (10.0.20.10), Windows 10 Pro 22H2
+**Host:** WIN-SOC-01 (10.77.20.10), Windows 10 Pro 22H2
 **MITRE ATT&CK:** T1046, T1082, T1033, T1016, T1059.001, T1027, T1071.001, T1105, T1218.005, T1547.001, T1562.001, T1036
 **Connected Narrative:** This report closes the IR-002 through IR-004 kill
 chain. No new attack activity was run. This is a pure analyst exercise:
@@ -23,7 +23,7 @@ On 02/04/2026 I ran a correlated hunt across the Suricata NDR telemetry
 default index). The kill chain began at 14:41 and ended at 17:18. Total
 dwell time on one host: 2 hours 37 minutes.
 
-Starting from one Suricata alert (SID 9000001, T=0 at 14:41:40), the hunt
+Starting from one Suricata alert (SID 9000077, T=0 at 14:41:40), the hunt
 rebuilt the whole sequence: external network scan, internal host
 enumeration, encoded PowerShell execution, jittered C2 beaconing, file
 staging, LOLBin persistence, and a Defender disable attempt. Every stage
@@ -55,8 +55,8 @@ queries. Time range set to 02/04/2026 14:41 to 17:30.
 
 **Analysis approach:** Three pivots, run in order.
 
-**Pivot 1: Timeline anchor.** The Suricata SID 9000001 timestamp is T=0.
-I pulled all Sysmon EID 1 events from DESKTOP-MM1REM9 across the full
+**Pivot 1: Timeline anchor.** The Suricata SID 9000077 timestamp is T=0.
+I pulled all Sysmon EID 1 events from WIN-SOC-01 across the full
 window to build the process execution timeline.
 
 **Pivot 2: ProcessGuid parent-child chain.** The mshta.exe ProcessGuid
@@ -64,8 +64,8 @@ from IR-004 was queried against the ParentProcessGuid field. Confirmed
 that cmd.exe was spawned directly by mshta.exe. LOLBin chain established.
 
 **Pivot 3: Cross-layer correlation.** Sysmon EID 3 events (DestinationIp:
-10.0.30.10) matched against Suricata EVE HTTP flow records (src_ip:
-10.0.20.10) in overlapping timestamp windows. Same actor, same IPs, seen
+10.77.30.10) matched against Suricata EVE HTTP flow records (src_ip:
+10.77.20.10) in overlapping timestamp windows. Same actor, same IPs, seen
 independently by two detection systems.
 
 ### Kill Chain Reconstruction
@@ -73,9 +73,9 @@ independently by two detection systems.
 #### Stage 1: Initial Scan (T=0, 14:41)
 
 **Source:** Suricata NDR (filebeat-*)
-**Query:** `suricata.eve.alert.signature_id: 9000001`
-**Result:** 26 alert records. First hit at 14:41:40. src_ip: 10.0.30.10,
-dest_ip: 10.0.20.10.
+**Query:** `suricata.eve.alert.signature_id: 9000077`
+**Result:** 26 alert records. First hit at 14:41:40. src_ip: 10.77.30.10,
+dest_ip: 10.77.20.10.
 
 The earliest observable indicator of the attack. The Suricata alert comes
 about four minutes before any EDR activity, which confirms the attacker
@@ -85,7 +85,7 @@ becomes T=0 for every pivot after this.
 #### Stage 2: Host Enumeration (14:45 - 14:52)
 
 **Source:** Sysmon EDR (logs-*)
-**Query:** `agent.name: "DESKTOP-MM1REM9" AND event.code: "1" AND winlog.event_data.Image: (*whoami.exe* OR *net.exe* OR *systeminfo.exe* OR *ipconfig.exe* OR *arp.exe* OR *netstat.exe* OR *route.exe* OR *tasklist.exe* OR *netstat.exe*)`
+**Query:** `agent.name: "WIN-SOC-01" AND event.code: "1" AND winlog.event_data.Image: (*whoami.exe* OR *net.exe* OR *systeminfo.exe* OR *ipconfig.exe* OR *arp.exe* OR *netstat.exe* OR *route.exe* OR *tasklist.exe* OR *netstat.exe*)`
 **Result:** 9 EID 1 events across a seven-minute window.
 
 All nine recon binaries share ParentProcessGuid
@@ -97,23 +97,23 @@ before moving to the host.
 #### Stage 3: Encoded Execution (16:11 - 16:14)
 
 **Source:** Sysmon EDR (logs-*)
-**Query:** `agent.name: "DESKTOP-MM1REM9" AND event.code: "1" AND winlog.event_data.CommandLine: *hidden*`
+**Query:** `agent.name: "WIN-SOC-01" AND event.code: "1" AND winlog.event_data.CommandLine: *hidden*`
 **Result:** 2 EID 1 events. CommandLine: `powershell.exe -w hidden -nop -enc dwBoAG8A...`
 
-Note: the `*-enc*` wildcard returns empty on this Elastic build because of
-field tokenization. `*hidden*` is the query that works. The 79 minutes
+Note: `*-enc*` returns empty on this Elastic build (field tokenization);
+`*hidden*` is the query that works. The 79 minutes
 between recon (14:52) and execution (16:11) is dwell time, the operator
 planning between phases.
 
 #### Stage 4: C2 Beaconing (16:31 - 16:47)
 
 **Source (EDR):** Sysmon EID 3:
-`agent.name: "DESKTOP-MM1REM9" AND event.code: "3" AND winlog.event_data.DestinationIp: "10.0.30.10"`
+`agent.name: "WIN-SOC-01" AND event.code: "3" AND winlog.event_data.DestinationIp: "10.77.30.10"`
 **Result:** 23 EID 3 events, DestinationPort: 8080, 25-45 second jitter.
 
 **Source (NDR):** Suricata HTTP flows:
-`src_ip: "10.0.20.10" AND http.http_method: GET`
-**Result:** 23 HTTP GET records, dest: 10.0.30.10:8080, User-Agent:
+`src_ip: "10.77.20.10" AND http.http_method: GET`
+**Result:** 23 HTTP GET records, dest: 10.77.30.10:8080, User-Agent:
 Mozilla/5.0.
 
 **Cross-layer match:** 23 EID 3 events (EDR) and 23 HTTP GET records
@@ -124,25 +124,25 @@ separate detection systems with no coordination between them.
 #### Stage 5: File Staging (16:46)
 
 **Source:** Sysmon EDR (logs-*)
-**Query:** `agent.name: "DESKTOP-MM1REM9" AND event.code: "11" AND winlog.event_data.TargetFilename: *update.bat*`
+**Query:** `agent.name: "WIN-SOC-01" AND event.code: "11" AND winlog.event_data.TargetFilename: *update.bat*`
 **Result:** 1 EID 11 event. TargetFilename: C:\Users\Public\update.bat,
 Image: powershell.exe.
 
 #### Stage 6: Persistence (16:53 - 17:01)
 
 **Source:** Sysmon EDR (logs-*)
-**Query:** `agent.name: "DESKTOP-MM1REM9" AND event.code: "13" AND winlog.event_data.TargetObject: *CurrentVersion\\Run*`
+**Query:** `agent.name: "WIN-SOC-01" AND event.code: "13" AND winlog.event_data.TargetObject: *CurrentVersion\\Run*`
 **Result:** 1 EID 13 event. TargetObject: HKCU\...\Run\WindowsUpdate.
 Registry persistence confirmed.
 
-**Query:** `agent.name: "DESKTOP-MM1REM9" AND event.code: "1" AND winlog.event_data.ParentImage: *mshta.exe*`
+**Query:** `agent.name: "WIN-SOC-01" AND event.code: "1" AND winlog.event_data.ParentImage: *mshta.exe*`
 **Result:** 1 EID 1 event. Image: cmd.exe, ParentImage: mshta.exe. LOLBin
 chain confirmed.
 
 #### Stage 7: Defense Evasion (17:18)
 
 **Source:** Sysmon EDR (logs-*)
-**Query:** `agent.name: "DESKTOP-MM1REM9" AND event.code: "13" AND winlog.event_data.TargetObject: *Windows Defender*`
+**Query:** `agent.name: "WIN-SOC-01" AND event.code: "13" AND winlog.event_data.TargetObject: *Windows Defender*`
 **Result:** 1 EID 13 event. TargetObject: HKLM\SOFTWARE\Policies\Microsoft
 Windows Defender\DisableAntiSpyware. The evasion attempt is documented
 even though it only partially succeeded.
@@ -160,7 +160,7 @@ reconstruction:
 Query used to confirm the chain:
 
 ```
-agent.name: "DESKTOP-MM1REM9" AND event.code: "1" AND winlog.event_data.ParentProcessGuid: "{c466df0a-5a9b-69ce-600a-000000000a00}"
+agent.name: "WIN-SOC-01" AND event.code: "1" AND winlog.event_data.ParentProcessGuid: "{c466df0a-5a9b-69ce-600a-000000000a00}"
 ```
 
 Result: 1 hit, cmd.exe with CommandLine
@@ -170,8 +170,8 @@ Result: 1 hit, cmd.exe with CommandLine
 
 | Layer | Source | Events | IPs | Timestamps |
 |---|---|---|---|---|
-| EDR | Sysmon EID 3 | 23 | 10.0.20.10 -> 10.0.30.10:8080 | 16:31 - 16:47 |
-| NDR | Suricata EVE HTTP | 23 | 10.0.20.10 -> 10.0.30.10:8080 | 16:31 - 16:47 |
+| EDR | Sysmon EID 3 | 23 | 10.77.20.10 -> 10.77.30.10:8080 | 16:31 - 16:47 |
+| NDR | Suricata EVE HTTP | 23 | 10.77.20.10 -> 10.77.30.10:8080 | 16:31 - 16:47 |
 
 Same count, same IPs, same window. Independent confirmation across both
 pipelines. Sysmon and Suricata share no data path.
@@ -180,12 +180,12 @@ pipelines. Sysmon and Suricata share no data path.
 
 | Timestamp | Stage | Event ID | Source | Key Indicator | MITRE |
 |---|---|---|---|---|---|
-| 14:41:40 | Recon: External | Alert | Suricata | SID 9000001, src: 10.0.30.10 | T1046 |
+| 14:41:40 | Recon: External | Alert | Suricata | SID 9000077, src: 10.77.30.10 | T1046 |
 | 14:45:15 | Recon: Internal | 1 | Sysmon | whoami.exe, ParentGuid: {c466df0a-c199...} | T1033 |
 | 14:46:11 | Recon: Internal | 1 | Sysmon | net.exe user | T1033 |
 | 14:48-14:52 | Recon: Internal | 1 (x7) | Sysmon | systeminfo, ipconfig, route, arp, tasklist, netstat | T1082, T1016 |
 | 16:11:25 | Execution | 1 | Sysmon | powershell.exe -w hidden -nop -enc | T1027, T1059.001 |
-| 16:31:41 | C2 Beaconing | 3 + Flow | Sysmon + Suricata | EID3 + HTTP GET to 10.0.30.10:8080 (x23) | T1071.001 |
+| 16:31:41 | C2 Beaconing | 3 + Flow | Sysmon + Suricata | EID3 + HTTP GET to 10.77.30.10:8080 (x23) | T1071.001 |
 | 16:46:03 | File Staging | 11 | Sysmon | update.bat to C:\Users\Public\ | T1105 |
 | 16:53:54 | Persistence | 13 | Sysmon | HKCU Run\WindowsUpdate | T1547.001, T1036 |
 | 17:01:25 | LOLBin | 11 | Sysmon | update.hta created | T1218.005 |
@@ -224,12 +224,12 @@ pipelines. Sysmon and Suricata share no data path.
 
 Each phase (IR-002 through IR-004) had its own gaps. No alert ever fired
 that would have started an investigation of the full sequence. An analyst
-without proactive hunting would have seen fragments: the SID 9000001
+without proactive hunting would have seen fragments: the SID 9000077
 alert, maybe the Run key write. Not the connected story.
 
 **Fix:** A correlation rule that links NDR scan alerts to EDR recon
-activity in a defined window. A scan from 10.0.30.0/24 followed by recon
-binaries on 10.0.20.10 within 30 minutes should raise a high-severity
+activity in a defined window. A scan from 10.77.30.0/24 followed by recon
+binaries on 10.77.20.10 within 30 minutes should raise a high-severity
 correlated alert.
 
 **Gap 2: The 79-minute dwell window was blind**
@@ -241,7 +241,7 @@ fired and no hunting query returned results.
 recon events in a burst stays in elevated monitoring for a configurable
 period. Any PowerShell execution in that window auto-escalates.
 
-**Gap 3: KQL tokenization breaks -enc detection**
+**Gap 3: encoded-command wildcards silently fail**
 
 Documented in IR-003 and here. The `*-enc*` wildcard against
 winlog.event_data.CommandLine returns empty. Production rules using this
@@ -265,7 +265,7 @@ visual correlation without switching queries. (Planned for Phase 9.)
 
 * All remediation from IR-002 through IR-004 applies
 * Revert the victim VM to the victim-ready-baseline-v2 snapshot
-* Verify the Suricata ruleset is intact and SID 9000001 active
+* Verify the Suricata ruleset is intact and SID 9000077 active
 * Verify Filebeat and Elastic Agent pipelines are healthy before the
   next session
 

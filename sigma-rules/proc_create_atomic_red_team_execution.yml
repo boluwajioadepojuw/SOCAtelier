@@ -7,7 +7,7 @@ references:
     - https://github.com/redcanaryco/atomic-red-team
     - https://github.com/Adepoju/SOCAtelier
 author: Boluwaji Oluwaseyi Adepoju
-date: 2026-05-16
+date: 2026-06-10
 tags:
     - attack.execution
     - attack.t1059.001

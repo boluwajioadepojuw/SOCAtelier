@@ -14,15 +14,15 @@
             "type": "winlog"
           },
           "agent": {
-            "name": "DESKTOP-MM1REM9",
+            "name": "WIN-SOC-01",
             "id": "23b63155-d5a7-4c98-ba2f-6eb495833877",
             "ephemeral_id": "fb428c44-a56b-4417-83a3-d061abc3e7a5",
             "type": "filebeat",
             "version": "8.17.0"
           },
-          "@timestamp": "2026-04-02T11:53:54.087Z",
+          "@timestamp": "2026.05.02T11:53:54.087Z",
           "winlog": {
-            "computer_name": "DESKTOP-MM1REM9",
+            "computer_name": "WIN-SOC-01",
             "process": {
               "pid": 2276,
               "thread": {
@@ -31,7 +31,7 @@
             },
             "channel": "Microsoft-Windows-Sysmon/Operational",
             "event_data": {
-              "User": "DESKTOP-MM1REM9\\victim",
+              "User": "WIN-SOC-01\\victim",
               "Details": "C:\\Windows\\System32\\cmd.exe /c whoami > C:\\Users\\Public\\out.txt",
               "EventType": "SetValue",
               "ProcessId": "7788",
@@ -39,7 +39,7 @@
               "RuleName": "T1060,RunKey",
               "ProcessGuid": "{c466df0a-58d2-69ce-530a-000000000a00}",
               "TargetObject": "HKU\\S-1-5-21-3653511100-4210277373-1638563163-1001\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\\WindowsUpdate",
-              "UtcTime": "2026-04-02 11:53:54.078"
+              "UtcTime": "2026.05.02 11:53:54.078"
             },
             "opcode": "Info",
             "version": 2,
@@ -68,7 +68,7 @@
             "dataset": "winlog.winlog"
           },
           "host": {
-            "hostname": "DESKTOP-MM1REM9",
+            "hostname": "WIN-SOC-01",
             "os": {
               "build": "19045.6466",
               "kernel": "10.0.19041.6456 (WinBuild.160101.0800)",
@@ -80,9 +80,9 @@
             },
             "ip": [
               "fe80::5e29:4f96:fa0a:5d6",
-              "10.0.20.10"
+              "10.77.20.10"
             ],
-            "name": "desktop-mm1rem9",
+            "name": "WIN-SOC-01",
             "id": "c466df0a-5a17-4b86-8ff6-4d8edbf647a8",
             "mac": [
               "BC-24-11-9F-45-75"
@@ -94,12 +94,12 @@
             "version": "8.17.0",
             "snapshot": false
           },
-          "message": "Registry value set:\nRuleName: T1060,RunKey\nEventType: SetValue\nUtcTime: 2026-04-02 11:53:54.078\nProcessGuid: {c466df0a-58d2-69ce-530a-000000000a00}\nProcessId: 7788\nImage: C:\\Windows\\system32\\reg.exe\nTargetObject: HKU\\S-1-5-21-3653511100-4210277373-1638563163-1001\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\\WindowsUpdate\nDetails: C:\\Windows\\System32\\cmd.exe /c whoami > C:\\Users\\Public\\out.txt\nUser: DESKTOP-MM1REM9\\victim",
+          "message": "Registry value set:\nRuleName: T1060,RunKey\nEventType: SetValue\nUtcTime: 2026.05.02 11:53:54.078\nProcessGuid: {c466df0a-58d2-69ce-530a-000000000a00}\nProcessId: 7788\nImage: C:\\Windows\\system32\\reg.exe\nTargetObject: HKU\\S-1-5-21-3653511100-4210277373-1638563163-1001\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\\WindowsUpdate\nDetails: C:\\Windows\\System32\\cmd.exe /c whoami > C:\\Users\\Public\\out.txt\nUser: WIN-SOC-01\\victim",
           "event": {
             "code": "13",
             "provider": "Microsoft-Windows-Sysmon",
             "kind": "event",
-            "created": "2026-04-02T11:53:55.805Z",
+            "created": "2026.05.02T11:53:55.805Z",
             "action": "Registry value set (rule: RegistryEvent)",
             "dataset": "winlog.winlog"
           }

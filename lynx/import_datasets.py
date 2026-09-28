@@ -40,8 +40,8 @@ def load_no_id(path: Path, key: str, index: str) -> None:
     print(f"{path.name}: {ok} docs into {index}" + (f" ({len(errors)} errors)" if errors else ""))
 
 
-load(datasets / "lynx-cases-2026-05-16.json", "cases", "lynx-cases", "case_id")
+load(datasets / "lynx-cases-2026-06-10.json", "cases", "lynx-cases", "case_id")
 for f in sorted(datasets.glob("behaviors-CASE-*.json")):
     load(f, "behaviors", "lynx-behaviors", "behavior_id")
-load_no_id(datasets / "lynx-actions-2026-05-16.json", "actions", "lynx-actions")
+load_no_id(datasets / "lynx-actions-2026-06-10.json", "actions", "lynx-actions")
 print("Import complete. Refresh the console (http://localhost:5173).")

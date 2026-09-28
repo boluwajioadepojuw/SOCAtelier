@@ -19,7 +19,7 @@ Template catalogue:
 
 Usage:
     from hunt_engine import run_hunt
-    results = run_hunt("HT-02", host="desktop-mm1rem9", hours=24)
+    results = run_hunt("HT-02", host="WIN-SOC-01", hours=24)
 """
 
 from elasticsearch import Elasticsearch
@@ -63,7 +63,7 @@ TEMPLATES = {
 
     # ── HT-02 — Encoded PowerShell ──────────────────────────────────────────
     # Detects -EncodedCommand / -enc usage. High-fidelity indicator.
-    # Uses *hidden* wildcard (not *-enc*) — tokenization issue in this ES build.
+    # Query uses *hidden* (the *-enc* wildcard fails on this build; see IR-005 Gap 3).
     "HT-02": {
         "id":          "HT-02",
         "name":        "Encoded PowerShell executions",
@@ -233,8 +233,8 @@ def build_HT02(host=None, hours=24) -> str:
     hc = _host_clause(host)
     # Primary filter: *EncodedCommand* catches -EncodedCommand and abbreviated forms.
     # Secondary: *hidden* catches -WindowStyle Hidden often paired with encoded payloads.
-    # Note: the *-enc* wildcard does not match on this Elastic build because of
-    # field tokenization. Use *hidden* as the working query.
+    # Note: *-enc* does not match here (field tokenization on this build);
+    # *hidden* is the working query.
     return (
         f'FROM logs-winlog.winlog-default '
         f'| WHERE @timestamp >= "{ts}"{hc} '

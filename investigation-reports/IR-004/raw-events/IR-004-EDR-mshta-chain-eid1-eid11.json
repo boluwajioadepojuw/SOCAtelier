@@ -6,7 +6,7 @@
     "message.keyword"
   ],
   "_source": {
-    "@timestamp": "2026-04-02T12:01:35.719Z",
+    "@timestamp": "2026.05.02T12:01:35.719Z",
     "winlog": {
       "provider_name": "Microsoft-Windows-Sysmon",
       "record_id": 13028,
@@ -30,13 +30,13 @@
         "Product": "Microsoft® Windows® Operating System",
         "CommandLine": "\"C:\\Windows\\System32\\cmd.exe\" /c whoami >> C:\\Users\\Public\\out.txt",
         "LogonId": "0x284e8",
-        "UtcTime": "2026-04-02 12:01:35.708",
+        "UtcTime": "2026.05.02 12:01:35.708",
         "ProcessId": "9124",
         "ProcessGuid": "{c466df0a-5a9f-69ce-610a-000000000a00}",
         "Image": "C:\\Windows\\System32\\cmd.exe",
-        "ParentUser": "DESKTOP-MM1REM9\\victim",
+        "ParentUser": "WIN-SOC-01\\victim",
         "ParentProcessId": "7032",
-        "User": "DESKTOP-MM1REM9\\victim",
+        "User": "WIN-SOC-01\\victim",
         "ParentCommandLine": "mshta  C:\\Users\\Public\\update.hta",
         "Hashes": "MD5=2B40C98ED0F7A1D3B091A3E8353132DC,SHA256=BADF4752413CB0CBDC03FB95820CA167F0CDC63B597CCDB5EF43111180E088B0,IMPHASH=272245E2988E1E430500B852C4FB5E18",
         "ParentProcessGuid": "{c466df0a-5a9b-69ce-600a-000000000a00}",
@@ -54,7 +54,7 @@
         },
         "pid": 2276
       },
-      "computer_name": "DESKTOP-MM1REM9"
+      "computer_name": "WIN-SOC-01"
     },
     "log": {
       "level": "information"
@@ -65,7 +65,7 @@
       "version": "8.17.0"
     },
     "agent": {
-      "name": "DESKTOP-MM1REM9",
+      "name": "WIN-SOC-01",
       "type": "filebeat",
       "id": "23b63155-d5a7-4c98-ba2f-6eb495833877",
       "version": "8.17.0",
@@ -88,23 +88,23 @@
       "id": "c466df0a-5a17-4b86-8ff6-4d8edbf647a8",
       "ip": [
         "fe80::5e29:4f96:fa0a:5d6",
-        "10.0.20.10"
+        "10.77.20.10"
       ],
       "mac": [
         "BC-24-11-9F-45-75"
       ],
-      "hostname": "DESKTOP-MM1REM9",
-      "name": "desktop-mm1rem9"
+      "hostname": "WIN-SOC-01",
+      "name": "WIN-SOC-01"
     },
     "event": {
       "dataset": "winlog.winlog",
-      "created": "2026-04-02T12:01:36.829Z",
+      "created": "2026.05.02T12:01:36.829Z",
       "code": "1",
       "kind": "event",
       "provider": "Microsoft-Windows-Sysmon",
       "action": "Process Create (rule: ProcessCreate)"
     },
-    "message": "Process Create:\nRuleName: -\nUtcTime: 2026-04-02 12:01:35.708\nProcessGuid: {c466df0a-5a9f-69ce-610a-000000000a00}\nProcessId: 9124\nImage: C:\\Windows\\System32\\cmd.exe\nFileVersion: 10.0.19041.4355 (WinBuild.160101.0800)\nDescription: Windows Command Processor\nProduct: Microsoft® Windows® Operating System\nCompany: Microsoft Corporation\nOriginalFileName: Cmd.Exe\nCommandLine: \"C:\\Windows\\System32\\cmd.exe\" /c whoami >> C:\\Users\\Public\\out.txt\nCurrentDirectory: C:\\Windows\\system32\\\nUser: DESKTOP-MM1REM9\\victim\nLogonGuid: {c466df0a-0254-69cb-e884-020000000000}\nLogonId: 0x284E8\nTerminalSessionId: 1\nIntegrityLevel: High\nHashes: MD5=2B40C98ED0F7A1D3B091A3E8353132DC,SHA256=BADF4752413CB0CBDC03FB95820CA167F0CDC63B597CCDB5EF43111180E088B0,IMPHASH=272245E2988E1E430500B852C4FB5E18\nParentProcessGuid: {c466df0a-5a9b-69ce-600a-000000000a00}\nParentProcessId: 7032\nParentImage: C:\\Windows\\System32\\mshta.exe\nParentCommandLine: mshta  C:\\Users\\Public\\update.hta\nParentUser: DESKTOP-MM1REM9\\victim",
+    "message": "Process Create:\nRuleName: -\nUtcTime: 2026.05.02 12:01:35.708\nProcessGuid: {c466df0a-5a9f-69ce-610a-000000000a00}\nProcessId: 9124\nImage: C:\\Windows\\System32\\cmd.exe\nFileVersion: 10.0.19041.4355 (WinBuild.160101.0800)\nDescription: Windows Command Processor\nProduct: Microsoft® Windows® Operating System\nCompany: Microsoft Corporation\nOriginalFileName: Cmd.Exe\nCommandLine: \"C:\\Windows\\System32\\cmd.exe\" /c whoami >> C:\\Users\\Public\\out.txt\nCurrentDirectory: C:\\Windows\\system32\\\nUser: WIN-SOC-01\\victim\nLogonGuid: {c466df0a-0254-69cb-e884-020000000000}\nLogonId: 0x284E8\nTerminalSessionId: 1\nIntegrityLevel: High\nHashes: MD5=2B40C98ED0F7A1D3B091A3E8353132DC,SHA256=BADF4752413CB0CBDC03FB95820CA167F0CDC63B597CCDB5EF43111180E088B0,IMPHASH=272245E2988E1E430500B852C4FB5E18\nParentProcessGuid: {c466df0a-5a9b-69ce-600a-000000000a00}\nParentProcessId: 7032\nParentImage: C:\\Windows\\System32\\mshta.exe\nParentCommandLine: mshta  C:\\Users\\Public\\update.hta\nParentUser: WIN-SOC-01\\victim",
     "input": {
       "type": "winlog"
     },
@@ -122,7 +122,7 @@
       "8.17.0"
     ],
     "host.name.keyword": [
-      "desktop-mm1rem9"
+      "WIN-SOC-01"
     ],
     "winlog.event_data.ProcessGuid": [
       "{c466df0a-5a9f-69ce-610a-000000000a00}"
@@ -134,7 +134,7 @@
       "winlog.winlog"
     ],
     "host.hostname": [
-      "DESKTOP-MM1REM9"
+      "WIN-SOC-01"
     ],
     "host.mac": [
       "BC-24-11-9F-45-75"
@@ -158,13 +158,13 @@
       "High"
     ],
     "agent.name": [
-      "DESKTOP-MM1REM9"
+      "WIN-SOC-01"
     ],
     "winlog.event_data.User.keyword": [
-      "DESKTOP-MM1REM9\\victim"
+      "WIN-SOC-01\\victim"
     ],
     "winlog.event_data.UtcTime": [
-      "2026-04-02 12:01:35.708"
+      "2026.05.02 12:01:35.708"
     ],
     "winlog.event_data.OriginalFileName": [
       "Cmd.Exe"
@@ -188,7 +188,7 @@
       "23b63155-d5a7-4c98-ba2f-6eb495833877"
     ],
     "winlog.event_data.User": [
-      "DESKTOP-MM1REM9\\victim"
+      "WIN-SOC-01\\victim"
     ],
     "input.type": [
       "winlog"
@@ -215,7 +215,7 @@
       "Microsoft-Windows-Sysmon"
     ],
     "winlog.event_data.UtcTime.keyword": [
-      "2026-04-02 12:01:35.708"
+      "2026.05.02 12:01:35.708"
     ],
     "winlog.event_data.LogonGuid": [
       "{c466df0a-0254-69cb-e884-020000000000}"
@@ -246,7 +246,7 @@
     ],
     "host.ip": [
       "fe80::5e29:4f96:fa0a:5d6",
-      "10.0.20.10"
+      "10.77.20.10"
     ],
     "agent.type": [
       "filebeat"
@@ -291,7 +291,7 @@
       "fb428c44-a56b-4417-83a3-d061abc3e7a5"
     ],
     "agent.name.keyword": [
-      "DESKTOP-MM1REM9"
+      "WIN-SOC-01"
     ],
     "elastic_agent.id": [
       "23b63155-d5a7-4c98-ba2f-6eb495833877"
@@ -309,7 +309,7 @@
       "Process Create (rule: ProcessCreate)"
     ],
     "@timestamp": [
-      "2026-04-02T12:01:35.719Z"
+      "2026.05.02T12:01:35.719Z"
     ],
     "winlog.channel": [
       "Microsoft-Windows-Sysmon/Operational"
@@ -363,17 +363,17 @@
       "1"
     ],
     "winlog.computer_name": [
-      "DESKTOP-MM1REM9"
+      "WIN-SOC-01"
     ],
     "winlog.event_data.ParentUser.keyword": [
-      "DESKTOP-MM1REM9\\victim"
+      "WIN-SOC-01\\victim"
     ],
     "ecs.version.keyword": [
       "8.0.0"
     ],
     "host.ip.keyword": [
       "fe80::5e29:4f96:fa0a:5d6",
-      "10.0.20.10"
+      "10.77.20.10"
     ],
     "winlog.record_id": [
       13028
@@ -400,7 +400,7 @@
       "c466df0a-5a17-4b86-8ff6-4d8edbf647a8"
     ],
     "host.name": [
-      "desktop-mm1rem9"
+      "WIN-SOC-01"
     ],
     "winlog.event_data.ParentProcessGuid": [
       "{c466df0a-5a9b-69ce-600a-000000000a00}"
@@ -430,10 +430,10 @@
       "8.0.0"
     ],
     "event.created": [
-      "2026-04-02T12:01:36.829Z"
+      "2026.05.02T12:01:36.829Z"
     ],
     "host.hostname.keyword": [
-      "DESKTOP-MM1REM9"
+      "WIN-SOC-01"
     ],
     "agent.version": [
       "8.17.0"
@@ -448,10 +448,10 @@
       "information"
     ],
     "winlog.event_data.ParentUser": [
-      "DESKTOP-MM1REM9\\victim"
+      "WIN-SOC-01\\victim"
     ],
     "winlog.computer_name.keyword": [
-      "DESKTOP-MM1REM9"
+      "WIN-SOC-01"
     ],
     "winlog.event_data.ParentCommandLine.keyword": [
       "mshta  C:\\Users\\Public\\update.hta"
@@ -499,7 +499,7 @@
       "High"
     ],
     "message": [
-      "Process Create:\nRuleName: -\nUtcTime: 2026-04-02 12:01:35.708\nProcessGuid: {c466df0a-5a9f-69ce-610a-000000000a00}\nProcessId: 9124\nImage: C:\\Windows\\System32\\cmd.exe\nFileVersion: 10.0.19041.4355 (WinBuild.160101.0800)\nDescription: Windows Command Processor\nProduct: Microsoft® Windows® Operating System\nCompany: Microsoft Corporation\nOriginalFileName: Cmd.Exe\nCommandLine: \"C:\\Windows\\System32\\cmd.exe\" /c whoami >> C:\\Users\\Public\\out.txt\nCurrentDirectory: C:\\Windows\\system32\\\nUser: DESKTOP-MM1REM9\\victim\nLogonGuid: {c466df0a-0254-69cb-e884-020000000000}\nLogonId: 0x284E8\nTerminalSessionId: 1\nIntegrityLevel: High\nHashes: MD5=2B40C98ED0F7A1D3B091A3E8353132DC,SHA256=BADF4752413CB0CBDC03FB95820CA167F0CDC63B597CCDB5EF43111180E088B0,IMPHASH=272245E2988E1E430500B852C4FB5E18\nParentProcessGuid: {c466df0a-5a9b-69ce-600a-000000000a00}\nParentProcessId: 7032\nParentImage: C:\\Windows\\System32\\mshta.exe\nParentCommandLine: mshta  C:\\Users\\Public\\update.hta\nParentUser: DESKTOP-MM1REM9\\victim"
+      "Process Create:\nRuleName: -\nUtcTime: 2026.05.02 12:01:35.708\nProcessGuid: {c466df0a-5a9f-69ce-610a-000000000a00}\nProcessId: 9124\nImage: C:\\Windows\\System32\\cmd.exe\nFileVersion: 10.0.19041.4355 (WinBuild.160101.0800)\nDescription: Windows Command Processor\nProduct: Microsoft® Windows® Operating System\nCompany: Microsoft Corporation\nOriginalFileName: Cmd.Exe\nCommandLine: \"C:\\Windows\\System32\\cmd.exe\" /c whoami >> C:\\Users\\Public\\out.txt\nCurrentDirectory: C:\\Windows\\system32\\\nUser: WIN-SOC-01\\victim\nLogonGuid: {c466df0a-0254-69cb-e884-020000000000}\nLogonId: 0x284E8\nTerminalSessionId: 1\nIntegrityLevel: High\nHashes: MD5=2B40C98ED0F7A1D3B091A3E8353132DC,SHA256=BADF4752413CB0CBDC03FB95820CA167F0CDC63B597CCDB5EF43111180E088B0,IMPHASH=272245E2988E1E430500B852C4FB5E18\nParentProcessGuid: {c466df0a-5a9b-69ce-600a-000000000a00}\nParentProcessId: 7032\nParentImage: C:\\Windows\\System32\\mshta.exe\nParentCommandLine: mshta  C:\\Users\\Public\\update.hta\nParentUser: WIN-SOC-01\\victim"
     ],
     "winlog.event_id": [
       "1"
@@ -540,7 +540,7 @@
   },
   "ignored_field_values": {
     "message.keyword": [
-      "Process Create:\nRuleName: -\nUtcTime: 2026-04-02 12:01:35.708\nProcessGuid: {c466df0a-5a9f-69ce-610a-000000000a00}\nProcessId: 9124\nImage: C:\\Windows\\System32\\cmd.exe\nFileVersion: 10.0.19041.4355 (WinBuild.160101.0800)\nDescription: Windows Command Processor\nProduct: Microsoft® Windows® Operating System\nCompany: Microsoft Corporation\nOriginalFileName: Cmd.Exe\nCommandLine: \"C:\\Windows\\System32\\cmd.exe\" /c whoami >> C:\\Users\\Public\\out.txt\nCurrentDirectory: C:\\Windows\\system32\\\nUser: DESKTOP-MM1REM9\\victim\nLogonGuid: {c466df0a-0254-69cb-e884-020000000000}\nLogonId: 0x284E8\nTerminalSessionId: 1\nIntegrityLevel: High\nHashes: MD5=2B40C98ED0F7A1D3B091A3E8353132DC,SHA256=BADF4752413CB0CBDC03FB95820CA167F0CDC63B597CCDB5EF43111180E088B0,IMPHASH=272245E2988E1E430500B852C4FB5E18\nParentProcessGuid: {c466df0a-5a9b-69ce-600a-000000000a00}\nParentProcessId: 7032\nParentImage: C:\\Windows\\System32\\mshta.exe\nParentCommandLine: mshta  C:\\Users\\Public\\update.hta\nParentUser: DESKTOP-MM1REM9\\victim"
+      "Process Create:\nRuleName: -\nUtcTime: 2026.05.02 12:01:35.708\nProcessGuid: {c466df0a-5a9f-69ce-610a-000000000a00}\nProcessId: 9124\nImage: C:\\Windows\\System32\\cmd.exe\nFileVersion: 10.0.19041.4355 (WinBuild.160101.0800)\nDescription: Windows Command Processor\nProduct: Microsoft® Windows® Operating System\nCompany: Microsoft Corporation\nOriginalFileName: Cmd.Exe\nCommandLine: \"C:\\Windows\\System32\\cmd.exe\" /c whoami >> C:\\Users\\Public\\out.txt\nCurrentDirectory: C:\\Windows\\system32\\\nUser: WIN-SOC-01\\victim\nLogonGuid: {c466df0a-0254-69cb-e884-020000000000}\nLogonId: 0x284E8\nTerminalSessionId: 1\nIntegrityLevel: High\nHashes: MD5=2B40C98ED0F7A1D3B091A3E8353132DC,SHA256=BADF4752413CB0CBDC03FB95820CA167F0CDC63B597CCDB5EF43111180E088B0,IMPHASH=272245E2988E1E430500B852C4FB5E18\nParentProcessGuid: {c466df0a-5a9b-69ce-600a-000000000a00}\nParentProcessId: 7032\nParentImage: C:\\Windows\\System32\\mshta.exe\nParentCommandLine: mshta  C:\\Users\\Public\\update.hta\nParentUser: WIN-SOC-01\\victim"
     ]
   }
 }
@@ -555,7 +555,7 @@
     "message.keyword"
   ],
   "_source": {
-    "@timestamp": "2026-04-02T12:01:25.762Z",
+    "@timestamp": "2026.05.02T12:01:25.762Z",
     "log": {
       "level": "information"
     },
@@ -574,9 +574,9 @@
       "version": "8.17.0",
       "ephemeral_id": "fb428c44-a56b-4417-83a3-d061abc3e7a5",
       "id": "23b63155-d5a7-4c98-ba2f-6eb495833877",
-      "name": "DESKTOP-MM1REM9"
+      "name": "WIN-SOC-01"
     },
-    "message": "File created:\nRuleName: -\nUtcTime: 2026-04-02 12:01:25.754\nProcessGuid: {c466df0a-58bf-69ce-500a-000000000a00}\nProcessId: 5320\nImage: C:\\Windows\\system32\\cmd.exe\nTargetFilename: C:\\Users\\Public\\update.hta\nCreationUtcTime: 2026-04-02 12:01:25.754\nUser: DESKTOP-MM1REM9\\victim",
+    "message": "File created:\nRuleName: -\nUtcTime: 2026.05.02 12:01:25.754\nProcessGuid: {c466df0a-58bf-69ce-500a-000000000a00}\nProcessId: 5320\nImage: C:\\Windows\\system32\\cmd.exe\nTargetFilename: C:\\Users\\Public\\update.hta\nCreationUtcTime: 2026.05.02 12:01:25.754\nUser: WIN-SOC-01\\victim",
     "winlog": {
       "api": "wineventlog",
       "channel": "Microsoft-Windows-Sysmon/Operational",
@@ -594,14 +594,14 @@
         "ProcessId": "5320",
         "Image": "C:\\Windows\\system32\\cmd.exe",
         "TargetFilename": "C:\\Users\\Public\\update.hta",
-        "CreationUtcTime": "2026-04-02 12:01:25.754",
-        "User": "DESKTOP-MM1REM9\\victim",
+        "CreationUtcTime": "2026.05.02 12:01:25.754",
+        "User": "WIN-SOC-01\\victim",
         "RuleName": "-",
-        "UtcTime": "2026-04-02 12:01:25.754"
+        "UtcTime": "2026.05.02 12:01:25.754"
       },
       "provider_guid": "{5770385f-c22a-43e0-bf4c-06f5698ffbd9}",
       "opcode": "Info",
-      "computer_name": "DESKTOP-MM1REM9",
+      "computer_name": "WIN-SOC-01",
       "record_id": 13026,
       "task": "File created (rule: FileCreate)",
       "user": {
@@ -612,7 +612,7 @@
       }
     },
     "event": {
-      "created": "2026-04-02T12:01:27.696Z",
+      "created": "2026.05.02T12:01:27.696Z",
       "code": "11",
       "kind": "event",
       "dataset": "winlog.winlog",
@@ -628,13 +628,13 @@
     "host": {
       "ip": [
         "fe80::5e29:4f96:fa0a:5d6",
-        "10.0.20.10"
+        "10.77.20.10"
       ],
-      "name": "desktop-mm1rem9",
+      "name": "WIN-SOC-01",
       "mac": [
         "BC-24-11-9F-45-75"
       ],
-      "hostname": "DESKTOP-MM1REM9",
+      "hostname": "WIN-SOC-01",
       "architecture": "x86_64",
       "os": {
         "version": "10.0",
@@ -656,7 +656,7 @@
       "8.17.0"
     ],
     "host.name.keyword": [
-      "desktop-mm1rem9"
+      "WIN-SOC-01"
     ],
     "winlog.event_data.ProcessGuid": [
       "{c466df0a-58bf-69ce-500a-000000000a00}"
@@ -665,7 +665,7 @@
       "winlog.winlog"
     ],
     "host.hostname": [
-      "DESKTOP-MM1REM9"
+      "WIN-SOC-01"
     ],
     "host.mac": [
       "BC-24-11-9F-45-75"
@@ -683,13 +683,13 @@
       "10.0"
     ],
     "agent.name": [
-      "DESKTOP-MM1REM9"
+      "WIN-SOC-01"
     ],
     "winlog.event_data.User.keyword": [
-      "DESKTOP-MM1REM9\\victim"
+      "WIN-SOC-01\\victim"
     ],
     "winlog.event_data.UtcTime": [
-      "2026-04-02 12:01:25.754"
+      "2026.05.02 12:01:25.754"
     ],
     "winlog.event_data.Image.keyword": [
       "C:\\Windows\\system32\\cmd.exe"
@@ -707,7 +707,7 @@
       "23b63155-d5a7-4c98-ba2f-6eb495833877"
     ],
     "winlog.event_data.User": [
-      "DESKTOP-MM1REM9\\victim"
+      "WIN-SOC-01\\victim"
     ],
     "input.type": [
       "winlog"
@@ -731,7 +731,7 @@
       "Microsoft-Windows-Sysmon"
     ],
     "winlog.event_data.UtcTime.keyword": [
-      "2026-04-02 12:01:25.754"
+      "2026.05.02 12:01:25.754"
     ],
     "winlog.user.domain.keyword": [
       "NT AUTHORITY"
@@ -753,7 +753,7 @@
     ],
     "host.ip": [
       "fe80::5e29:4f96:fa0a:5d6",
-      "10.0.20.10"
+      "10.77.20.10"
     ],
     "agent.type": [
       "filebeat"
@@ -792,7 +792,7 @@
       "fb428c44-a56b-4417-83a3-d061abc3e7a5"
     ],
     "agent.name.keyword": [
-      "DESKTOP-MM1REM9"
+      "WIN-SOC-01"
     ],
     "elastic_agent.id": [
       "23b63155-d5a7-4c98-ba2f-6eb495833877"
@@ -807,7 +807,7 @@
       "File created (rule: FileCreate)"
     ],
     "@timestamp": [
-      "2026-04-02T12:01:25.762Z"
+      "2026.05.02T12:01:25.762Z"
     ],
     "winlog.channel": [
       "Microsoft-Windows-Sysmon/Operational"
@@ -849,14 +849,14 @@
       "11"
     ],
     "winlog.computer_name": [
-      "DESKTOP-MM1REM9"
+      "WIN-SOC-01"
     ],
     "ecs.version.keyword": [
       "8.0.0"
     ],
     "host.ip.keyword": [
       "fe80::5e29:4f96:fa0a:5d6",
-      "10.0.20.10"
+      "10.77.20.10"
     ],
     "winlog.record_id": [
       13026
@@ -880,7 +880,7 @@
       "c466df0a-5a17-4b86-8ff6-4d8edbf647a8"
     ],
     "host.name": [
-      "desktop-mm1rem9"
+      "WIN-SOC-01"
     ],
     "event.kind": [
       "event"
@@ -901,10 +901,10 @@
       "8.0.0"
     ],
     "event.created": [
-      "2026-04-02T12:01:27.696Z"
+      "2026.05.02T12:01:27.696Z"
     ],
     "host.hostname.keyword": [
-      "DESKTOP-MM1REM9"
+      "WIN-SOC-01"
     ],
     "agent.version": [
       "8.17.0"
@@ -916,13 +916,13 @@
       "information"
     ],
     "winlog.event_data.CreationUtcTime": [
-      "2026-04-02 12:01:25.754"
+      "2026.05.02 12:01:25.754"
     ],
     "winlog.computer_name.keyword": [
-      "DESKTOP-MM1REM9"
+      "WIN-SOC-01"
     ],
     "winlog.event_data.CreationUtcTime.keyword": [
-      "2026-04-02 12:01:25.754"
+      "2026.05.02 12:01:25.754"
     ],
     "host.os.build": [
       "19045.6466"
@@ -958,7 +958,7 @@
       "default"
     ],
     "message": [
-      "File created:\nRuleName: -\nUtcTime: 2026-04-02 12:01:25.754\nProcessGuid: {c466df0a-58bf-69ce-500a-000000000a00}\nProcessId: 5320\nImage: C:\\Windows\\system32\\cmd.exe\nTargetFilename: C:\\Users\\Public\\update.hta\nCreationUtcTime: 2026-04-02 12:01:25.754\nUser: DESKTOP-MM1REM9\\victim"
+      "File created:\nRuleName: -\nUtcTime: 2026.05.02 12:01:25.754\nProcessGuid: {c466df0a-58bf-69ce-500a-000000000a00}\nProcessId: 5320\nImage: C:\\Windows\\system32\\cmd.exe\nTargetFilename: C:\\Users\\Public\\update.hta\nCreationUtcTime: 2026.05.02 12:01:25.754\nUser: WIN-SOC-01\\victim"
     ],
     "winlog.event_id": [
       "11"
@@ -984,7 +984,7 @@
   },
   "ignored_field_values": {
     "message.keyword": [
-      "File created:\nRuleName: -\nUtcTime: 2026-04-02 12:01:25.754\nProcessGuid: {c466df0a-58bf-69ce-500a-000000000a00}\nProcessId: 5320\nImage: C:\\Windows\\system32\\cmd.exe\nTargetFilename: C:\\Users\\Public\\update.hta\nCreationUtcTime: 2026-04-02 12:01:25.754\nUser: DESKTOP-MM1REM9\\victim"
+      "File created:\nRuleName: -\nUtcTime: 2026.05.02 12:01:25.754\nProcessGuid: {c466df0a-58bf-69ce-500a-000000000a00}\nProcessId: 5320\nImage: C:\\Windows\\system32\\cmd.exe\nTargetFilename: C:\\Users\\Public\\update.hta\nCreationUtcTime: 2026.05.02 12:01:25.754\nUser: WIN-SOC-01\\victim"
     ]
   }
 }

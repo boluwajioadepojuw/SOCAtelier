@@ -6,7 +6,7 @@
     "message.keyword"
   ],
   "_source": {
-    "@timestamp": "2026-04-02T12:18:17.567Z",
+    "@timestamp": "2026.05.02T12:18:17.567Z",
     "elastic_agent": {
       "snapshot": false,
       "version": "8.17.0",
@@ -16,8 +16,8 @@
       "level": "information"
     },
     "host": {
-      "name": "desktop-mm1rem9",
-      "hostname": "DESKTOP-MM1REM9",
+      "name": "WIN-SOC-01",
+      "hostname": "WIN-SOC-01",
       "architecture": "x86_64",
       "os": {
         "kernel": "10.0.19041.6456 (WinBuild.160101.0800)",
@@ -31,7 +31,7 @@
       "id": "c466df0a-5a17-4b86-8ff6-4d8edbf647a8",
       "ip": [
         "fe80::5e29:4f96:fa0a:5d6",
-        "10.0.20.10"
+        "10.77.20.10"
       ],
       "mac": [
         "BC-24-11-9F-45-75"
@@ -49,13 +49,13 @@
       "version": "8.17.0",
       "ephemeral_id": "fb428c44-a56b-4417-83a3-d061abc3e7a5",
       "id": "23b63155-d5a7-4c98-ba2f-6eb495833877",
-      "name": "DESKTOP-MM1REM9",
+      "name": "WIN-SOC-01",
       "type": "filebeat"
     },
     "ecs": {
       "version": "8.0.0"
     },
-    "message": "Registry value set:\nRuleName: T1089,Tamper-Defender\nEventType: SetValue\nUtcTime: 2026-04-02 12:18:17.561\nProcessGuid: {c466df0a-5e89-69ce-870a-000000000a00}\nProcessId: 1340\nImage: C:\\Windows\\system32\\reg.exe\nTargetObject: HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows Defender\\DisableAntiSpyware\nDetails: DWORD (0x00000001)\nUser: DESKTOP-MM1REM9\\victim",
+    "message": "Registry value set:\nRuleName: T1089,Tamper-Defender\nEventType: SetValue\nUtcTime: 2026.05.02 12:18:17.561\nProcessGuid: {c466df0a-5e89-69ce-870a-000000000a00}\nProcessId: 1340\nImage: C:\\Windows\\system32\\reg.exe\nTargetObject: HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows Defender\\DisableAntiSpyware\nDetails: DWORD (0x00000001)\nUser: WIN-SOC-01\\victim",
     "winlog": {
       "user": {
         "type": "User",
@@ -78,9 +78,9 @@
         "RuleName": "T1089,Tamper-Defender",
         "Details": "DWORD (0x00000001)",
         "EventType": "SetValue",
-        "User": "DESKTOP-MM1REM9\\victim",
+        "User": "WIN-SOC-01\\victim",
         "TargetObject": "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows Defender\\DisableAntiSpyware",
-        "UtcTime": "2026-04-02 12:18:17.561",
+        "UtcTime": "2026.05.02 12:18:17.561",
         "ProcessGuid": "{c466df0a-5e89-69ce-870a-000000000a00}",
         "ProcessId": "1340"
       },
@@ -89,14 +89,14 @@
       "opcode": "Info",
       "record_id": 13057,
       "channel": "Microsoft-Windows-Sysmon/Operational",
-      "computer_name": "DESKTOP-MM1REM9"
+      "computer_name": "WIN-SOC-01"
     },
     "event": {
       "kind": "event",
       "dataset": "winlog.winlog",
       "provider": "Microsoft-Windows-Sysmon",
       "action": "Registry value set (rule: RegistryEvent)",
-      "created": "2026-04-02T12:18:19.248Z",
+      "created": "2026.05.02T12:18:19.248Z",
       "code": "13"
     }
   },
@@ -108,7 +108,7 @@
       "8.17.0"
     ],
     "host.name.keyword": [
-      "desktop-mm1rem9"
+      "WIN-SOC-01"
     ],
     "winlog.event_data.ProcessGuid": [
       "{c466df0a-5e89-69ce-870a-000000000a00}"
@@ -117,7 +117,7 @@
       "winlog.winlog"
     ],
     "host.hostname": [
-      "DESKTOP-MM1REM9"
+      "WIN-SOC-01"
     ],
     "host.mac": [
       "BC-24-11-9F-45-75"
@@ -138,13 +138,13 @@
       "10.0"
     ],
     "agent.name": [
-      "DESKTOP-MM1REM9"
+      "WIN-SOC-01"
     ],
     "winlog.event_data.User.keyword": [
-      "DESKTOP-MM1REM9\\victim"
+      "WIN-SOC-01\\victim"
     ],
     "winlog.event_data.UtcTime": [
-      "2026-04-02 12:18:17.561"
+      "2026.05.02 12:18:17.561"
     ],
     "winlog.event_data.Image.keyword": [
       "C:\\Windows\\system32\\reg.exe"
@@ -159,7 +159,7 @@
       "23b63155-d5a7-4c98-ba2f-6eb495833877"
     ],
     "winlog.event_data.User": [
-      "DESKTOP-MM1REM9\\victim"
+      "WIN-SOC-01\\victim"
     ],
     "input.type": [
       "winlog"
@@ -183,7 +183,7 @@
       "Microsoft-Windows-Sysmon"
     ],
     "winlog.event_data.UtcTime.keyword": [
-      "2026-04-02 12:18:17.561"
+      "2026.05.02 12:18:17.561"
     ],
     "winlog.user.domain.keyword": [
       "NT AUTHORITY"
@@ -205,7 +205,7 @@
     ],
     "host.ip": [
       "fe80::5e29:4f96:fa0a:5d6",
-      "10.0.20.10"
+      "10.77.20.10"
     ],
     "agent.type": [
       "filebeat"
@@ -250,7 +250,7 @@
       "fb428c44-a56b-4417-83a3-d061abc3e7a5"
     ],
     "agent.name.keyword": [
-      "DESKTOP-MM1REM9"
+      "WIN-SOC-01"
     ],
     "elastic_agent.id": [
       "23b63155-d5a7-4c98-ba2f-6eb495833877"
@@ -268,7 +268,7 @@
       "Registry value set (rule: RegistryEvent)"
     ],
     "@timestamp": [
-      "2026-04-02T12:18:17.567Z"
+      "2026.05.02T12:18:17.567Z"
     ],
     "winlog.channel": [
       "Microsoft-Windows-Sysmon/Operational"
@@ -313,14 +313,14 @@
       "13"
     ],
     "winlog.computer_name": [
-      "DESKTOP-MM1REM9"
+      "WIN-SOC-01"
     ],
     "ecs.version.keyword": [
       "8.0.0"
     ],
     "host.ip.keyword": [
       "fe80::5e29:4f96:fa0a:5d6",
-      "10.0.20.10"
+      "10.77.20.10"
     ],
     "winlog.record_id": [
       13057
@@ -344,7 +344,7 @@
       "c466df0a-5a17-4b86-8ff6-4d8edbf647a8"
     ],
     "host.name": [
-      "desktop-mm1rem9"
+      "WIN-SOC-01"
     ],
     "event.kind": [
       "event"
@@ -362,10 +362,10 @@
       "8.0.0"
     ],
     "event.created": [
-      "2026-04-02T12:18:19.248Z"
+      "2026.05.02T12:18:19.248Z"
     ],
     "host.hostname.keyword": [
-      "DESKTOP-MM1REM9"
+      "WIN-SOC-01"
     ],
     "agent.version": [
       "8.17.0"
@@ -380,7 +380,7 @@
       "DWORD (0x00000001)"
     ],
     "winlog.computer_name.keyword": [
-      "DESKTOP-MM1REM9"
+      "WIN-SOC-01"
     ],
     "host.os.build": [
       "19045.6466"
@@ -416,7 +416,7 @@
       "default"
     ],
     "message": [
-      "Registry value set:\nRuleName: T1089,Tamper-Defender\nEventType: SetValue\nUtcTime: 2026-04-02 12:18:17.561\nProcessGuid: {c466df0a-5e89-69ce-870a-000000000a00}\nProcessId: 1340\nImage: C:\\Windows\\system32\\reg.exe\nTargetObject: HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows Defender\\DisableAntiSpyware\nDetails: DWORD (0x00000001)\nUser: DESKTOP-MM1REM9\\victim"
+      "Registry value set:\nRuleName: T1089,Tamper-Defender\nEventType: SetValue\nUtcTime: 2026.05.02 12:18:17.561\nProcessGuid: {c466df0a-5e89-69ce-870a-000000000a00}\nProcessId: 1340\nImage: C:\\Windows\\system32\\reg.exe\nTargetObject: HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows Defender\\DisableAntiSpyware\nDetails: DWORD (0x00000001)\nUser: WIN-SOC-01\\victim"
     ],
     "winlog.event_id": [
       "13"
@@ -442,7 +442,7 @@
   },
   "ignored_field_values": {
     "message.keyword": [
-      "Registry value set:\nRuleName: T1089,Tamper-Defender\nEventType: SetValue\nUtcTime: 2026-04-02 12:18:17.561\nProcessGuid: {c466df0a-5e89-69ce-870a-000000000a00}\nProcessId: 1340\nImage: C:\\Windows\\system32\\reg.exe\nTargetObject: HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows Defender\\DisableAntiSpyware\nDetails: DWORD (0x00000001)\nUser: DESKTOP-MM1REM9\\victim"
+      "Registry value set:\nRuleName: T1089,Tamper-Defender\nEventType: SetValue\nUtcTime: 2026.05.02 12:18:17.561\nProcessGuid: {c466df0a-5e89-69ce-870a-000000000a00}\nProcessId: 1340\nImage: C:\\Windows\\system32\\reg.exe\nTargetObject: HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows Defender\\DisableAntiSpyware\nDetails: DWORD (0x00000001)\nUser: WIN-SOC-01\\victim"
     ]
   }
 }

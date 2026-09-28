@@ -8,7 +8,7 @@ a fresh machine without the original lab hardware.
 
 | Property | Value |
 |---|---|
-| Host | DESKTOP-MM1REM9 (Windows 10, 10.0.20.10) |
+| Host | WIN-SOC-01 (Windows 10, 10.77.20.10) |
 | Attack framework | Atomic Red Team (330 atomics installed) |
 | Execution window | 16:45-17:16 UTC, 16/05/2026 |
 | Cases formed | 6 (CASE-001 through CASE-006) |
@@ -37,11 +37,11 @@ a fresh machine without the original lab hardware.
 
 | File | Description | Behaviors | Size |
 |---|---|---|---|
-| lynx-cases-2026-05-16.json | All 6 cases from case_builder.py | 6 cases | 4.4KB |
-| behaviors-CASE-004-2026-05-16.json | Primary demo case. 251 behaviors, full kill chain, cross-layer corroborated | 251 | 155KB |
-| behaviors-CASE-005-2026-05-16.json | 53 behaviors. EXECUTION + DEFENSE_EVASION + DISCOVERY | 53 | 33KB |
-| behaviors-CASE-006-2026-05-16.json | 52 behaviors. EXECUTION + PERSISTENCE + DISCOVERY | 52 | 32KB |
-| lynx-actions-2026-05-16.json | Analyst actions audit trail from the investigation session | - | 1.4KB |
+| lynx-cases-2026-06-10.json | All 6 cases from case_builder.py | 6 cases | 4.4KB |
+| behaviors-CASE-004-2026-06-10.json | Primary demo case. 251 behaviors, full kill chain, cross-layer corroborated | 251 | 155KB |
+| behaviors-CASE-005-2026-06-10.json | 53 behaviors. EXECUTION + DEFENSE_EVASION + DISCOVERY | 53 | 33KB |
+| behaviors-CASE-006-2026-06-10.json | 52 behaviors. EXECUTION + PERSISTENCE + DISCOVERY | 52 | 32KB |
+| lynx-actions-2026-06-10.json | Analyst actions audit trail from the investigation session | - | 1.4KB |
 
 ## Notes on missing data
 

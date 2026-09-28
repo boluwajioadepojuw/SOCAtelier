@@ -1,7 +1,7 @@
 title: PowerShell Multi-Stage Attack Chain — Discovery to Persistence
 id: a1b2c3d4-0012-4e5f-a012-lynx00000012
 status: test
-description: Correlation rule detecting a PowerShell process that spawns discovery tools (whoami, systeminfo, net) and subsequently creates scheduled tasks or modifies run keys. This chain — Discovery → Execution → Persistence — was the primary kill chain observed across all 6 cases formed during Lynx stress test on 2026-05-16. Individual technique rules fire first; this rule surfaces the combined pattern for triage prioritization.
+description: Correlation rule detecting a PowerShell process that spawns discovery tools (whoami, systeminfo, net) and subsequently creates scheduled tasks or modifies run keys. This chain — Discovery → Execution → Persistence — was the primary kill chain observed across all 6 cases formed during Lynx stress test on 2026-06-10. Individual technique rules fire first; this rule surfaces the combined pattern for triage prioritization.
 references:
     - https://attack.mitre.org/techniques/T1059/001/
     - https://attack.mitre.org/techniques/T1033/
@@ -10,7 +10,7 @@ references:
     - https://attack.mitre.org/techniques/T1547/001/
     - https://github.com/Adepoju/SOCAtelier
 author: Boluwaji Oluwaseyi Adepoju
-date: 2026-05-16
+date: 2026-06-10
 tags:
     - attack.execution
     - attack.t1059.001

@@ -6,7 +6,7 @@
     "message.keyword"
   ],
   "_source": {
-    "@timestamp": "2026-04-02T11:14:06.204Z",
+    "@timestamp": "2026.05.02T11:14:06.204Z",
     "winlog": {
       "record_id": 12952,
       "user": {
@@ -23,18 +23,18 @@
       },
       "api": "wineventlog",
       "task": "Process Create (rule: ProcessCreate)",
-      "computer_name": "DESKTOP-MM1REM9",
+      "computer_name": "WIN-SOC-01",
       "event_data": {
         "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
         "Description": "Windows PowerShell",
         "IntegrityLevel": "High",
         "TerminalSessionId": "1",
         "ParentImage": "C:\\Program Files\\WindowsApps\\Microsoft.PowerShell_7.6.0.0_x64__8wekyb3d8bbwe\\pwsh.exe",
-        "UtcTime": "2026-04-02 11:14:05.552",
+        "UtcTime": "2026.05.02 11:14:05.552",
         "FileVersion": "10.0.19041.3996 (WinBuild.160101.0800)",
         "Hashes": "MD5=2E5A8590CF6848968FC23DE3FA1E25F1,SHA256=9785001B0DCF755EDDB8AF294A373C0B87B2498660F724E76C4D53F9C217C7A3,IMPHASH=3D08F4848535206D772DE145804FF4B6",
         "ProcessId": "4664",
-        "User": "DESKTOP-MM1REM9\\victim",
+        "User": "WIN-SOC-01\\victim",
         "ParentProcessGuid": "{c466df0a-4f79-69ce-150a-000000000a00}",
         "ParentProcessId": "7632",
         "Product": "Microsoft® Windows® Operating System",
@@ -47,7 +47,7 @@
         "CurrentDirectory": "C:\\Windows\\System32\\",
         "ProcessGuid": "{c466df0a-4f7d-69ce-170a-000000000a00}",
         "OriginalFileName": "PowerShell.EXE",
-        "ParentUser": "DESKTOP-MM1REM9\\victim"
+        "ParentUser": "WIN-SOC-01\\victim"
       },
       "event_id": "1",
       "provider_guid": "{5770385f-c22a-43e0-bf4c-06f5698ffbd9}",
@@ -60,7 +60,7 @@
       "level": "information"
     },
     "host": {
-      "name": "desktop-mm1rem9",
+      "name": "WIN-SOC-01",
       "architecture": "x86_64",
       "os": {
         "version": "10.0",
@@ -74,12 +74,12 @@
       "id": "c466df0a-5a17-4b86-8ff6-4d8edbf647a8",
       "ip": [
         "fe80::5e29:4f96:fa0a:5d6",
-        "10.0.20.10"
+        "10.77.20.10"
       ],
       "mac": [
         "BC-24-11-9F-45-75"
       ],
-      "hostname": "DESKTOP-MM1REM9"
+      "hostname": "WIN-SOC-01"
     },
     "elastic_agent": {
       "snapshot": false,
@@ -89,7 +89,7 @@
     "agent": {
       "ephemeral_id": "fb428c44-a56b-4417-83a3-d061abc3e7a5",
       "id": "23b63155-d5a7-4c98-ba2f-6eb495833877",
-      "name": "DESKTOP-MM1REM9",
+      "name": "WIN-SOC-01",
       "type": "filebeat",
       "version": "8.17.0"
     },
@@ -102,9 +102,9 @@
       "provider": "Microsoft-Windows-Sysmon",
       "action": "Process Create (rule: ProcessCreate)",
       "dataset": "winlog.winlog",
-      "created": "2026-04-02T11:14:07.581Z"
+      "created": "2026.05.02T11:14:07.581Z"
     },
-    "message": "Process Create:\nRuleName: -\nUtcTime: 2026-04-02 11:14:05.552\nProcessGuid: {c466df0a-4f7d-69ce-170a-000000000a00}\nProcessId: 4664\nImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\nFileVersion: 10.0.19041.3996 (WinBuild.160101.0800)\nDescription: Windows PowerShell\nProduct: Microsoft® Windows® Operating System\nCompany: Microsoft Corporation\nOriginalFileName: PowerShell.EXE\nCommandLine: \"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -w hidden -nop -enc dwBoAG8AYQBtAGkAOwAgAGgAbwBzAHQAbgBhAG0AZQA7ACAARwBlAHQALQBEAGEAdABlAA==\nCurrentDirectory: C:\\Windows\\System32\\\nUser: DESKTOP-MM1REM9\\victim\nLogonGuid: {c466df0a-0254-69cb-e884-020000000000}\nLogonId: 0x284E8\nTerminalSessionId: 1\nIntegrityLevel: High\nHashes: MD5=2E5A8590CF6848968FC23DE3FA1E25F1,SHA256=9785001B0DCF755EDDB8AF294A373C0B87B2498660F724E76C4D53F9C217C7A3,IMPHASH=3D08F4848535206D772DE145804FF4B6\nParentProcessGuid: {c466df0a-4f79-69ce-150a-000000000a00}\nParentProcessId: 7632\nParentImage: C:\\Program Files\\WindowsApps\\Microsoft.PowerShell_7.6.0.0_x64__8wekyb3d8bbwe\\pwsh.exe\nParentCommandLine: \"C:\\Program Files\\WindowsApps\\Microsoft.PowerShell_7.6.0.0_x64__8wekyb3d8bbwe\\pwsh.exe\" \nParentUser: DESKTOP-MM1REM9\\victim",
+    "message": "Process Create:\nRuleName: -\nUtcTime: 2026.05.02 11:14:05.552\nProcessGuid: {c466df0a-4f7d-69ce-170a-000000000a00}\nProcessId: 4664\nImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\nFileVersion: 10.0.19041.3996 (WinBuild.160101.0800)\nDescription: Windows PowerShell\nProduct: Microsoft® Windows® Operating System\nCompany: Microsoft Corporation\nOriginalFileName: PowerShell.EXE\nCommandLine: \"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -w hidden -nop -enc dwBoAG8AYQBtAGkAOwAgAGgAbwBzAHQAbgBhAG0AZQA7ACAARwBlAHQALQBEAGEAdABlAA==\nCurrentDirectory: C:\\Windows\\System32\\\nUser: WIN-SOC-01\\victim\nLogonGuid: {c466df0a-0254-69cb-e884-020000000000}\nLogonId: 0x284E8\nTerminalSessionId: 1\nIntegrityLevel: High\nHashes: MD5=2E5A8590CF6848968FC23DE3FA1E25F1,SHA256=9785001B0DCF755EDDB8AF294A373C0B87B2498660F724E76C4D53F9C217C7A3,IMPHASH=3D08F4848535206D772DE145804FF4B6\nParentProcessGuid: {c466df0a-4f79-69ce-150a-000000000a00}\nParentProcessId: 7632\nParentImage: C:\\Program Files\\WindowsApps\\Microsoft.PowerShell_7.6.0.0_x64__8wekyb3d8bbwe\\pwsh.exe\nParentCommandLine: \"C:\\Program Files\\WindowsApps\\Microsoft.PowerShell_7.6.0.0_x64__8wekyb3d8bbwe\\pwsh.exe\" \nParentUser: WIN-SOC-01\\victim",
     "input": {
       "type": "winlog"
     },
@@ -122,7 +122,7 @@
       "8.17.0"
     ],
     "host.name.keyword": [
-      "desktop-mm1rem9"
+      "WIN-SOC-01"
     ],
     "winlog.event_data.ProcessGuid": [
       "{c466df0a-4f7d-69ce-170a-000000000a00}"
@@ -134,7 +134,7 @@
       "winlog.winlog"
     ],
     "host.hostname": [
-      "DESKTOP-MM1REM9"
+      "WIN-SOC-01"
     ],
     "host.mac": [
       "BC-24-11-9F-45-75"
@@ -158,13 +158,13 @@
       "High"
     ],
     "agent.name": [
-      "DESKTOP-MM1REM9"
+      "WIN-SOC-01"
     ],
     "winlog.event_data.User.keyword": [
-      "DESKTOP-MM1REM9\\victim"
+      "WIN-SOC-01\\victim"
     ],
     "winlog.event_data.UtcTime": [
-      "2026-04-02 11:14:05.552"
+      "2026.05.02 11:14:05.552"
     ],
     "winlog.event_data.OriginalFileName": [
       "PowerShell.EXE"
@@ -188,7 +188,7 @@
       "23b63155-d5a7-4c98-ba2f-6eb495833877"
     ],
     "winlog.event_data.User": [
-      "DESKTOP-MM1REM9\\victim"
+      "WIN-SOC-01\\victim"
     ],
     "input.type": [
       "winlog"
@@ -215,7 +215,7 @@
       "Microsoft-Windows-Sysmon"
     ],
     "winlog.event_data.UtcTime.keyword": [
-      "2026-04-02 11:14:05.552"
+      "2026.05.02 11:14:05.552"
     ],
     "winlog.event_data.LogonGuid": [
       "{c466df0a-0254-69cb-e884-020000000000}"
@@ -246,7 +246,7 @@
     ],
     "host.ip": [
       "fe80::5e29:4f96:fa0a:5d6",
-      "10.0.20.10"
+      "10.77.20.10"
     ],
     "agent.type": [
       "filebeat"
@@ -291,7 +291,7 @@
       "fb428c44-a56b-4417-83a3-d061abc3e7a5"
     ],
     "agent.name.keyword": [
-      "DESKTOP-MM1REM9"
+      "WIN-SOC-01"
     ],
     "elastic_agent.id": [
       "23b63155-d5a7-4c98-ba2f-6eb495833877"
@@ -309,7 +309,7 @@
       "Process Create (rule: ProcessCreate)"
     ],
     "@timestamp": [
-      "2026-04-02T11:14:06.204Z"
+      "2026.05.02T11:14:06.204Z"
     ],
     "winlog.channel": [
       "Microsoft-Windows-Sysmon/Operational"
@@ -363,17 +363,17 @@
       "1"
     ],
     "winlog.computer_name": [
-      "DESKTOP-MM1REM9"
+      "WIN-SOC-01"
     ],
     "winlog.event_data.ParentUser.keyword": [
-      "DESKTOP-MM1REM9\\victim"
+      "WIN-SOC-01\\victim"
     ],
     "ecs.version.keyword": [
       "8.0.0"
     ],
     "host.ip.keyword": [
       "fe80::5e29:4f96:fa0a:5d6",
-      "10.0.20.10"
+      "10.77.20.10"
     ],
     "winlog.record_id": [
       12952
@@ -400,7 +400,7 @@
       "c466df0a-5a17-4b86-8ff6-4d8edbf647a8"
     ],
     "host.name": [
-      "desktop-mm1rem9"
+      "WIN-SOC-01"
     ],
     "winlog.event_data.ParentProcessGuid": [
       "{c466df0a-4f79-69ce-150a-000000000a00}"
@@ -430,10 +430,10 @@
       "8.0.0"
     ],
     "event.created": [
-      "2026-04-02T11:14:07.581Z"
+      "2026.05.02T11:14:07.581Z"
     ],
     "host.hostname.keyword": [
-      "DESKTOP-MM1REM9"
+      "WIN-SOC-01"
     ],
     "agent.version": [
       "8.17.0"
@@ -448,10 +448,10 @@
       "information"
     ],
     "winlog.event_data.ParentUser": [
-      "DESKTOP-MM1REM9\\victim"
+      "WIN-SOC-01\\victim"
     ],
     "winlog.computer_name.keyword": [
-      "DESKTOP-MM1REM9"
+      "WIN-SOC-01"
     ],
     "winlog.event_data.ParentCommandLine.keyword": [
       "\"C:\\Program Files\\WindowsApps\\Microsoft.PowerShell_7.6.0.0_x64__8wekyb3d8bbwe\\pwsh.exe\" "
@@ -499,7 +499,7 @@
       "High"
     ],
     "message": [
-      "Process Create:\nRuleName: -\nUtcTime: 2026-04-02 11:14:05.552\nProcessGuid: {c466df0a-4f7d-69ce-170a-000000000a00}\nProcessId: 4664\nImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\nFileVersion: 10.0.19041.3996 (WinBuild.160101.0800)\nDescription: Windows PowerShell\nProduct: Microsoft® Windows® Operating System\nCompany: Microsoft Corporation\nOriginalFileName: PowerShell.EXE\nCommandLine: \"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -w hidden -nop -enc dwBoAG8AYQBtAGkAOwAgAGgAbwBzAHQAbgBhAG0AZQA7ACAARwBlAHQALQBEAGEAdABlAA==\nCurrentDirectory: C:\\Windows\\System32\\\nUser: DESKTOP-MM1REM9\\victim\nLogonGuid: {c466df0a-0254-69cb-e884-020000000000}\nLogonId: 0x284E8\nTerminalSessionId: 1\nIntegrityLevel: High\nHashes: MD5=2E5A8590CF6848968FC23DE3FA1E25F1,SHA256=9785001B0DCF755EDDB8AF294A373C0B87B2498660F724E76C4D53F9C217C7A3,IMPHASH=3D08F4848535206D772DE145804FF4B6\nParentProcessGuid: {c466df0a-4f79-69ce-150a-000000000a00}\nParentProcessId: 7632\nParentImage: C:\\Program Files\\WindowsApps\\Microsoft.PowerShell_7.6.0.0_x64__8wekyb3d8bbwe\\pwsh.exe\nParentCommandLine: \"C:\\Program Files\\WindowsApps\\Microsoft.PowerShell_7.6.0.0_x64__8wekyb3d8bbwe\\pwsh.exe\" \nParentUser: DESKTOP-MM1REM9\\victim"
+      "Process Create:\nRuleName: -\nUtcTime: 2026.05.02 11:14:05.552\nProcessGuid: {c466df0a-4f7d-69ce-170a-000000000a00}\nProcessId: 4664\nImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\nFileVersion: 10.0.19041.3996 (WinBuild.160101.0800)\nDescription: Windows PowerShell\nProduct: Microsoft® Windows® Operating System\nCompany: Microsoft Corporation\nOriginalFileName: PowerShell.EXE\nCommandLine: \"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -w hidden -nop -enc dwBoAG8AYQBtAGkAOwAgAGgAbwBzAHQAbgBhAG0AZQA7ACAARwBlAHQALQBEAGEAdABlAA==\nCurrentDirectory: C:\\Windows\\System32\\\nUser: WIN-SOC-01\\victim\nLogonGuid: {c466df0a-0254-69cb-e884-020000000000}\nLogonId: 0x284E8\nTerminalSessionId: 1\nIntegrityLevel: High\nHashes: MD5=2E5A8590CF6848968FC23DE3FA1E25F1,SHA256=9785001B0DCF755EDDB8AF294A373C0B87B2498660F724E76C4D53F9C217C7A3,IMPHASH=3D08F4848535206D772DE145804FF4B6\nParentProcessGuid: {c466df0a-4f79-69ce-150a-000000000a00}\nParentProcessId: 7632\nParentImage: C:\\Program Files\\WindowsApps\\Microsoft.PowerShell_7.6.0.0_x64__8wekyb3d8bbwe\\pwsh.exe\nParentCommandLine: \"C:\\Program Files\\WindowsApps\\Microsoft.PowerShell_7.6.0.0_x64__8wekyb3d8bbwe\\pwsh.exe\" \nParentUser: WIN-SOC-01\\victim"
     ],
     "winlog.event_id": [
       "1"
@@ -540,7 +540,7 @@
   },
   "ignored_field_values": {
     "message.keyword": [
-      "Process Create:\nRuleName: -\nUtcTime: 2026-04-02 11:14:05.552\nProcessGuid: {c466df0a-4f7d-69ce-170a-000000000a00}\nProcessId: 4664\nImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\nFileVersion: 10.0.19041.3996 (WinBuild.160101.0800)\nDescription: Windows PowerShell\nProduct: Microsoft® Windows® Operating System\nCompany: Microsoft Corporation\nOriginalFileName: PowerShell.EXE\nCommandLine: \"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -w hidden -nop -enc dwBoAG8AYQBtAGkAOwAgAGgAbwBzAHQAbgBhAG0AZQA7ACAARwBlAHQALQBEAGEAdABlAA==\nCurrentDirectory: C:\\Windows\\System32\\\nUser: DESKTOP-MM1REM9\\victim\nLogonGuid: {c466df0a-0254-69cb-e884-020000000000}\nLogonId: 0x284E8\nTerminalSessionId: 1\nIntegrityLevel: High\nHashes: MD5=2E5A8590CF6848968FC23DE3FA1E25F1,SHA256=9785001B0DCF755EDDB8AF294A373C0B87B2498660F724E76C4D53F9C217C7A3,IMPHASH=3D08F4848535206D772DE145804FF4B6\nParentProcessGuid: {c466df0a-4f79-69ce-150a-000000000a00}\nParentProcessId: 7632\nParentImage: C:\\Program Files\\WindowsApps\\Microsoft.PowerShell_7.6.0.0_x64__8wekyb3d8bbwe\\pwsh.exe\nParentCommandLine: \"C:\\Program Files\\WindowsApps\\Microsoft.PowerShell_7.6.0.0_x64__8wekyb3d8bbwe\\pwsh.exe\" \nParentUser: DESKTOP-MM1REM9\\victim"
+      "Process Create:\nRuleName: -\nUtcTime: 2026.05.02 11:14:05.552\nProcessGuid: {c466df0a-4f7d-69ce-170a-000000000a00}\nProcessId: 4664\nImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\nFileVersion: 10.0.19041.3996 (WinBuild.160101.0800)\nDescription: Windows PowerShell\nProduct: Microsoft® Windows® Operating System\nCompany: Microsoft Corporation\nOriginalFileName: PowerShell.EXE\nCommandLine: \"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -w hidden -nop -enc dwBoAG8AYQBtAGkAOwAgAGgAbwBzAHQAbgBhAG0AZQA7ACAARwBlAHQALQBEAGEAdABlAA==\nCurrentDirectory: C:\\Windows\\System32\\\nUser: WIN-SOC-01\\victim\nLogonGuid: {c466df0a-0254-69cb-e884-020000000000}\nLogonId: 0x284E8\nTerminalSessionId: 1\nIntegrityLevel: High\nHashes: MD5=2E5A8590CF6848968FC23DE3FA1E25F1,SHA256=9785001B0DCF755EDDB8AF294A373C0B87B2498660F724E76C4D53F9C217C7A3,IMPHASH=3D08F4848535206D772DE145804FF4B6\nParentProcessGuid: {c466df0a-4f79-69ce-150a-000000000a00}\nParentProcessId: 7632\nParentImage: C:\\Program Files\\WindowsApps\\Microsoft.PowerShell_7.6.0.0_x64__8wekyb3d8bbwe\\pwsh.exe\nParentCommandLine: \"C:\\Program Files\\WindowsApps\\Microsoft.PowerShell_7.6.0.0_x64__8wekyb3d8bbwe\\pwsh.exe\" \nParentUser: WIN-SOC-01\\victim"
     ]
   }
 }

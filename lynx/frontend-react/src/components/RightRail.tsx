@@ -113,7 +113,7 @@ function ActionsPanel({ selectedCase }: ActionsPanelProps) {
           <input
             value={ipText}
             onChange={e => setIpText(e.target.value)}
-            placeholder="e.g. 10.0.20.10"
+            placeholder="e.g. 10.77.20.10"
             style={inputStyle}
           />
           {submitBtn("Log block", "BLOCK_IP", "var(--t2)")}

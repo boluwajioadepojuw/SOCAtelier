@@ -1,9 +1,9 @@
 {
-  "_index": "filebeat-7.14.0-2026.04.02",
+  "_index": "filebeat-2026.05.02",
   "_id": "EVsATp0BuL2Ov6TVLnCQ",
   "_version": 1,
   "_source": {
-    "@timestamp": "2026-04-02T11:42:07.069Z",
+    "@timestamp": "2026.05.02T11:42:07.069Z",
     "pkt_src": "wire/pcap",
     "log": {
       "offset": 228873,
@@ -22,14 +22,14 @@
     "dest_port": 8080,
     "tx_id": 0,
     "event_type": "http",
-    "src_ip": "10.0.20.10",
+    "src_ip": "10.77.20.10",
     "input": {
       "type": "log"
     },
     "host": {
       "name": "pfSense.home.arpa"
     },
-    "dest_ip": "10.0.30.10",
+    "dest_ip": "10.77.30.10",
     "ecs": {
       "version": "1.10.0"
     },
@@ -55,7 +55,7 @@
           "name": "Content-Length"
         }
       ],
-      "hostname": "10.0.30.10",
+      "hostname": "10.77.30.10",
       "http_port": 8080,
       "request_headers": [
         {
@@ -67,7 +67,7 @@
       "status": 200,
       "protocol": "HTTP/1.1"
     },
-    "timestamp": "2026-04-02T11:42:05.189365+0000",
+    "timestamp": "2026.05.02T11:42:05.189365+0000",
     "in_iface": "vtnet2",
     "src_port": 50295,
     "flow_id": 1643729695487748,
@@ -153,7 +153,7 @@
       1673
     ],
     "http.hostname": [
-      "10.0.30.10"
+      "10.77.30.10"
     ],
     "http.request_headers.value": [
       "Keep-Alive"
@@ -162,7 +162,7 @@
       "53035be0-00d3-47bd-8b49-f7b52fe04318"
     ],
     "dest_ip.keyword": [
-      "10.0.30.10"
+      "10.77.30.10"
     ],
     "ecs.version": [
       "1.10.0"
@@ -171,7 +171,7 @@
       "wire/pcap"
     ],
     "dest_ip": [
-      "10.0.30.10"
+      "10.77.30.10"
     ],
     "proto": [
       "TCP"
@@ -201,7 +201,7 @@
       "Content-Length"
     ],
     "http.hostname.keyword": [
-      "10.0.30.10"
+      "10.77.30.10"
     ],
     "http.http_content_type": [
       "text/html"
@@ -213,13 +213,13 @@
       "vtnet2"
     ],
     "src_ip": [
-      "10.0.20.10"
+      "10.77.20.10"
     ],
     "agent.type": [
       "filebeat"
     ],
     "src_ip.keyword": [
-      "10.0.20.10"
+      "10.77.20.10"
     ],
     "log.file.path.keyword": [
       "/var/log/suricata/suricata_vtnet242556/eve.json"
@@ -228,7 +228,7 @@
       "filebeat"
     ],
     "timestamp": [
-      "2026-04-02T11:42:05.189Z"
+      "2026.05.02T11:42:05.189Z"
     ],
     "agent.ephemeral_id.keyword": [
       "90a984d9-a264-4fb2-aee4-dc3752dab915"
@@ -249,7 +249,7 @@
       50295
     ],
     "@timestamp": [
-      "2026-04-02T11:42:07.069Z"
+      "2026.05.02T11:42:07.069Z"
     ],
     "http.url.keyword": [
       "/"

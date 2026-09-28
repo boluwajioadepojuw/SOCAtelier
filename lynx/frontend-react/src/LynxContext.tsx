@@ -7,7 +7,7 @@ export type View = "investigation" | "actions" | "hunt" | "coverage"
 export interface HuntPivot {
   templateId: string
   params: Record<string, any>
-  label: string           // e.g. "Pivot: 10.0.30.10"
+  label: string           // e.g. "Pivot: 10.77.30.10"
   sourceCase?: string     // originating case ID
   sourceBehavior?: string // originating behavior ID
 }

@@ -6,7 +6,7 @@ references:
     - https://attack.mitre.org/techniques/T1547/001/
     - https://github.com/Adepoju/SOCAtelier
 author: Boluwaji Oluwaseyi Adepoju
-date: 2026-05-16
+date: 2026-06-10
 tags:
     - attack.persistence
     - attack.t1547.001

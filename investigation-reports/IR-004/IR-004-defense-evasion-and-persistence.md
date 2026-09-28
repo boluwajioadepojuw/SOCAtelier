@@ -5,7 +5,7 @@
 **Date:** 02/04/2026
 **Status:** Closed
 **Severity:** High
-**Host:** DESKTOP-MM1REM9 (10.0.20.10), Windows 10 Pro 22H2
+**Host:** WIN-SOC-01 (10.77.20.10), Windows 10 Pro 22H2
 **MITRE ATT&CK:** T1218.005, T1547.001, T1562.001, T1036
 **Connected Narrative:** Continues from IR-003. After execution and C2,
 the operator moved to persistence and defense evasion: a registry Run key
@@ -17,7 +17,7 @@ modification. The whole chain is rebuilt in IR-005.
 
 ## 1. Summary
 
-On 02/04/2026 three persistence and evasion techniques hit DESKTOP-MM1REM9
+On 02/04/2026 three persistence and evasion techniques hit WIN-SOC-01
 inside a 25-minute window.
 
 First, a registry Run key named "WindowsUpdate" was written to the HKCU
@@ -114,7 +114,7 @@ EID 13 for this attempt. A later direct registry write via
 DisableAntiSpyware /t REG_DWORD /d 1` bypassed Tamper Protection and was
 captured by Sysmon EID 13 at 17:18:17.
 
-**Privilege context:** All activity under DESKTOP-MM1REM9\victim, High
+**Privilege context:** All activity under WIN-SOC-01\victim, High
 integrity.
 
 **Data exfiltration:** None observed.
@@ -123,11 +123,11 @@ integrity.
 
 | Timestamp | Event ID | Source | Key Fields | MITRE |
 |---|---|---|---|---|
-| 2026-04-02T16:53:54 | 13 | Sysmon (EDR) | TargetObject: HKCU\...\CurrentVersion\Run\WindowsUpdate, Image: reg.exe | T1547.001, T1036 |
-| 2026-04-02T17:01:25 | 11 | Sysmon (EDR) | TargetFilename: C:\Users\Public\update.hta, Image: cmd.exe | T1218.005 |
-| 2026-04-02T17:01:31 | 1 | Sysmon (EDR) | Image: mshta.exe, CommandLine: mshta C:\Users\Public\update.hta, ProcessGuid: {c466df0a-5a9b-69ce-600a-000000000a00} | T1218.005 |
-| 2026-04-02T17:01:35 | 1 | Sysmon (EDR) | Image: cmd.exe, ParentImage: mshta.exe, ParentProcessGuid: {c466df0a-5a9b-69ce-600a-000000000a00}, ProcessGuid: {c466df0a-5a9f-69ce-610a-000000000a00} | T1218.005 |
-| 2026-04-02T17:18:17 | 13 | Sysmon (EDR) | TargetObject: HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\DisableAntiSpyware, Image: reg.exe | T1562.001 |
+| 2026.05.02T16:53:54 | 13 | Sysmon (EDR) | TargetObject: HKCU\...\CurrentVersion\Run\WindowsUpdate, Image: reg.exe | T1547.001, T1036 |
+| 2026.05.02T17:01:25 | 11 | Sysmon (EDR) | TargetFilename: C:\Users\Public\update.hta, Image: cmd.exe | T1218.005 |
+| 2026.05.02T17:01:31 | 1 | Sysmon (EDR) | Image: mshta.exe, CommandLine: mshta C:\Users\Public\update.hta, ProcessGuid: {c466df0a-5a9b-69ce-600a-000000000a00} | T1218.005 |
+| 2026.05.02T17:01:35 | 1 | Sysmon (EDR) | Image: cmd.exe, ParentImage: mshta.exe, ParentProcessGuid: {c466df0a-5a9b-69ce-600a-000000000a00}, ProcessGuid: {c466df0a-5a9f-69ce-610a-000000000a00} | T1218.005 |
+| 2026.05.02T17:18:17 | 13 | Sysmon (EDR) | TargetObject: HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\DisableAntiSpyware, Image: reg.exe | T1562.001 |
 
 ### Notable Observations
 
@@ -166,7 +166,7 @@ EID 13 for Defender tamper detection would miss this technique entirely.
 regardless of outcome:
 
 ```
-agent.name: "DESKTOP-MM1REM9" AND event.code: "1" AND winlog.event_data.CommandLine: *DisableRealtimeMonitoring*
+agent.name: "WIN-SOC-01" AND event.code: "1" AND winlog.event_data.CommandLine: *DisableRealtimeMonitoring*
 ```
 
 This catches the attempt at process creation even when the registry write
@@ -180,7 +180,7 @@ EID 13 captured the write but no rule fired. The value name
 **Fix:**
 
 ```
-agent.name: "DESKTOP-MM1REM9" AND event.code: "13" AND winlog.event_data.TargetObject: *CurrentVersion\\Run*
+agent.name: "WIN-SOC-01" AND event.code: "13" AND winlog.event_data.TargetObject: *CurrentVersion\\Run*
 ```
 
 Alert on any write to the Run key regardless of value name, and review
@@ -195,7 +195,7 @@ spawning cmd.exe is anomalous in most environments.
 **Fix:**
 
 ```
-agent.name: "DESKTOP-MM1REM9" AND event.code: "1" AND winlog.event_data.ParentImage: *mshta.exe*
+agent.name: "WIN-SOC-01" AND event.code: "1" AND winlog.event_data.ParentImage: *mshta.exe*
 ```
 
 Any child process spawned by mshta.exe should be treated as suspicious
