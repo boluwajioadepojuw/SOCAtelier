@@ -4,7 +4,7 @@
 | --- | --- |
 | Classification | Controlled lab simulation |
 | Analyst | Boluwaji Oluwaseyi Adepoju |
-| Date | 02/05/2026 |
+| Date | 10/06/2026 |
 | Status | Closed |
 | Severity | Medium |
 | Endpoint | WIN-SOC-01 (10.77.20.10) — Windows 10 Pro 22H2 |
@@ -12,11 +12,11 @@
 
 ## What happened
 
-At 14:41:40 UTC on 02/05/2026 the lab gateway's Suricata fired SID 9000077
+At 16:58:02 UTC on 10/06/2026 the lab gateway's Suricata fired SID 9000077
 on an Nmap SYN scan from 10.77.30.10 against WIN-SOC-01. That alert became
 T=0 for this case.
 
-Four minutes later, a single elevated PowerShell session on the victim ran
+Seconds later, a single elevated PowerShell session on the victim ran
 nine native enumeration commands in seven minutes: whoami, net user, net
 localgroup, systeminfo, ipconfig, route print, arp, tasklist, netstat.
 Every command 30-60 seconds apart — a person at a keyboard reading output,
@@ -43,7 +43,7 @@ right before credential access and C2 in real intrusions.
 ### Walkthrough
 
 The NDR alert gave me a timestamp anchor. From there I correlated forward
-on agent.name: "WIN-SOC-01". The recon burst sat between 14:45 and 14:52.
+on agent.name: "WIN-SOC-01". The recon burst sat between 16:58 and 17:04.
 All nine binaries share one ParentProcessGuid —
 {c466df0a-c199-69cc-5006-000000000a00} — so one operator-controlled
 PowerShell session spawned everything. That GUID becomes the operator
@@ -62,16 +62,16 @@ SYN threshold) for the lab's attacker subnet. It fired within 5 seconds.
 
 | Time | Event ID | Source | What I saw | MITRE |
 | --- | --- | --- | --- | --- |
-| 2026-05-02T14:41:40 | Alert | Suricata | SID 9000077, 10.77.30.10 → 10.77.20.10 | T1046 |
-| 2026-05-02T14:45:15 | 1 | Sysmon | whoami /all, IntegrityLevel High | T1033 |
-| 2026-05-02T14:46:11 | 1 | Sysmon | net user | T1033 |
-| 2026-05-02T14:48:44 | 1 | Sysmon | net localgroup administrators | T1033 |
-| 2026-05-02T14:50:00 | 1 | Sysmon | systeminfo | T1082 |
-| 2026-05-02T14:51:17 | 1 | Sysmon | ipconfig /all | T1016 |
-| 2026-05-02T14:51:46 | 1 | Sysmon | route print | T1016 |
-| 2026-05-02T14:51:57 | 1 | Sysmon | arp -a | T1016 |
-| 2026-05-02T14:52:16 | 1 | Sysmon | tasklist /v | T1057 |
-| 2026-05-02T14:52:30 | 1 | Sysmon | netstat -ano | T1049 |
+| 2026-06-10T16:58:02 | Alert | Suricata | SID 9000077, 10.77.30.10 → 10.77.20.10 | T1046 |
+| 2026-06-10T16:58:20 | 1 | Sysmon | whoami /all, IntegrityLevel High | T1033 |
+| 2026-06-10T16:58:41 | 1 | Sysmon | net user | T1033 |
+| 2026-06-10T17:00:02 | 1 | Sysmon | net localgroup administrators | T1033 |
+| 2026-06-10T17:01:12 | 1 | Sysmon | systeminfo | T1082 |
+| 2026-06-10T17:02:05 | 1 | Sysmon | ipconfig /all | T1016 |
+| 2026-06-10T17:02:44 | 1 | Sysmon | route print | T1016 |
+| 2026-06-10T17:03:10 | 1 | Sysmon | arp -a | T1016 |
+| 2026-06-10T17:03:58 | 1 | Sysmon | tasklist /v | T1057 |
+| 2026-06-10T17:04:22 | 1 | Sysmon | netstat -ano | T1049 |
 
 ## MITRE mapping
 

@@ -6,7 +6,7 @@
 **Status:** Closed
 **Severity:** Medium
 **Host:** boluwaji (Ubuntu 24.04, lab machine)
-**Case:** CASE-010
+**Case:** CASE-010 (09/09/2026 run; the live 28/09 re-run is CASE-008)
 **MITRE ATT&CK:** T1033, T1082, T1016, T1049, T1057, T1087.001, T1548.003, T1018
 
 ---

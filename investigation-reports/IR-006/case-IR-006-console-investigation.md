@@ -4,11 +4,11 @@
 | --- | --- |
 | Classification | Controlled lab simulation |
 | Analyst | Boluwaji Oluwaseyi Adepoju |
-| Date | 16/05/2026 |
+| Date | 10/06/2026 |
 | Status | Closed |
 | Severity | High |
-| Case ID | CASE-021 |
-| Risk score | 7310 |
+| Case ID | CASE-006 |
+| Risk score | 1280 |
 | Endpoint | WIN-SOC-01 (10.77.20.10) — Windows 10 Pro 22H2 |
 | Attacker host | Kali, 10.77.30.10, HTTP on 8080 |
 | MITRE ATT&CK | T1059.001, T1105, T1053.005, T1082, T1016, T1049, T1033 |
@@ -21,18 +21,18 @@ Kibana: case triage, process-tree analysis, cross-layer corroboration and
 a hunt pivot, with every analyst action logged.
 
 The scenario: discovery commands, three PowerShell HTTP retrievals of
-/payload.txt from 10.77.30.10:8080, a certutil decode (blocked by
+/payload.txt from 10.77.30.10:8080, a signed-binary decode attempt (blocked by
 AppControl — 4 of 5 stages executed), encoded PowerShell, then a Run key
 and a scheduled task for persistence.
 
 ## Triage
 
-Lynx normalized the raw Sysmon stream into CASE-021: 26 behaviors across
-07:15-07:45 UTC, three tactic groups (EXECUTION, PERSISTENCE,
-DISCOVERY), HIGH severity, risk score 7310.
+Lynx normalized the raw Sysmon stream into CASE-006: 26 behaviors across
+16:57-17:03 UTC, three tactic groups (EXECUTION, PERSISTENCE,
+DISCOVERY), HIGH severity, risk score 1280.
 
 Console summary: WIN-SOC-01 exhibited 26 suspicious behaviors spanning
-execution, persistence, and discovery tactics between 07:15-07:45,
+execution, persistence, and discovery tactics between 16:57-17:03,
 indicating potential malware installation or compromise. Immediate
 investigation required.
 
@@ -88,20 +88,20 @@ its destination was left unverified and is listed as a follow-up.
 
 ## Analyst actions
 
-One ESCALATE logged against CASE-021 (analyst, 2026-06-10 12:37:09 UTC),
+One ESCALATE logged against CASE-006 (analyst, 2026-06-10 12:37:09 UTC),
 written back to the case document through the action trail.
 
 ## Timeline (UTC)
 
 | Time | Source | EID | Event | MITRE |
 | --- | --- | --- | --- | --- |
-| 07:15:00 | Sysmon | 1 | powershell.exe launched (9160) | T1059.001 |
-| 07:15-07:20 | Sysmon | 1 | discovery children (whoami..systeminfo) | T1033, T1082, T1016, T1049 |
-| 07:37 | Sysmon + Suricata | 3 + http | 3x GET /payload.txt to 10.77.30.10:8080, 200 OK | T1105 |
-| 07:38 | Sysmon | 1 | powershell.exe -EncodedCommand | T1059.001 |
-| 07:40 | Sysmon | 13 | HKCU Run key written | T1547.001 |
-| 07:44 | Sysmon | 1 + 11 | schtasks /create + task file under System32\Tasks | T1053.005 |
-| 12:37:09 | Lynx | — | analyst ESCALATE on CASE-021 | — |
+| 16:57:10 | Sysmon | 1 | powershell.exe launched (9160) | T1059.001 |
+| 16:57-17:00 | Sysmon | 1 | discovery children (whoami..systeminfo) | T1033, T1082, T1016, T1049 |
+| 17:01 | Sysmon + Suricata | 3 + http | 3x GET /payload.txt to 10.77.30.10:8080, 200 OK | T1105 |
+| 17:02 | Sysmon | 1 | powershell.exe -EncodedCommand | T1059.001 |
+| 17:02 | Sysmon | 13 | HKCU Run key written | T1547.001 |
+| 17:03 | Sysmon | 1 + 11 | schtasks /create + task file under System32\Tasks | T1053.005 |
+| 12:37:09 | Lynx | — | analyst ESCALATE on CASE-006 | — |
 
 ## Indicators
 
@@ -127,4 +127,4 @@ written back to the case document through the action trail.
 
 - Raw events: investigation-reports/IR-006/raw-events/
 - Console artifacts: lynx screenshots (case queue, tree, hunt workbench)
-- Case record: lynx-cases index, CASE-021
+- Case record: lynx-cases index, CASE-006

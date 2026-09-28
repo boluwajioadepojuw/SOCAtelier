@@ -4,7 +4,7 @@
 | --- | --- |
 | Classification | Controlled lab simulation |
 | Analyst | Boluwaji Oluwaseyi Adepoju |
-| Date | 02/05/2026 |
+| Date | 10/06/2026 |
 | Status | Closed |
 | Severity | High |
 | Endpoint | WIN-SOC-01 (10.77.20.10) — Windows 10 Pro 22H2 |
@@ -38,7 +38,7 @@ the main preventive control before anything worse arrived.
 
 ### Walkthrough
 
-- EID 13 confirmed the Run key write by TargetObject (reg.exe, 16:53:54).
+- EID 13 confirmed the Run key write by TargetObject (reg.exe, 16:59:30).
 - The mshta chain was verified GUID by GUID: mshta.exe ProcessGuid
   {c466df0a-5a9b-69ce-600a-000000000a00} became the ParentProcessGuid of
   the cmd.exe child. That GUID pair is the pivot reused in IR-005.
@@ -51,11 +51,11 @@ the main preventive control before anything worse arrived.
 
 | Time | Event ID | What I saw | MITRE |
 | --- | --- | --- | --- |
-| 2026-05-02T16:53:54 | 13 | HKCU\...\Run\WindowsUpdate written by reg.exe | T1547.001, T1036 |
-| 2026-05-02T17:01:25 | 11 | C:\Users\Public\update.hta written by cmd.exe | T1218.005 |
-| 2026-05-02T17:01:31 | 1 | mshta.exe update.hta, ProcessGuid {c466df0a-5a9b-69ce-600a-000000000a00} | T1218.005 |
-| 2026-05-02T17:01:35 | 1 | cmd.exe child of mshta.exe, ParentProcessGuid {c466df0a-5a9b-69ce-600a-000000000a00} | T1218.005 |
-| 2026-05-02T17:18:17 | 13 | HKLM\...\Windows Defender\DisableAntiSpyware written by reg.exe | T1562.001 |
+| 2026-06-10T16:59:30 | 13 | HKCU\...\Run\WindowsUpdate written by reg.exe | T1547.001, T1036 |
+| 2026-06-10T17:04:10 | 11 | C:\Users\Public\update.hta written by cmd.exe | T1218.005 |
+| 2026-06-10T17:04:16 | 1 | mshta.exe update.hta, ProcessGuid {c466df0a-5a9b-69ce-600a-000000000a00} | T1218.005 |
+| 2026-06-10T17:04:20 | 1 | cmd.exe child of mshta.exe, ParentProcessGuid {c466df0a-5a9b-69ce-600a-000000000a00} | T1218.005 |
+| 2026-06-10T17:12:00 | 13 | HKLM\...\Windows Defender\DisableAntiSpyware written by reg.exe | T1562.001 |
 
 ## MITRE mapping
 

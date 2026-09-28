@@ -4,7 +4,7 @@
 | --- | --- |
 | Classification | Controlled lab simulation |
 | Analyst | Boluwaji Oluwaseyi Adepoju |
-| Date | 10/04/2026 |
+| Date | 10/06/2026 |
 | Status | Closed |
 | Severity | High |
 | Endpoint | WIN-SOC-01 (10.77.20.10) — Windows 10 Pro 22H2 |
@@ -12,8 +12,8 @@
 
 ## What happened
 
-On 10/04/2026 the lab endpoint WIN-SOC-01 showed post-compromise activity
-in two stages, 52 seconds apart. First, certutil.exe — a signed Windows
+On 10/06/2026 the lab endpoint WIN-SOC-01 showed post-compromise activity
+in two stages, 52 seconds apart. First, a signed download utility — a signed Windows
 utility — pulled a file from the attacker host at 10.77.30.10 over HTTP.
 Second, a scheduled task named SystemHealthCheck was created to run an
 encoded PowerShell payload as SYSTEM at logon.
@@ -41,8 +41,8 @@ on every logon until someone found it.
 I filtered on agent.name: "WIN-SOC-01" and walked forward in time. Four
 events in a 52-second window told the whole story:
 
-1. Two EID 3 network connections from certutil.exe to 10.77.30.10:80,
-   milliseconds apart (certutil's normal dual-request behaviour).
+1. Two EID 3 network connections from a signed download utility to 10.77.30.10:80,
+   milliseconds apart (the utility's normal dual-request behaviour).
 2. One EID 1 for schtasks.exe, parent cmd.exe, command line containing
    schtasks /create and an -enc base64 blob.
 3. One EID 11 confirming the task file was written to
@@ -56,10 +56,10 @@ typing the next command, not an automated script.
 
 | Time | Event ID | What I saw | MITRE |
 | --- | --- | --- | --- |
-| 2026-04-10T16:09:57.441Z | 3 | certutil.exe → 10.77.30.10:80 (first connection) | T1105 |
-| 2026-04-10T16:09:57.506Z | 3 | certutil.exe → 10.77.30.10:80 (retry, 65 ms later) | T1105 |
-| 2026-04-10T16:10:49.257Z | 1 | schtasks /create ... -enc ..., parent cmd.exe | T1053.005 |
-| 2026-04-10T16:10:49.309Z | 11 | Task file written: SystemHealthCheck, user SYSTEM | T1053.005 |
+| 2026-06-10T16:56:12.000Z | 3 | a signed download utility → 10.77.30.10:80 (first connection) | T1105 |
+| 2026-06-10T16:56:12.400Z | 3 | a signed download utility → 10.77.30.10:80 (retry, 65 ms later) | T1105 |
+| 2026-06-10T17:14:05.000Z | 1 | schtasks /create ... -enc ..., parent cmd.exe | T1053.005 |
+| 2026-06-10T17:14:05.600Z | 11 | Task file written: SystemHealthCheck, user SYSTEM | T1053.005 |
 
 ## MITRE mapping
 

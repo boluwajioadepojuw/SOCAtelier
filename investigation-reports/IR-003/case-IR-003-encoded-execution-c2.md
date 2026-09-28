@@ -4,7 +4,7 @@
 | --- | --- |
 | Classification | Controlled lab simulation |
 | Analyst | Boluwaji Oluwaseyi Adepoju |
-| Date | 02/05/2026 |
+| Date | 10/06/2026 |
 | Status | Closed |
 | Severity | High |
 | Endpoint | WIN-SOC-01 (10.77.20.10) — Windows 10 Pro 22H2 |
@@ -12,7 +12,7 @@
 
 ## What happened
 
-Seventy-nine minutes after the recon burst in IR-002, encoded PowerShell
+Minutes after the recon burst in IR-002, encoded PowerShell
 ran on WIN-SOC-01 with the -w hidden -nop -enc flag set — window hidden,
 no profile, base64 payload. The payload decodes to whoami; hostname;
 Get-Date: the operator was checking whose session they owned.
@@ -43,7 +43,7 @@ plain sight until a baseline catches it.
   build (field indexing behaviour), so the working query is *hidden*
   against winlog.event_data.CommandLine. Every -enc-based rule I checked
   fails silently for the same reason — noted for any deployment.
-- The same payload ran twice (16:11:25, then 16:14:06) — one operator,
+- The same payload ran twice (16:59:10, then 17:00:20) — one operator,
   one retry.
 - The beacon window (16:31-16:47) shows 23 EID 3 hits whose IPs and
   timestamps line up one-to-one with the gateway flow recordsTTP flows.
@@ -57,13 +57,13 @@ staging spot in real intrusions too.
 
 | Time | Event ID | Source | What I saw | MITRE |
 | --- | --- | --- | --- | --- |
-| 2026-05-02T16:11:25 | 1 | Sysmon | powershell -w hidden -nop -enc dwBoAG8A... | T1027, T1059.001 |
-| 2026-05-02T16:14:06 | 1 | Sysmon | same command, second run | T1027, T1059.001 |
-| 2026-05-02T16:31:41 | 3 + Flow | Sysmon + Suricata | 10.77.20.10 → 10.77.30.10:8080, GET, Mozilla UA | T1071.001 |
-| 2026-05-02T16:32:16 | 3 | Sysmon | next beacon, ~35 s later | T1071.001 |
-| 2026-05-02T16:46:03 | 11 | Sysmon | C:\Users\Public\update.bat written by powershell.exe | T1105 |
+| 2026-06-10T16:59:10 | 1 | Sysmon | powershell -w hidden -nop -enc dwBoAG8A... | T1027, T1059.001 |
+| 2026-06-10T17:00:20 | 1 | Sysmon | same command, second run | T1027, T1059.001 |
+| 2026-06-10T17:02:30 | 3 + Flow | Sysmon + Suricata | 10.77.20.10 → 10.77.30.10:8080, GET, Mozilla UA | T1071.001 |
+| 2026-06-10T17:03:05 | 3 | Sysmon | next beacon, ~35 s later | T1071.001 |
+| 2026-06-10T17:11:40 | 11 | Sysmon | C:\Users\Public\update.bat written by powershell.exe | T1105 |
 
-23 beacon connections total between 16:31 and 16:47; representative rows
+23 beacon connections total between 17:02 and 17:12; representative rows
 shown.
 
 ## MITRE mapping
