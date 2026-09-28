@@ -176,8 +176,13 @@ Write 1-2 sentences only. Start with what happened, end with why it matters. No 
             )
             r.raise_for_status()
             summary = r.json()["message"]["content"].strip()
-    except Exception as e:
-        return {"ok": False, "error": f"LLM API failed: {str(e)}"}
+    except Exception:
+        # Offline fallback: deterministic summary from case metadata (no LLM needed)
+        summary = (
+            f"{host}: {count} suspicious behaviors in the {window} window across "
+            f"{tactics or 'multiple tactics'}, highest severity {severity}. "
+            f"Queued for triage."
+        )
 
     # Write back to case doc so next load is instant (cached)
     try:
@@ -796,19 +801,27 @@ escalate should be true if severity is HIGH or CRITICAL, false otherwise."""
             )
             r.raise_for_status()
             raw = r.json()["message"]["content"].strip()
-    except Exception as e:
-        return {"ok": False, "error": f"LLM API failed: {str(e)}"}
-
-    # Parse JSON response
-    try:
-        briefing = _json.loads(raw)
     except Exception:
-        # The local model occasionally wraps output in backticks — strip and retry
+        briefing = None
+    else:
         try:
-            clean    = raw.replace("```json", "").replace("```", "").strip()
-            briefing = _json.loads(clean)
+            briefing = _json.loads(raw)
         except Exception:
-            return {"ok": False, "error": "LLM response was not valid JSON", "raw": raw}
+            clean = raw.replace("```json", "").replace("```", "").strip()
+            briefing = _json.loads(clean)
+    if not briefing:
+        # Offline fallback: deterministic briefing from the behavior doc
+        briefing = {
+            "summary": (f"{b.get('description', 'Suspicious behavior')} on {b.get('host', 'unknown host')} "
+                        f"via {b.get('image', 'unknown process')}. Tactic: {b.get('tactic', 'unknown')}, "
+                        f"MITRE {b.get('mitre_technique', 'n/a')}."),
+            "next_steps": [
+                "Open the process tree and check parent-child relationships",
+                "Review sibling behaviors in the same case window",
+                "Correlate with network telemetry for the same timestamp",
+            ],
+            "escalate": b.get("severity") in ("HIGH", "CRITICAL"),
+        }
 
     # Cache in lynx-briefings — failure is non-fatal, still return briefing
     try:
@@ -953,10 +966,16 @@ Interpret these results for a SOC analyst."""
 
     except httpx.HTTPStatusError as e:
         return {"ok": False, "error": f"LLM API HTTP {e.response.status_code}"}
-    except _json.JSONDecodeError as e:
-        return {"ok": False, "error": f"LLM returned non-JSON: {e}"}
-    except Exception as e:
-        return {"ok": False, "error": str(e)}
+    except _json.JSONDecodeError:
+        return {"ok": False, "error": "LLM returned non-JSON"}
+    except Exception:
+        # Offline fallback: honest placeholder interpretation
+        return {"ok": True, "copilot": {
+            "summary": "Offline mode: interpretation unavailable without a local LLM. The rows below are the evidence.",
+            "findings": [],
+            "mitre_tags": [],
+            "recommended_actions": ["Review the returned rows", "Pivot on any unexplained processes"],
+            "limitations": ["Deterministic offline fallback"]}}
 
 
 # ---------------------------------------------------------------------------
