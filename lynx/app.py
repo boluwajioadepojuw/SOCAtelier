@@ -181,7 +181,7 @@ Write 1-2 sentences only. Start with what happened, end with why it matters. No 
         summary = (
             f"{host}: {count} suspicious behaviors in the {window} window across "
             f"{tactics or 'multiple tactics'}, highest severity {severity}. "
-            f"Queued for triage."
+            f"Worth a look in the queue."
         )
 
     # Write back to case doc so next load is instant (cached)
@@ -290,7 +290,20 @@ async def get_process_tree(behavior_id: str):
         )
         hits = resp["hits"]["hits"]
         if not hits:
-            raise HTTPException(status_code=404, detail=f"Behavior {behavior_id} not found")
+            # fallback: a case id was passed — resolve to the case's first behavior
+            case_resp = es.search(
+                index="lynx-behaviors",
+                body={
+                    "size": 1,
+                    "query": {"term": {"case_id.keyword": behavior_id}},
+                    "_source": ["timestamp", "host", "image", "platform"],
+                    "sort": [{"timestamp": "asc"}]
+                }
+            )
+            case_hits = case_resp["hits"]["hits"]
+            if not case_hits:
+                raise HTTPException(status_code=404, detail=f"Behavior {behavior_id} not found")
+            hits = case_hits
 
         src       = hits[0]["_source"]
         timestamp = src.get("timestamp")
@@ -361,7 +374,20 @@ async def get_network_context(behavior_id: str):
         )
         hits = resp["hits"]["hits"]
         if not hits:
-            raise HTTPException(status_code=404, detail=f"Behavior {behavior_id} not found")
+            # fallback: a case id was passed — resolve to the case's first behavior
+            case_resp = es.search(
+                index="lynx-behaviors",
+                body={
+                    "size": 1,
+                    "query": {"term": {"case_id.keyword": behavior_id}},
+                    "_source": ["timestamp", "host"],
+                    "sort": [{"timestamp": "asc"}]
+                }
+            )
+            case_hits = case_resp["hits"]["hits"]
+            if not case_hits:
+                raise HTTPException(status_code=404, detail=f"Behavior {behavior_id} not found")
+            hits = case_hits
 
         src = hits[0]["_source"]
         behavior_ts = src.get("timestamp")
@@ -971,7 +997,7 @@ Interpret these results for a SOC analyst."""
     except Exception:
         # Offline fallback: honest placeholder interpretation
         return {"ok": True, "copilot": {
-            "summary": "Offline mode: interpretation unavailable without a local LLM. The rows below are the evidence.",
+            "summary": "No local model running, so no auto-interpretation here. The rows are what we have, and they are enough to start.",
             "findings": [],
             "mitre_tags": [],
             "recommended_actions": ["Review the returned rows", "Pivot on any unexplained processes"],
