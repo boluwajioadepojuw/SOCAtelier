@@ -1,0 +1,1 @@
+{"_source": {"winlog": {"event_id": 13, "event_data": {"Image": "C:\\Windows\\System32\\reg.exe", "TargetObject": "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\\Updater"}}}

@@ -1,8 +1,8 @@
 """
 Detection profile tests.
 
-Windows fixtures are real events exported from the lab during the
-IR-002 through IR-005 investigations (raw-events/ under each report).
+Windows fixtures are Sysmon-shaped events under each report's raw-events/
+folder, matching the event data fields the detector profiles read.
 Linux fixtures are ECS-shaped documents in the exact format Elastic
 Defend produces for the listed techniques.
 """
