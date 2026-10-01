@@ -10,6 +10,7 @@ import Investigation from "./pages/Investigation"
 import ActionsLog from "./pages/ActionsLog"
 import HuntWorkbench from "./pages/HuntWorkbench"
 import CoverageMap from "./pages/CoverageMap"
+import PhishingLab from "./pages/PhishingLab"
 
 // Inner component reads view from context — no prop drilling
 function AppInner() {
@@ -25,6 +26,7 @@ function AppInner() {
         {activeView === "actions"       && <ActionsLog onNavigateToInvestigation={() => setActiveView("investigation")} />}
         {activeView === "hunt"          && <HuntWorkbench />}
         {activeView === "coverage"      && <CoverageMap />}
+        {activeView === "phishing"      && <PhishingLab />}
         {activeView === "investigation" && showRight && (
           <div style={{ width: 300, flexShrink: 0, display: "flex", flexDirection: "column", background: "var(--bg1)", borderLeft: "1px solid var(--ln2)" }}>
             <div style={{ height: 26, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 8px", borderBottom: "1px solid var(--ln2)", fontSize: 9.5, fontFamily: "var(--mono)", color: "var(--t3)" }}>

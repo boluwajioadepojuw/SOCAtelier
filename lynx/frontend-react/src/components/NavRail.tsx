@@ -1,12 +1,20 @@
 import { useLynx } from "../LynxContext"
 import type { View } from "../LynxContext"
-import { SearchOutlined, FileDoneOutlined, ExperimentOutlined, RadarChartOutlined } from "@ant-design/icons"
+import { SearchOutlined, FileDoneOutlined, ExperimentOutlined, RadarChartOutlined, MailOutlined } from "@ant-design/icons"
+import type { ComponentType } from "react"
 
-const ITEMS: { key: View; label: string; Icon: any }[] = [
+interface NavItem {
+  key: View
+  label: string
+  Icon: ComponentType<{ style?: React.CSSProperties }>
+}
+
+const ITEMS: NavItem[] = [
   { key: "investigation", label: "Cases", Icon: SearchOutlined },
   { key: "actions", label: "Actions", Icon: FileDoneOutlined },
   { key: "hunt", label: "Hunt", Icon: ExperimentOutlined },
   { key: "coverage", label: "Coverage", Icon: RadarChartOutlined },
+  { key: "phishing", label: "Phish", Icon: MailOutlined },
 ]
 
 export default function NavRail() {

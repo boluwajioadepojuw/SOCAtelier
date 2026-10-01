@@ -2,22 +2,36 @@ import { useState, useEffect } from "react"
 import { useLynx } from "../LynxContext"
 import { useQuery } from "@tanstack/react-query"
 import { fetchHuntTemplates } from "../api"
-import type { HuntTemplate } from "../types"
+import type { HuntTemplate, HuntParam } from "../types"
+
+type CellValue = string | number | boolean | null
 
 interface HuntResult {
   columns: { name: string; type: string }[]
-  rows: any[][]
+  rows: CellValue[][]
   query: string
   total: number
 }
 
+interface CopilotResponse {
+  summary: string
+  findings: string[]
+  recommended_actions: string[]
+  mitre_tags: string[]
+  limitations?: string[]
+}
+
+function errorMessage(e: unknown): string {
+  return e instanceof Error ? e.message : String(e)
+}
+
 export default function HuntWorkbench() {
   const [activeId, setActiveId] = useState<string | null>(null)
-  const [params, setParams] = useState<Record<string, any>>({})
+  const [params, setParams] = useState<Record<string, string | number | boolean>>({})
   const [result, setResult] = useState<HuntResult | null>(null)
   const [running, setRunning] = useState(false)
   const [runError, setRunError] = useState<string | null>(null)
-  const [copilot, setCopilot] = useState<Record<string, any> | null>(null)
+  const [copilot, setCopilot] = useState<CopilotResponse | null>(null)
   const [copilotLoading, setCopilotLoading] = useState(false)
 
   const { huntPivot, setHuntPivot } = useLynx()
@@ -28,24 +42,30 @@ export default function HuntWorkbench() {
     staleTime: Infinity,
   })
 
-  // Consume pivot from CrossLayerTab — pre-fill template + params
+  // Consume pivot from CrossLayerTab — pre-fill template + params.
+  // The pivot is an external event (a click in another view); the state
+  // updates happen in a scheduled callback, not synchronously in the
+  // effect body, so they cannot cause cascading renders.
   useEffect(() => {
     if (!huntPivot || templates.length === 0) return
-    const tpl = templates.find((t: any) => t.id === huntPivot.templateId)
-    if (!tpl) return
-    setActiveId(huntPivot.templateId)
-    setResult(null)
-    setCopilot(null)
-    setRunError(null)
-    // Merge defaults with pivot params
-    const defaults: Record<string, any> = {}
-    Object.entries(tpl.params).forEach(([k, v]: [string, any]) => {
-      if (v.default !== undefined) defaults[k] = v.default
-    })
-    setParams({ ...defaults, ...huntPivot.params })
-    // Clear pivot so it doesn't re-trigger
-    setHuntPivot(null)
-  }, [huntPivot, templates])
+    const timer = setTimeout(() => {
+      const tpl = templates.find((t: HuntTemplate) => t.id === huntPivot.templateId)
+      if (!tpl) return
+      setActiveId(huntPivot.templateId)
+      setResult(null)
+      setCopilot(null)
+      setRunError(null)
+      // Merge defaults with pivot params
+      const defaults: Record<string, string | number | boolean> = {}
+      tpl.params.forEach((p: HuntParam) => {
+        if (p.default !== undefined) defaults[p.name] = p.default
+      })
+      setParams({ ...defaults, ...huntPivot.params })
+      // Clear pivot so it doesn't re-trigger
+      setHuntPivot(null)
+    }, 0)
+    return () => clearTimeout(timer)
+  }, [huntPivot, templates, setHuntPivot])
 
   const activeTemplate = templates.find((t: HuntTemplate) => t.id === activeId)
 
@@ -54,7 +74,7 @@ export default function HuntWorkbench() {
     setResult(null)
     setCopilot(null)
     setRunError(null)
-    const defaults: Record<string, any> = {}
+    const defaults: Record<string, string | number | boolean> = {}
     t.params.forEach(p => { if (p.default !== undefined) defaults[p.name] = p.default })
     setParams(defaults)
   }
@@ -80,8 +100,8 @@ export default function HuntWorkbench() {
         query: data.query || '',
         total: data.total || 0,
       })
-    } catch (e: any) {
-      setRunError(e.message)
+    } catch (e) {
+      setRunError(errorMessage(e))
     } finally {
       setRunning(false)
     }
@@ -100,7 +120,7 @@ export default function HuntWorkbench() {
           template_name:        tpl?.name        || activeId,
           template_description: tpl?.description || '',
           query:                result.query      || '',
-          columns:              result.columns.map((c: any) => c.name || c),
+          columns:              result.columns.map((c) => c.name),
           total_rows:           result.total,
           preview_rows:         result.rows.slice(0, 20),
           suspicious_row_count: 0,
@@ -109,8 +129,8 @@ export default function HuntWorkbench() {
       const data = await res.json()
       if (!data.ok) throw new Error(data.error || 'Copilot failed')
       setCopilot(data.copilot)
-    } catch (e: any) {
-      setCopilot({ summary: `Error: ${e.message}`, findings: [], recommended_actions: [], mitre_tags: [], limitations: [] })
+    } catch (e) {
+      setCopilot({ summary: `Error: ${errorMessage(e)}`, findings: [], recommended_actions: [], mitre_tags: [], limitations: [] })
     } finally {
       setCopilotLoading(false)
     }
@@ -194,7 +214,7 @@ export default function HuntWorkbench() {
                       ) : (
                         <input
                           type={p.type === "number" ? "number" : "text"}
-                          value={params[p.name] ?? ""}
+                          value={String(params[p.name] ?? "")}
                           onChange={e => setParams({ ...params, [p.name]: p.type === "number" ? Number(e.target.value) : e.target.value })}
                           style={{ background: "var(--bg3)", border: "1px solid var(--ln2)", borderRadius: 3, color: "var(--t1)", fontSize: 11, padding: "5px 8px", fontFamily: "var(--mono)", outline: "none" }}
                         />
@@ -283,26 +303,26 @@ export default function HuntWorkbench() {
             {copilot && (
               <div style={{ background: "var(--bg2)", border: "1px solid var(--teal3)", borderRadius: 4, padding: "12px 16px", borderLeft: "3px solid var(--teal)" }}>
                 <div style={{ fontSize: 9, fontFamily: "var(--mono)", letterSpacing: "0.08em", color: "var(--teal)", textTransform: "uppercase", marginBottom: 8 }}>LLM Co-pilot</div>
-                <div style={{ fontSize: 11, color: "var(--t1)", lineHeight: 1.6, marginBottom: 10 }}>{(copilot as any).summary}</div>
-                {(copilot as any).findings?.length > 0 && <>
+                <div style={{ fontSize: 11, color: "var(--t1)", lineHeight: 1.6, marginBottom: 10 }}>{copilot.summary}</div>
+                {copilot.findings.length > 0 && <>
                   <div style={{ fontSize: 9, fontFamily: "var(--mono)", color: "var(--t3)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>Findings</div>
-                  {(copilot as any).findings.map((f: string, i: number) => (
+                  {copilot.findings.map((f, i) => (
                     <div key={i} style={{ fontSize: 10, color: "var(--t2)", display: "flex", gap: 6, marginBottom: 3 }}>
                       <span style={{ color: "var(--teal)" }}>·</span><span>{f}</span>
                     </div>
                   ))}
                 </>}
-                {(copilot as any).recommended_actions?.length > 0 && <>
+                {copilot.recommended_actions.length > 0 && <>
                   <div style={{ fontSize: 9, fontFamily: "var(--mono)", color: "var(--t3)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6, marginTop: 8 }}>Recommended actions</div>
-                  {(copilot as any).recommended_actions.map((a: string, i: number) => (
+                  {copilot.recommended_actions.map((a, i) => (
                     <div key={i} style={{ fontSize: 10, color: "var(--t2)", display: "flex", gap: 6, marginBottom: 3 }}>
                       <span style={{ color: "var(--amb)" }}>→</span><span>{a}</span>
                     </div>
                   ))}
                 </>}
-                {(copilot as any).mitre_tags?.length > 0 && (
+                {copilot.mitre_tags.length > 0 && (
                   <div style={{ marginTop: 8, display: "flex", gap: 4, flexWrap: "wrap" }}>
-                    {(copilot as any).mitre_tags.map((t: string, i: number) => (
+                    {copilot.mitre_tags.map((t, i) => (
                       <span key={i} style={{ fontSize: 9, fontFamily: "var(--mono)", padding: "2px 6px", borderRadius: 2, background: "var(--pur2)", color: "var(--pur)", border: "1px solid var(--pur3)" }}>{t}</span>
                     ))}
                   </div>

@@ -50,6 +50,20 @@ base64 encode, the exfil probe, and the cron write.
 | T+5s | ssh root@127.0.0.1 (refused) | T1021.004 |
 | T+6s | crontab entry every 10 minutes | T1053.003 |
 
+## Deduplication notes
+
+| Behavior | Root cause | Why it is the same activity |
+| --- | --- | --- |
+| grep /etc for "password" | The credential-hunting pass (step 2) | One operator action; the grep and the find below are two commands of the same search intent |
+| find /home for *.pem and .env | The credential-hunting pass (step 3) | Same intent seconds apart; not an independent finding |
+| copy + base64 /etc/passwd | Staging for exfil (step 4) | One action chain: copy then encode the same file |
+| curl POST to the local handler | The exfil probe (step 5) | Single HTTP probe, seen by the network recorder only |
+| crontab entry | Persistence (step 8) | One write; the every-10-minutes schedule is an attribute of the same action |
+
+The 10 behaviors collapse into 5 root causes: hidden work directory,
+credential hunt, staging, exfil probe, persistence. The console kept them
+in one case because they share the host and the 10-minute window.
+
 ## What I would fix
 
 1. Alert on grep/find targeting credential file names (*.pem, .env,

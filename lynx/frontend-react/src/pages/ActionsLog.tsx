@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { fetchActions } from "../api"
 import { useLynx } from "../LynxContext"
+import { stubBehavior } from "../types"
 
 type FilterType = "ALL" | "ESCALATE" | "BLOCK_IP" | "NOTE" | "RESOLVED" | "CONFIRMED_MALICIOUS" | "FALSE_POSITIVE"
 
@@ -47,7 +48,7 @@ export default function ActionsLog({ onNavigateToInvestigation }: Props) {
   ]
 
   function openBehavior(behaviorId: string) {
-    setSelectedBehavior({ behavior_id: behaviorId } as any)
+    setSelectedBehavior(stubBehavior({ behavior_id: behaviorId }))
     onNavigateToInvestigation?.()
   }
 

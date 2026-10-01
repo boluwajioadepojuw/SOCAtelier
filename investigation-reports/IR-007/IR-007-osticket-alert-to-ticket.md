@@ -83,6 +83,20 @@ python -m lynx.osticket_bridge --every 60
 
 ---
 
+## Deduplication notes
+
+| Behavior | Root cause | Why it is the same activity |
+| --- | --- | --- |
+| 28 failed SSH logins (auth.log) | One brute-force burst from 10.77.20.99 | Same source, 42-second window; the detector counts the burst, not 28 separate incidents |
+| Suricata connection-burst alert | The same 28 attempts seen on the wire | NDR corroboration of the EDR signal, not a second finding |
+| Elevated-priority brute-force behavior | The grouped burst | Detector weighting on volume + same-source consistency |
+
+One root cause, one case (CASE-014), one ticket (#512). No child cases
+were created because the grouper kept the whole burst inside the same
+10-minute host window.
+
+---
+
 ## 3. Gaps and Fixes
 
 | # | Gap | Finding | Remediation | Status |

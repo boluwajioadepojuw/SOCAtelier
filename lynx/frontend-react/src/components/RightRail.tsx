@@ -4,10 +4,23 @@ import { useLynx } from "../LynxContext"
 // fetchNetworkContext now imported from api.ts — single source of truth.
 // Previously defined as a local function here and duplicated in CrossLayerTab.tsx.
 import { fetchBriefing, fetchCaseSummary, fetchNetworkContext } from "../api"
+import type { Case, NetworkEvent, SuricataAlert } from "../types"
 
 const TABS = ["Intel", "Entities", "Actions"]
 
-interface ActionsPanelProps { selectedCase: any }
+interface ActionBody {
+  action: string
+  case_id: string
+  behavior_id: string | null
+  actor: string
+  note?: string
+}
+
+interface ActionsPanelProps { selectedCase: Case }
+
+function errorMessage(e: unknown): string {
+  return e instanceof Error ? e.message : String(e)
+}
 
 function ActionsPanel({ selectedCase }: ActionsPanelProps) {
   const [open, setOpen] = useState<string | null>(null)
@@ -23,7 +36,7 @@ function ActionsPanel({ selectedCase }: ActionsPanelProps) {
       // Case-level actions correctly pass behavior_id as null.
       // Previously passed selectedCase.case_id as behavior_id — wrong field.
       // behavior_id is only relevant for behavior-level actions, not case closures.
-      const body: any = {
+      const body: ActionBody = {
         action,
         case_id: selectedCase.case_id,
         behavior_id: null,
@@ -42,8 +55,8 @@ function ActionsPanel({ selectedCase }: ActionsPanelProps) {
       setOpen(null)
       setNoteText("")
       setIpText("")
-    } catch (e: any) {
-      setStatus("Error: " + e.message)
+    } catch (e) {
+      setStatus("Error: " + errorMessage(e))
     } finally {
       setLoading(false)
     }
@@ -166,7 +179,14 @@ function ActionsPanel({ selectedCase }: ActionsPanelProps) {
   )
 }
 
-function BriefingPanel({ data }: { data: any }) {
+interface BriefingData {
+  briefing?: { summary: string; next_steps: string[]; escalate: boolean }
+  summary?: string
+  next_steps?: string[]
+  escalate?: boolean
+}
+
+function BriefingPanel({ data }: { data: BriefingData | undefined }) {
   const b = data?.briefing || data
   const steps: string[] = Array.isArray(b?.next_steps) ? b.next_steps : []
   return (
@@ -362,7 +382,7 @@ export default function RightRail() {
                   {events.length > 0 && (
                     <div style={{ marginBottom: 8 }}>
                       <div style={{ fontSize: 8, color: "var(--t3)", fontFamily: "var(--mono)", marginBottom: 4 }}>HTTP FLOWS ({events.length})</div>
-                      {events.slice(0, 4).map((e: any, i: number) => (
+                      {events.slice(0, 4).map((e: NetworkEvent, i: number) => (
                         <div key={i} style={{ marginBottom: 4, padding: "4px 6px", background: "var(--bg3)", borderRadius: 2, border: "1px solid var(--ln)" }}>
                           <div style={{ fontSize: 9, fontFamily: "var(--mono)", color: "var(--teal)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                             {e.dest_ip}:{e.dest_port}
@@ -387,7 +407,7 @@ export default function RightRail() {
                   {alerts.length > 0 && (
                     <div>
                       <div style={{ fontSize: 8, color: "var(--t3)", fontFamily: "var(--mono)", marginBottom: 4 }}>ALERTS ({alerts.length})</div>
-                      {alerts.slice(0, 3).map((a: any, i: number) => (
+                      {alerts.slice(0, 3).map((a: SuricataAlert, i: number) => (
                         <div key={i} style={{ marginBottom: 4, padding: "4px 6px", background: "var(--red2)", borderRadius: 2, border: "1px solid var(--red3)" }}>
                           <div style={{ fontSize: 9, color: "var(--red)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                             {a.signature}

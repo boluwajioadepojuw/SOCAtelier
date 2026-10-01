@@ -123,7 +123,7 @@ function severityLabel(sev?: number): string {
 interface PivotEntityProps {
   value: string
   templateId: string
-  params: Record<string, any>
+  params: Record<string, string | number | boolean>
   label: string
   sourceCase?: string
   style?: React.CSSProperties
@@ -134,9 +134,11 @@ function PivotEntity({ value, templateId, params, label, sourceCase, style }: Pi
   const { setHuntPivot, setActiveView } = useLynx()
 
   function handlePivot() {
+    const pivotParams: Record<string, string | number | boolean> = { ...params, _pivotLabel: label }
+    if (sourceCase) pivotParams._sourceCase = sourceCase
     setHuntPivot({
       templateId,
-      params: { ...params, _pivotLabel: label, _sourceCase: sourceCase },
+      params: pivotParams,
       label,
       sourceCase,
     })
@@ -273,7 +275,7 @@ function buildAssessment(
   const suspiciousPort = remotePort === 8080 || remotePort === 4444 || remotePort === 1337
 
   // Finding — factual, what was observed
-  let finding = ""
+  let finding: string
   if (isPowerShell && httpEvents.length > 1) {
     finding = `${httpEvents.length}× repeated PowerShell-originated HTTP retrievals confirmed.`
   } else if (httpEvents.length > 0) {
@@ -285,7 +287,7 @@ function buildAssessment(
   }
 
   // Implication — hedged, what it may mean
-  let implication = ""
+  let implication: string
   if (isPowerShell && suspiciousPort) {
     implication = `Behavior may indicate staged payload delivery or C2 staging over non-standard port ${remotePort}.`
   } else if (isPowerShell) {
@@ -752,6 +754,37 @@ function AlertCard({ alert }: { alert: AlertEvent }) {
 
 // ─── Intel sidebar ────────────────────────────────────────────────────────────
 
+// Panel building blocks live at module scope so they are not re-created
+// (and not re-mounted) on every render of IntelPanel.
+function Section({ title, accent, children }: { title: string; accent?: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <div style={{
+        fontSize: 8, fontFamily: "var(--mono)",
+        color: accent || "var(--t4)",
+        letterSpacing: "0.1em", textTransform: "uppercase",
+        padding: "8px 14px 6px",
+        borderBottom: `1px solid ${accent ? accent + "22" : "var(--ln)"}`,
+        background: accent ? `${accent}06` : "transparent",
+      }}>{title}</div>
+      <div style={{ padding: "9px 14px 11px" }}>{children}</div>
+    </div>
+  )
+}
+
+function Row({ label, value, accent }: { label: string; value: string; accent?: boolean }) {
+  return (
+    <div style={{ display: "flex", justifyContent: "space-between", gap: 8, marginBottom: 5 }}>
+      <span style={{ fontSize: 9, color: "var(--t4)", flexShrink: 0 }}>{label}</span>
+      <span style={{
+        fontSize: 9, fontFamily: "var(--mono)",
+        color: accent ? COLOR.teal : "var(--t2)",
+        textAlign: "right", wordBreak: "break-all",
+      }}>{value}</span>
+    </div>
+  )
+}
+
 function IntelPanel({ networkEvents, alerts, summary }: {
   networkEvents: NetworkEvent[]
   alerts: AlertEvent[]
@@ -774,31 +807,6 @@ function IntelPanel({ networkEvents, alerts, summary }: {
   if (remotePort === 8080 || remotePort === 4444) pivots.push(`Check firewall for additional port ${remotePort} traffic`)
   if (alerts.length > 0) pivots.push("Review Suricata alert context in Kibana NDR dashboard")
   pivots.push("Check EID 11 file writes in raw events tab")
-
-  const Section = ({ title, accent, children }: { title: string; accent?: string; children: React.ReactNode }) => (
-    <div>
-      <div style={{
-        fontSize: 8, fontFamily: "var(--mono)",
-        color: accent || "var(--t4)",
-        letterSpacing: "0.1em", textTransform: "uppercase",
-        padding: "8px 14px 6px",
-        borderBottom: `1px solid ${accent ? accent + "22" : "var(--ln)"}`,
-        background: accent ? `${accent}06` : "transparent",
-      }}>{title}</div>
-      <div style={{ padding: "9px 14px 11px" }}>{children}</div>
-    </div>
-  )
-
-  const Row = ({ label, value, accent }: { label: string; value: string; accent?: boolean }) => (
-    <div style={{ display: "flex", justifyContent: "space-between", gap: 8, marginBottom: 5 }}>
-      <span style={{ fontSize: 9, color: "var(--t4)", flexShrink: 0 }}>{label}</span>
-      <span style={{
-        fontSize: 9, fontFamily: "var(--mono)",
-        color: accent ? COLOR.teal : "var(--t2)",
-        textAlign: "right", wordBreak: "break-all",
-      }}>{value}</span>
-    </div>
-  )
 
   return (
     <div style={{

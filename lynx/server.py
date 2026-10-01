@@ -1051,6 +1051,25 @@ Interpret these results for a SOC analyst."""
 
 
 # ---------------------------------------------------------------------------
+# POST /api/phishing/analyze
+# ---------------------------------------------------------------------------
+from phishing_analyzer import analyze_email  # noqa: E402
+
+
+@app.post("/api/phishing/analyze")
+async def phishing_analyze(payload: dict):
+    """Deterministic phishing triage on a raw email (headers + body).
+
+    Offline analysis: indicators, L1 phishing signals, 0-100 score and
+    MITRE ATT&CK mapping. No AI service involved.
+    """
+    raw = (payload or {}).get("raw", "")
+    if not isinstance(raw, str) or not raw.strip():
+        raise HTTPException(status_code=400, detail="raw email text is required")
+    return analyze_email(raw)
+
+
+# ---------------------------------------------------------------------------
 # ---------------------------------------------------------------------------
 
 

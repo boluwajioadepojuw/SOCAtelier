@@ -1,12 +1,23 @@
 # deploy-lynx-rules.ps1
-# Creates 100 custom Sysmon-based detection rules in Kibana via API
+# Creates the lynx Sysmon-based detection rules in Kibana via API
 # Target: Elastic 8.17 | Index: logs-* | Dataset: windows.sysmon_operational
-# Run as Administrator from E:\SOCAtelier
-# Usage: .\deploy-lynx-rules.ps1
+# Run as Administrator from the repo root
+# Usage:
+#   $env:LYNX_KIBANA_PASSWORD = "your-password"
+#   .\deploy-lynx-rules.ps1
+# or:  .\deploy-lynx-rules.ps1 -Password "your-password"
 
-$KibanaUrl  = "http://localhost:5601"
-$Username   = "elastic"
-$Password   = "SOCHomelab2026!"
+param(
+    [string]$KibanaUrl = "http://localhost:5601",
+    [string]$Username  = "elastic",
+    [string]$Password  = $env:LYNX_KIBANA_PASSWORD
+)
+
+if (-not $Password) {
+    Write-Host "[-] No password: set LYNX_KIBANA_PASSWORD or pass -Password." -ForegroundColor Red
+    exit 1
+}
+
 $Headers    = @{
     "Content-Type"  = "application/json"
     "kbn-xsrf"      = "true"

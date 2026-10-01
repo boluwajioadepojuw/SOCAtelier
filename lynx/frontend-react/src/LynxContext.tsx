@@ -2,11 +2,11 @@ import { createContext, useContext, useState } from "react"
 import type { ReactNode } from "react"
 import type { Case, Behavior } from "./types"
 
-export type View = "investigation" | "actions" | "hunt" | "coverage"
+export type View = "investigation" | "actions" | "hunt" | "coverage" | "phishing"
 
 export interface HuntPivot {
   templateId: string
-  params: Record<string, any>
+  params: Record<string, string | number | boolean>
   label: string           // e.g. "Pivot: 10.77.30.10"
   sourceCase?: string     // originating case ID
   sourceBehavior?: string // originating behavior ID
@@ -52,4 +52,7 @@ export function LynxProvider({ children }: { children: ReactNode }) {
   )
 }
 
+// useLynx is the public accessor every page imports; it lives next to the
+// provider it reads so the context object stays private to this module.
+// eslint-disable-next-line react-refresh/only-export-components
 export const useLynx = () => useContext(Ctx)

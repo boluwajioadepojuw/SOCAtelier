@@ -1,5 +1,7 @@
 # SOCAtelier
 
+[![CI](https://github.com/boluwajioadepojuw/SOCAtelier/actions/workflows/ci.yml/badge.svg)](https://github.com/boluwajioadepojuw/SOCAtelier/actions/workflows/ci.yml)
+
 A home SOC lab I built to practice the L1 loop end to end: take logs in,
 find the bad stuff, work the case, write it up. Everything runs on one
 machine with Docker; nothing here needs a second PC or a paid license.
@@ -43,7 +45,9 @@ sequenceDiagram
   internal RFC1918 SYN sweeps, which the stock ET ruleset ignores)
 - Sysmon (Windows) and Elastic Defend (Linux) endpoint telemetry
 - Lynx, my investigation console (FastAPI + React): case queue, process
-  trees, cross-layer timeline, hunt templates, analyst action trail
+  trees, cross-layer timeline, hunt templates, analyst action trail, and a
+  phishing triage tab (paste headers/body, extract indicators, map to
+  MITRE - deterministic, offline)
 - osTicket as the alert-to-ticket bridge — the same loop a real SOC L1
   works every day (see IR-007)
 
@@ -56,11 +60,13 @@ sequenceDiagram
 
 ## Incident reports
 
-investigation-reports/ has eleven write-ups: six Windows cases
-(case-IR-001..006), the osTicket workflow (IR-007), and four Linux runs
-(LIR-001..004). Each one follows a single alert from detection to the
+investigation-reports/ has fourteen write-ups: six Windows cases
+(case-IR-001..006), the osTicket workflow (IR-007), and seven Linux runs
+(LIR-001..007). Each one follows a single alert from detection to the
 full kill chain, correlates EDR and NDR telemetry, and ties every step to
-its ATT&CK technique.
+its ATT&CK technique. The report shape is documented in
+[TEMPLATE.md](investigation-reports/TEMPLATE.md), including the
+deduplication section that maps behaviors back to their root cause.
 
 ## Data notes (read this before judging the repo)
 
@@ -85,6 +91,14 @@ cd lynx/frontend-react && npm run dev   # console on :5173
 
 The console works fully offline: case summaries and briefings are
 deterministic, no AI service required.
+
+## Related projects
+
+- [SigScope](https://github.com/boluwajioadepojuw/SigScope) - ATT&CK coverage gate for the Sigma rules in sigma-rules/
+- [SplunkHarbor](https://github.com/boluwajioadepojuw/SplunkHarbor) - Splunk ingestion lab for the same Windows telemetry
+- [IocVerdict](https://github.com/boluwajioadepojuw/IocVerdict) - IOC enrichment for the indicators these cases surface
+- [DomainSieve](https://github.com/boluwajioadepojuw/DomainSieve) - NRD feed to Suricata rules on the gateway
+- [ArpSieve](https://github.com/boluwajioadepojuw/ArpSieve) - ARP spoofing detection on the local segment
 
 ## Data flow
 

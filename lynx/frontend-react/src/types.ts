@@ -14,6 +14,7 @@ export interface GroupedBy {
 export interface Case {
   case_id: string
   status: string
+  severity?: string
   highest_severity: string
   risk_score: number
   behavior_count: number
@@ -36,6 +37,7 @@ export interface Behavior {
   process_name?: string
   command_line?: string
   pid?: number
+  process_pid?: number
   parent_pid?: number
   parent_process?: string
   user?: string
@@ -147,3 +149,18 @@ export interface SuricataAlert {
 }
 
 export type Severity = 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW'
+
+// Minimal valid behavior used when the console knows an id/pid but the
+// full document has not been loaded yet (breadcrumb + graceful briefing).
+export function stubBehavior(overrides: Partial<Behavior>): Behavior {
+  return {
+    behavior_id: overrides.behavior_id ?? "",
+    timestamp: "",
+    host: "",
+    description: "",
+    tactic: "",
+    severity: "",
+    status: "",
+    ...overrides,
+  }
+}

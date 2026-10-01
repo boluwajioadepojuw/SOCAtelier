@@ -1,8 +1,10 @@
-import { useRef, useEffect, useCallback } from "react"
+import { useRef, useEffect, useCallback, useMemo } from "react"
 import { useLynx } from "../LynxContext"
+import type { Behavior } from "../types"
+import { stubBehavior } from "../types"
 
 // Shape from the actual API response
-interface ApiNode {
+export interface ApiNode {
   id: string
   name?: string
   full_path?: string
@@ -13,12 +15,12 @@ interface ApiNode {
   on_chain?: boolean
 }
 
-interface ApiEdge {
+export interface ApiEdge {
   source: string
   target: string
 }
 
-interface ApiTreeData {
+export interface ApiTreeData {
   nodes: ApiNode[]
   edges: ApiEdge[]
   behavior_pid?: string
@@ -147,25 +149,13 @@ function buildGraph(data: ApiTreeData): { flatNodes: FlatNode[]; edges: Edge[] }
   return { flatNodes, edges }
 }
 
-interface BehaviorRef {
-  behavior_id: string
-  pid?: number
-  process_name?: string
-  image?: string
-  command_line?: string
-  tactic?: string
-  description?: string
-  severity?: string
-  host?: string
-}
-
 const LEGEND_ITEMS = [
   { color: "#e5534b",                label: "Execution / Shell" },
   { color: "#7b6dd4",                label: "Discovery" },
   { color: "rgba(255,255,255,0.28)", label: "Other process" },
 ]
 
-export default function ProcessTree({ treeData, behaviors = [] }: { treeData?: ApiTreeData; behaviors?: BehaviorRef[] }) {
+export default function ProcessTree({ treeData, behaviors = [] }: { treeData?: ApiTreeData; behaviors?: Behavior[] }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const wrapRef = useRef<HTMLDivElement>(null)
   const stateRef = useRef({
@@ -176,45 +166,12 @@ export default function ProcessTree({ treeData, behaviors = [] }: { treeData?: A
   const { setSelectedBehavior, setHoveredNodeId } = useLynx()
 
   // No demo fallback. If treeData is missing or empty, graph is null.
-  const graph = treeData ? buildGraph(treeData) : null
-  const flatNodes = graph?.flatNodes ?? []
-  const edges = graph?.edges ?? []
-
-  // Empty state — shown when no real process lineage exists.
-  // This is the correct behaviour: tell the analyst there is no data,
-  // rather than silently rendering synthetic nodes.
-  if (!graph) {
-    return (
-      <div style={{
-        flex: 1, display: "flex", flexDirection: "column",
-        alignItems: "center", justifyContent: "center",
-        color: "var(--t3)", fontFamily: "var(--mono)", gap: 6,
-        background: "var(--bg0)",
-      }}>
-        <div style={{ fontSize: 11 }}>No process lineage available for this behavior.</div>
-        <div style={{ fontSize: 9, color: "var(--t4)" }}>
-          Select a behavior from the timeline or click a node once the tree loads.
-        </div>
-      </div>
-    )
-  }
+  const graph = useMemo(() => (treeData ? buildGraph(treeData) : null), [treeData])
+  const flatNodes = useMemo(() => graph?.flatNodes ?? [], [graph])
+  const edges = useMemo(() => graph?.edges ?? [], [graph])
 
   function wx(x: number) { return x * stateRef.current.scale + stateRef.current.panX }
   function wy(y: number) { return y * stateRef.current.scale + stateRef.current.panY }
-
-  function getPath(nodeIdx: number): Set<number> {
-    const path = new Set<number>()
-    if (nodeIdx < 0) return path
-    path.add(nodeIdx)
-    let cur = nodeIdx
-    while (true) {
-      const e = edges.find(e => e.b === cur)
-      if (!e) break
-      path.add(e.a)
-      cur = e.a
-    }
-    return path
-  }
 
   function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
     ctx.beginPath()
@@ -231,6 +188,20 @@ export default function ProcessTree({ treeData, behaviors = [] }: { treeData?: A
     const ctx = canvas.getContext("2d")!
     const s = stateRef.current
     ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+    function getPath(nodeIdx: number): Set<number> {
+      const path = new Set<number>()
+      if (nodeIdx < 0) return path
+      path.add(nodeIdx)
+      let cur = nodeIdx
+      while (true) {
+        const e = edges.find(e => e.b === cur)
+        if (!e) break
+        path.add(e.a)
+        cur = e.a
+      }
+      return path
+    }
 
     const hotPath = getPath(s.hovered >= 0 ? s.hovered : s.selected)
     const hasActive = s.hovered >= 0 || s.selected >= 0
@@ -288,21 +259,21 @@ export default function ProcessTree({ treeData, behaviors = [] }: { treeData?: A
     })
   }, [flatNodes, edges])
 
-  function nodeAt(mx: number, my: number): number {
-    const s = stateRef.current
-    for (let i = flatNodes.length - 1; i >= 0; i--) {
-      const n = flatNodes[i]
-      const x = wx(n.x), y = wy(n.y)
-      const w = NODE_W * s.scale, h = NODE_H * s.scale
-      if (mx >= x && mx <= x+w && my >= y && my <= y+h) return n.idx
-    }
-    return -1
-  }
-
   useEffect(() => {
     const canvas = canvasRef.current
     const wrap = wrapRef.current
     if (!canvas || !wrap) return
+
+    function nodeAt(mx: number, my: number): number {
+      const s = stateRef.current
+      for (let i = flatNodes.length - 1; i >= 0; i--) {
+        const n = flatNodes[i]
+        const x = wx(n.x), y = wy(n.y)
+        const w = NODE_W * s.scale, h = NODE_H * s.scale
+        if (mx >= x && mx <= x+w && my >= y && my <= y+h) return n.idx
+      }
+      return -1
+    }
 
     const resize = () => {
       canvas.width = wrap.clientWidth
@@ -349,18 +320,18 @@ export default function ProcessTree({ treeData, behaviors = [] }: { treeData?: A
         const nodePid = parseInt(n.id)
         // Try to match clicked node PID to a real behavior doc
         const matched = behaviors.find(b => {
-          const bpid = (b as any).pid || (b as any).process_pid
-          return bpid && parseInt(String(bpid)) === nodePid
+          const bpid = b.pid ?? b.process_pid
+          return bpid !== undefined && parseInt(String(bpid)) === nodePid
         }) || behaviors.find(b => {
           // Fallback: match by process name
-          const bname = ((b as any).image || b.process_name || "").toLowerCase().split("\\").pop()
+          const bname = (b.image || b.process_name || "").toLowerCase().split("\\").pop()
           return bname && bname === n.label.toLowerCase()
         })
         if (matched) {
-          setSelectedBehavior(matched as any)
+          setSelectedBehavior(matched)
         } else {
           // No match — set minimal stub so breadcrumb updates but briefing shows graceful message
-          setSelectedBehavior({ behavior_id: "", pid: nodePid, process_name: n.label } as any)
+          setSelectedBehavior(stubBehavior({ pid: nodePid, process_name: n.label }))
         }
       } else {
         setSelectedBehavior(null)
@@ -394,7 +365,7 @@ export default function ProcessTree({ treeData, behaviors = [] }: { treeData?: A
       canvas.removeEventListener("wheel", onWheel)
       window.removeEventListener("mouseup", onUp)
     }
-  }, [draw, flatNodes])
+  }, [draw, flatNodes, behaviors, setHoveredNodeId, setSelectedBehavior])
 
   const zoomTo = (f: number) => {
     const canvas = canvasRef.current
@@ -408,6 +379,25 @@ export default function ProcessTree({ treeData, behaviors = [] }: { treeData?: A
       s.scale = Math.min(2.5, Math.max(0.3, s.scale * f))
     }
     draw()
+  }
+
+  // Empty state — shown when no real process lineage exists.
+  // This is the correct behaviour: tell the analyst there is no data,
+  // rather than silently rendering synthetic nodes.
+  if (!graph) {
+    return (
+      <div style={{
+        flex: 1, display: "flex", flexDirection: "column",
+        alignItems: "center", justifyContent: "center",
+        color: "var(--t3)", fontFamily: "var(--mono)", gap: 6,
+        background: "var(--bg0)",
+      }}>
+        <div style={{ fontSize: 11 }}>No process lineage available for this behavior.</div>
+        <div style={{ fontSize: 9, color: "var(--t4)" }}>
+          Select a behavior from the timeline or click a node once the tree loads.
+        </div>
+      </div>
+    )
   }
 
   return (

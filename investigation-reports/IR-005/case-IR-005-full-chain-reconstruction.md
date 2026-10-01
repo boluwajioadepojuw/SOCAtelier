@@ -112,6 +112,19 @@ killed it before the registry layer.)
 | 17:04:10-20 | LOLBin | 11 + 1 | Sysmon | update.hta → mshta.exe → cmd.exe | T1218.005 |
 | 17:12:00 | Evasion | 13 | Sysmon | Defender DisableAntiSpyware write | T1562.001 |
 
+## Deduplication notes
+
+| Behavior | Root cause | Why it is the same activity |
+| --- | --- | --- |
+| 23x Sysmon EID 3 beacons | 23x Suricata HTTP flows | One C2 channel observed by two independent sensors; same IPs, same 16:31-16:47 window |
+| Nine recon profiles (whoami, net, systeminfo, ipconfig, route, arp, tasklist, netstat) | One PowerShell session, ParentProcessGuid c466df0a-c199-69cc-5006-000000000a00 | Same parent process, 30-60s human pacing; one enumeration pass, not nine separate events |
+| Two encoded PowerShell executions | One payload, run twice | Identical base64, 17:05, one operator retry |
+| Run key write + masqueraded name | One persistence action | Same registry value, same minute; the masquerade is an attribute of the same write, not a second action |
+| update.hta -> mshta -> cmd | One LOLBin chain | ProcessGuid parent-child spine links the three EIDs |
+
+One activity per row: the case is rated on the six real actions, not on
+the 40+ individual events the detectors fired on.
+
 ## What I would fix
 
 ### Gaps

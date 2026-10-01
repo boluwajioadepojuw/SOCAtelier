@@ -3,7 +3,9 @@ import { useQuery } from "@tanstack/react-query"
 import { useLynx } from "../LynxContext"
 import { fetchCaseBehaviors, fetchProcessTree } from "../api"
 import ProcessTree from "../components/ProcessTree"
+import type { ApiTreeData } from "../components/ProcessTree"
 import CrossLayerTab from "./CrossLayerTab"
+import type { Behavior, DetectionReason } from "../types"
 
 const TACTIC_COLOR: Record<string, string> = {
   exec: "#4a8fc4",
@@ -59,7 +61,7 @@ export default function Investigation() {
     )
   }
 
-  const treeData = treeQuery.data as any
+  const treeData = treeQuery.data as unknown as ApiTreeData | undefined
   const tactics = [...new Set(selectedCase.tactics_seen || [])]
   const behaviors = behaviorsQuery.data || []
 
@@ -83,7 +85,7 @@ export default function Investigation() {
   const behaviorContext = targetBehavior ? {
     behavior_id: targetBehavior.behavior_id,
     description:  targetBehavior.description || "",
-    image:        (targetBehavior as any).image,
+    image:        targetBehavior.image,
     command_line: targetBehavior.command_line,
     timestamp:    targetBehavior.timestamp || "",
     tactic:       targetBehavior.tactic,
@@ -228,7 +230,7 @@ export default function Investigation() {
       {/* Tab 3: Detection logic — was tab 2, now tab 3 */}
       {activeTab === 3 && (() => {
         // Group behaviors by description (same profile firing multiple times)
-        const grouped = behaviors.reduce((acc: Record<string, any[]>, b) => {
+        const grouped = behaviors.reduce((acc: Record<string, Behavior[]>, b) => {
           const key = b.description || "unknown"
           if (!acc[key]) acc[key] = []
           acc[key].push(b)
@@ -306,7 +308,7 @@ export default function Investigation() {
                   {/* Detection reasons */}
                   {reasons.length > 0 && (
                     <div style={{ marginTop: 7, paddingTop: 7, borderTop: "1px solid var(--ln)" }}>
-                      {reasons.map((r: any, i: number) => (
+                      {reasons.map((r: DetectionReason, i: number) => (
                         <div key={i} style={{
                           fontSize: 9, color: "var(--t3)", display: "flex", gap: 6,
                           marginTop: i > 0 ? 3 : 0, fontFamily: "var(--mono)",
@@ -324,7 +326,7 @@ export default function Investigation() {
                       marginTop: 7, paddingTop: 7, borderTop: "1px solid var(--ln)",
                       display: "flex", flexWrap: "wrap", gap: 4,
                     }}>
-                      {hits.map((h: any, i: number) => (
+                      {hits.map((h: Behavior, i: number) => (
                         <span key={i} style={{
                           fontSize: 8, fontFamily: "var(--mono)", color: "var(--t3)",
                           padding: "1px 4px", background: "var(--bg1)", borderRadius: 2,
