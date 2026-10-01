@@ -7,8 +7,8 @@
 **Severity:** Medium
 **Case ID:** CASE-014
 **Risk Score:** 1,240
-**Host:** web01 (10.0.20.30), Ubuntu 22.04 LTS
-**Attacker Host:** Kali Linux (10.0.30.20), scripted SSH brute force
+**Host:** web01 (10.77.30.10), Ubuntu 22.04 LTS
+**Attacker Host:** Kali Linux (10.77.20.99), scripted SSH brute force
 **MITRE ATT&CK:** T1110 (Brute Force)
 **Telemetry Sources:** Elastic Agent (EDR, auth.log), Suricata via
 Filebeat (NDR), Lynx (behavior enrichment + case builder), osTicket
@@ -19,7 +19,7 @@ Filebeat (NDR), Lynx (behavior enrichment + case builder), osTicket
 ## 1. Summary
 
 On 20/06/2026 a scripted SSH brute-force campaign hit web01 from one
-source (10.0.30.20). In 42 seconds the attacker made 28 failed root login
+source (10.77.20.99). In 42 seconds the attacker made 28 failed root login
 attempts. Lynx grouped the failed-auth behaviors into CASE-014 and the
 new osTicket bridge opened ticket #512 automatically. As L1 I triaged the
 ticket: validated the alert, confirmed no successful login, applied an IP
@@ -42,13 +42,13 @@ exposed service.
 
 | Time | Event | Source |
 |------|-------|--------|
-| 14:22:03 | First failed SSH login for root (10.0.30.20) | Elastic Agent (auth.log) |
+| 14:22:03 | First failed SSH login for root (10.77.20.99) | Elastic Agent (auth.log) |
 | 14:22:45 | 28th failed login, burst completes (42s) | Elastic Agent (auth.log) |
 | 14:22:46 | Suricata flags the connection burst | Suricata eve.json |
 | 14:22:48 | Lynx groups behaviors into CASE-014 (OPEN) | Lynx case_grouper |
 | 14:22:52 | osTicket bridge opens ticket #512 | osTicket API |
 | 14:23:10 | Analyst assigns ticket, validates alert | osTicket UI |
-| 14:23:30 | Analyst applies the IP block on 10.0.30.20 | Lynx actions |
+| 14:23:30 | Analyst applies the IP block on 10.77.20.99 | Lynx actions |
 | 14:23:35 | Ticket closed, case marked CLOSED | osTicket + Lynx |
 
 ### Detection chain

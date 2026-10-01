@@ -16,6 +16,26 @@ All captured from the live console on 30/09/2026:
 - [Coverage map](screenshots/06-Coverage_Map.png)
 - [Action log](screenshots/07-Action_Log.png)
 
+## The L1 loop, as a sequence
+
+```mermaid
+sequenceDiagram
+    participant R as Raw telemetry
+    participant D as Signal detector
+    participant G as Case grouper
+    participant C as Lynx console
+    participant A as Analyst
+    participant T as osTicket
+    R->>D: events (Sysmon / Elastic Defend / Suricata)
+    D->>D: match against 90 behavioral profiles
+    D->>G: behaviors
+    G->>C: case (host + 10min window + risk)
+    C->>A: queue, process tree, cross-layer context
+    A->>A: triage: confirm, scope, decide
+    A->>T: escalate (alert-to-ticket bridge)
+    A->>C: write the investigation report
+```
+
 ## What is inside
 
 - Elasticsearch + Kibana as the SIEM core
