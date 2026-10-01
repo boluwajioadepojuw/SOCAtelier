@@ -57,6 +57,10 @@ sequenceDiagram
   (detection-rules/lynx-detection-rules.ndjson)
 - 18 Sigma rules, portable versions of the same detections (sigma-rules/)
 - detections exercised with Atomic Red Team runs
+- Splunk detections exercised end to end: datasets/splunk-replay/ replays
+  real Mordor Windows captures (plus a labeled 4625 burst) through the
+  SplunkHarbor lab; all five SPL detections fire - evidence in
+  [datasets/splunk-replay/README.md](datasets/splunk-replay/README.md)
 
 ## Incident reports
 
