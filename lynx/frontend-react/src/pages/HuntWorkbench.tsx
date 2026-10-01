@@ -146,7 +146,7 @@ export default function HuntWorkbench() {
       <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
         {!activeTemplate ? (
           <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8, color: "var(--t3)" }}>
-            <div style={{ fontSize: 28 }}>🔍</div>
+            <div style={{ fontSize: 28, color: "var(--teal)" }}>HUNT</div>
             <div style={{ fontSize: 12, color: "var(--t2)" }}>Select a hunt template</div>
             <div style={{ fontSize: 10, fontFamily: "var(--mono)" }}>Choose from the sidebar to begin hunting</div>
           </div>
@@ -236,7 +236,7 @@ export default function HuntWorkbench() {
                     marginLeft: "auto", fontSize: 9, fontFamily: "var(--mono)", padding: "3px 10px",
                     border: "1px solid var(--teal3)", background: "var(--teal2)", color: "var(--teal)",
                     borderRadius: 3, cursor: "pointer", opacity: copilotLoading ? 0.6 : 1,
-                  }}>{copilotLoading ? "Thinking..." : "✦ Ask LLM"}</button>
+                  }}>{copilotLoading ? "Processing..." : "Generate brief"}</button>
                 </div>
 
                 {result.rows.length === 0 ? (

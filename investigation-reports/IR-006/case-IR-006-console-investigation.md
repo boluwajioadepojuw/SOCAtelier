@@ -27,7 +27,7 @@ and a scheduled task for persistence.
 
 ## Triage
 
-Lynx normalized the raw Sysmon stream into CASE-006: 26 behaviors across
+Lynx normalized the raw Sysmon stream into CASE-006: 22 behaviors across
 16:57-17:03 UTC, three tactic groups (EXECUTION, PERSISTENCE,
 DISCOVERY), HIGH severity, risk score 1280.
 

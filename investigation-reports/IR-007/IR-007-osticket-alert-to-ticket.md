@@ -45,7 +45,7 @@ exposed service.
 | 14:22:03 | First failed SSH login for root (10.0.30.20) | Elastic Agent (auth.log) |
 | 14:22:45 | 28th failed login, burst completes (42s) | Elastic Agent (auth.log) |
 | 14:22:46 | Suricata flags the connection burst | Suricata eve.json |
-| 14:22:48 | Lynx groups behaviors into CASE-014 (OPEN) | Lynx case_builder |
+| 14:22:48 | Lynx groups behaviors into CASE-014 (OPEN) | Lynx case_grouper |
 | 14:22:52 | osTicket bridge opens ticket #512 | osTicket API |
 | 14:23:10 | Analyst assigns ticket, validates alert | osTicket UI |
 | 14:23:30 | Analyst applies the IP block on 10.0.30.20 | Lynx actions |
@@ -55,10 +55,10 @@ exposed service.
 
 1. **Failed SSH logons in auth.log.** The raw signal: 28 events in 42
    seconds from one source, collected by the Elastic Agent.
-2. **Lynx behavior_detector.** Flagged the burst as a brute-force
+2. **Lynx signal_detector.** Flagged the burst as a brute-force
    behavior with an elevated priority score (base 50, weighted up by
    volume and same-source consistency).
-3. **Lynx case_builder.** Grouped the behaviors into CASE-014 with
+3. **Lynx case_grouper.** Grouped the behaviors into CASE-014 with
    blast_radius=1 (single host) and tactics=[CredentialAccess].
 4. **osTicket bridge.** lynx/osticket_bridge.py picked up the OPEN case,
    built the ticket payload from the case document, and POSTed to the

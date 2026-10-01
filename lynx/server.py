@@ -1,5 +1,5 @@
 """
-app.py - Lynx FastAPI Backend
+server.py - Lynx FastAPI Backend
 
 Routes:
 - GET /api/cases                        - all cases sorted by risk_score desc
@@ -63,7 +63,7 @@ async def get_cases():
                 "sort": [{"risk_score": {"order": "desc"}}],
                 "_source": [
                     "case_id", "status", "behavior_count",
-                    "grouped_by", "blast_radius", "highest_severity",
+                    "grouped_by", "blast_radius", "highest_severity", "severity",
                     "tactics_seen", "risk_score", "case_summary", "created_at"
                 ]
             }
@@ -276,7 +276,7 @@ async def get_process_tree(behavior_id: str):
     3. Build adjacency JSON (nodes + links)
     4. Score nodes: grey=normal, orange=suspicious, red=malicious
     """
-    from process_tree_builder import build_process_tree, build_linux_process_tree
+    from tree_builder import build_process_tree, build_linux_process_tree
 
     # Step 1 — get timestamp + host + platform from behavior doc
     try:
@@ -352,7 +352,7 @@ async def get_process_tree(behavior_id: str):
 #   - Event types present: alert, http, fileinfo
 #   - Alert fields: alert.signature, alert.signature_id, alert.severity, alert.category
 #   - Victim IP filter: 10.77.20.10 (WIN-SOC-01) via src/dest, not host.name
-#   - Window: +-15min around behavior timestamp (consistent with process_tree_builder.py)
+#   - Window: +-15min around behavior timestamp (consistent with tree_builder.py)
 #   - Index: filebeat-* (old indices have broken text mappings, query still works on new)
 #   - Empty result is valid data: return has_network_data=False, never raise error
 # ---------------------------------------------------------------------------
@@ -369,7 +369,7 @@ async def get_network_context(behavior_id: str):
             body={
                 "size": 1,
                 "query": {"term": {"behavior_id.keyword": behavior_id}},
-                "_source": ["timestamp", "host"]
+                "_source": ["timestamp", "host", "platform"]
             }
         )
         hits = resp["hits"]["hits"]
@@ -380,7 +380,7 @@ async def get_network_context(behavior_id: str):
                 body={
                     "size": 1,
                     "query": {"term": {"case_id.keyword": behavior_id}},
-                    "_source": ["timestamp", "host"],
+                    "_source": ["timestamp", "host", "platform"],
                     "sort": [{"timestamp": "asc"}]
                 }
             )
@@ -393,6 +393,7 @@ async def get_network_context(behavior_id: str):
         behavior_ts = src.get("timestamp")
         if not behavior_ts:
             raise HTTPException(status_code=422, detail="Behavior missing timestamp")
+        platform = src.get("platform", "windows")
 
     except HTTPException:
         raise
@@ -413,6 +414,51 @@ async def get_network_context(behavior_id: str):
     # Use Suricata `timestamp` field (real event time), NOT `@timestamp` (Filebeat ingest time)
     # Both top-level and flow.* IPs required — some events only have context inside flow
     VICTIM_IP = "10.77.20.10"
+
+    if platform == "linux":
+        try:
+            lin_resp = es.search(
+                index="logs-endpoint.events.network-*",
+                body={
+                    "size": 200,
+                    "query": {
+                        "bool": {
+                            "must": [{"term": {"host.name": src.get("host")}}],
+                            "filter": [{"range": {"@timestamp": {"gte": start_ts, "lte": end_ts}}}],
+                        }
+                    },
+                    "sort": [{"@timestamp": {"order": "asc"}}],
+                    "_source": ["@timestamp", "source", "destination", "process.name", "event.action"],
+                }
+            )
+        except Exception:
+            lin_resp = {"hits": {"hits": []}}
+        alerts = []
+        network_events = []
+        unique_ips = set()
+        for h in lin_resp["hits"]["hits"]:
+            s = h["_source"]
+            dest = s.get("destination", {}) or {}
+            source = s.get("source", {}) or {}
+            destip = dest.get("ip", "0.0.0.0")
+            if destip:
+                unique_ips.add(destip)
+            network_events.append({
+                "timestamp": s.get("@timestamp"),
+                "event_type": "netflow",
+                "src_ip": source.get("ip", "0.0.0.0"),
+                "dest_ip": destip,
+                "src_port": source.get("port") or None,
+                "dest_port": dest.get("port") or None,
+                "proto": "TCP",
+                "process_name": (s.get("process") or {}).get("name", ""),
+            })
+        return {"ok": True, "has_network_data": bool(network_events),
+                "network_events": network_events, "alerts": alerts,
+                "summary": {"returned": len(network_events), "total_hits": len(network_events),
+                            "alert_count": 0, "network_event_count": len(network_events),
+                            "unique_ips": sorted(unique_ips)},
+                "window": {"start": start_ts, "end": end_ts}}
 
     try:
         ndr_resp = es.search(
@@ -655,7 +701,7 @@ async def create_action(payload: dict):
 @app.get("/api/hunt/templates")
 async def get_hunt_templates():
     """All hunt template metadata. Used by Screen 4 sidebar to populate template list."""
-    from hunt_engine import list_templates
+    from hunt_templates import list_templates
     return {"ok": True, "templates": list_templates()}
 
 
@@ -672,7 +718,7 @@ async def run_hunt(payload: dict):
     Returns columns + rows for the results table, plus the rendered ES|QL
     query string so the analyst can see exactly what ran.
     """
-    from hunt_engine import run_hunt as _run_hunt
+    from hunt_templates import run_hunt as _run_hunt
 
     template_id = payload.get("template_id")
     params      = payload.get("params", {})

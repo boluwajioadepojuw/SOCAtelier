@@ -13,7 +13,7 @@ Design:
     OPEN and the bridge logs the failure — it never deletes or mutates a
     case it could not export.
   * Reads only OPEN cases without a ticket id (the same "unassigned"
-    contract case_builder.py uses for behavior grouping).
+    contract case_grouper.py uses for behavior grouping).
 
 Usage:
     OSTICKET_URL=https://tickets.example.com/api/http.php/tickets.json \

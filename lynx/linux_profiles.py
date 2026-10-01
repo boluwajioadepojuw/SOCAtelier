@@ -1,7 +1,7 @@
 """
 Linux behavioral signal profiles for the Lynx detection layer.
 
-The Windows profiles in behavior_detector.py match Sysmon telemetry.
+The Windows profiles in signal_detector.py match Sysmon telemetry.
 These profiles match Elastic Defend (ECS) Linux telemetry instead.
 
 Field facts for the Linux pipeline:
@@ -15,7 +15,7 @@ Field facts for the Linux pipeline:
 Same rules as the Windows set: these are behavioral signals, not
 precise detections. Substring matching, false positives expected on
 benign admin work. Confidence reflects signal quality. The suppression
-cap in behavior_detector.py applies to both platforms.
+cap in signal_detector.py applies to both platforms.
 """
 
 LINUX_PROFILES = {
@@ -32,6 +32,28 @@ LINUX_PROFILES = {
         "priority_score": 30,
         "confidence": "low",
         "behavior_class": "execution",
+    },
+    "linux_ssh_attempt": {
+        "names": ["ssh"],
+        "args_any": ["-o", "BatchMode"],
+        "technique": "T1021.004",
+        "tactic": "LATERAL_MOVEMENT",
+        "description": "SSH Login Attempt (non-interactive)",
+        "severity": "MEDIUM",
+        "priority_score": 45,
+        "confidence": "medium",
+        "behavior_class": "lateral_movement",
+    },
+    "linux_port_probe": {
+        "names": ["nc", "netcat", "ncat"],
+        "args_any": ["-z", "-zv"],
+        "technique": "T1046",
+        "tactic": "DISCOVERY",
+        "description": "Port Scan Attempt (nc)",
+        "severity": "LOW",
+        "priority_score": 35,
+        "confidence": "low",
+        "behavior_class": "discovery",
     },
     "linux_python_exec": {
         "names": ["python3", "python", "python2"],

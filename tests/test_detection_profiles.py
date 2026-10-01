@@ -13,8 +13,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "lynx"))
 
-from behavior_detector import DETECTION_PROFILES, match_profile  # noqa: E402
-from behavior_detector import match_linux_profile  # noqa: E402
+from signal_detector import DETECTION_PROFILES, match_profile  # noqa: E402
+from signal_detector import match_linux_profile  # noqa: E402
 from linux_profiles import LINUX_PROFILES  # noqa: E402
 
 REPORTS = ROOT / "investigation-reports"

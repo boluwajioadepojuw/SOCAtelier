@@ -768,6 +768,14 @@ def run_detection_for_eid(eid):
                 "source_event_id":  doc_id,
             }
 
+            # preserve case assignment across re-runs: re-detecting the same event
+            # must not orphan its existing case membership
+            try:
+                existing = es.get(index="lynx-behaviors", id=index_id)["_source"]
+                if existing.get("case_id"):
+                    behavior_doc["case_id"] = existing["case_id"]
+            except Exception:
+                pass
             es.index(index="lynx-behaviors", id=index_id, document=behavior_doc)
             written += 1
 
@@ -929,6 +937,14 @@ def run_linux_detection_for_index(index, last_key, profiles):
                 "source_event_id":  doc_id,
             }
 
+            # preserve case assignment across re-runs: re-detecting the same event
+            # must not orphan its existing case membership
+            try:
+                existing = es.get(index="lynx-behaviors", id=index_id)["_source"]
+                if existing.get("case_id"):
+                    behavior_doc["case_id"] = existing["case_id"]
+            except Exception:
+                pass
             es.index(index="lynx-behaviors", id=index_id, document=behavior_doc)
             written += 1
 

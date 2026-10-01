@@ -2,7 +2,7 @@
 
 Lynx is the investigation console that ships with this lab. It exists because
 raw Kibana searches are good for finding events and bad for running an
-investigation. When a case has 107 behaviors across 8 minutes, an analyst
+investigation. When a case packs dozens of behaviors into a few minutes, an analyst
 needs process chains, network correlation, and a place to hunt, all in one
 screen.
 

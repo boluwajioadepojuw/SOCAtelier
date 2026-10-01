@@ -1,6 +1,6 @@
 # Sigma Rules
 
-12 Sigma detection rules written from real attack telemetry captured during a
+18 Sigma detection rules written from real attack telemetry captured during a
 lab stress test on 16/05/2026. Every rule comes from actual command lines and
 process chains seen in Elasticsearch across 6 cases (CASE-001 through
 CASE-006) formed by the Lynx behavior engine.
@@ -57,5 +57,5 @@ mapping is:
 ## Related
 
 - IR-006 report: `investigation-reports/IR-006/`
-- Lynx behavior profiles: `lynx/behavior_detector.py`
+- Lynx behavior profiles: `lynx/signal_detector.py`
 - MITRE ATT&CK coverage map: the Coverage Map screen in Lynx

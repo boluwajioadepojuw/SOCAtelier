@@ -9,7 +9,7 @@ export default function StatusBar() {
       color: "var(--t3)", letterSpacing: "0.03em",
     }}>
       <span style={{ color: "var(--t2)" }}>SOC ATELIER · LYNX CONSOLE</span>
-      <span>telemetry: Sysmon · Suricata · Elastic Defend (Linux)</span>
+      <span>one machine · Docker · Elastic + stored datasets · live Linux captures</span>
       <span style={{ flex: 1 }} />
       <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
         <i style={{ width: 7, height: 7, borderRadius: 2, background: "var(--red)", display: "inline-block" }} />

@@ -4,9 +4,7 @@ import { fetchCases } from "../api"
 import { useLynx } from "../LynxContext"
 import type { Case } from "../types"
 
-// sparkPath and SPARKS removed. Sparklines were hardcoded to old case IDs
-// and fell back to [1,2,3,4,3,2,1] for every new case — fake telemetry.
-// Replaced with tactic tag row which uses real data from the case document.
+// Tactic tags read from the case document, no synthetic data.
 
 const STATE_COLOR: Record<string, string> = {
   open: "var(--t3)",
@@ -30,8 +28,8 @@ export default function LeftRail() {
 
   const visibleCases = cases.filter((c: Case) => {
     if (filter === "ALL") return true
-    if (filter === "HIGH") return c.highest_severity === "HIGH" || c.highest_severity === "CRITICAL"
-    if (filter === "MED") return c.highest_severity === "MEDIUM" || c.highest_severity === "MED"
+    if (filter === "HIGH") return (c.severity || c.highest_severity) === "HIGH" || (c.severity || c.highest_severity) === "CRITICAL"
+    if (filter === "MED") return (c.severity || c.highest_severity) === "MEDIUM" || (c.severity || c.highest_severity) === "MED"
     return true
   })
 
@@ -64,7 +62,7 @@ export default function LeftRail() {
 
       <div style={{ flex: 1, overflowY: "auto" }}>
         {visibleCases.map((c) => {
-          const isHigh = c.highest_severity === "HIGH" || c.highest_severity === "CRITICAL"
+          const isHigh = (c.severity || c.highest_severity) === "HIGH" || (c.severity || c.highest_severity) === "CRITICAL"
           const col = isHigh ? "var(--red)" : "var(--amb)"
           const sel = selectedCase?.case_id === c.case_id
           const stateCol = STATE_COLOR[c.status?.toLowerCase()] || "var(--t3)"
@@ -107,7 +105,7 @@ export default function LeftRail() {
                   color: isHigh ? "var(--red)" : "var(--amb)",
                   border: isHigh ? "1px solid var(--red3)" : "1px solid var(--amb3)",
                   background: isHigh ? "var(--red2)" : "var(--amb2)",
-                }}>{c.highest_severity}</span>
+                }}>{c.severity || c.highest_severity}</span>
                 <span style={{ fontSize: 8, fontFamily: "var(--mono)", color: stateCol }}>
                   {c.status.toUpperCase()}
                 </span>

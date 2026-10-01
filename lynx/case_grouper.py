@@ -1,5 +1,5 @@
 """
-case_builder.py
+case_grouper.py
 
 Reads lynx-behaviors-*, groups behaviors into cases.
 Grouping rule: behaviors sharing host + 10min window = one case.
@@ -8,7 +8,7 @@ Run once, processes all behaviors without case_id assigned.
 Writes to lynx-cases-* index.
 
 USAGE:
-    python case_builder.py
+    python case_grouper.py
 """
 
 from elasticsearch import Elasticsearch
@@ -17,7 +17,7 @@ import sys
 import os
 import time
 
-# ES connection - matches behavior_detector.py pattern
+# ES connection - matches signal_detector.py pattern
 ES_URL  = os.environ.get("ES_URL", "http://localhost:9200")
 ES_USER = os.environ.get("ES_USER", "elastic")
 ES_PASS = os.environ.get("ES_PASS", "")
@@ -328,14 +328,14 @@ def run_once():
     print(f"[DONE] Created {len(valid_groups)} cases")
 
 def main():
-    print("[START] Lynx case_builder daemon (polling every 60s)")
+    print("[START] Lynx case_grouper daemon (polling every 60s)")
     print("Press Ctrl+C to stop")
     
     while True:
         try:
             run_once()
         except KeyboardInterrupt:
-            print("\n[STOP] case_builder daemon stopped")
+            print("\n[STOP] case_grouper daemon stopped")
             break
         except Exception as e:
             import traceback; traceback.print_exc()

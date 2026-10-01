@@ -28,6 +28,8 @@ import argparse
 import os
 import shlex
 import shutil
+
+LAST_PID = None
 import socket
 import subprocess
 import sys
@@ -96,8 +98,11 @@ def run_command(shell_cmd, label):
             "entity_id": str(pid),
             "parent": {"pid": ppid, "entity_id": str(ppid)},
         },
+        "user": {"name": os.getlogin()},
         "labels": {"scenario": label},
     }
+    global LAST_PID
+    LAST_PID = pid
     es.index(index=PROC_INDEX, document=doc)
     print(f"[proc] pid={pid} ppid={ppid} :: {name} :: {shell_cmd[:70]}")
     if err:
@@ -116,7 +121,8 @@ def record_file(path, action, process_name, label):
             "path": path,
             "extension": os.path.splitext(path)[1] or None,
         },
-        "process": {"name": process_name},
+        "process": {"name": process_name, "pid": LAST_PID},
+        "user": {"name": os.getlogin()},
         "labels": {"scenario": label},
     }
     es.index(index=FILE_INDEX, document=doc)
@@ -132,7 +138,8 @@ def record_network(src_ip, src_port, dest_ip, dest_port, process_name, label):
         "host": {"name": HOSTNAME},
         "source": {"ip": src_ip, "port": src_port},
         "destination": {"ip": dest_ip, "port": dest_port},
-        "process": {"name": process_name},
+        "process": {"name": process_name, "pid": LAST_PID},
+        "user": {"name": os.getlogin()},
         "labels": {"scenario": label},
     }
     es.index(index=NET_INDEX, document=doc)

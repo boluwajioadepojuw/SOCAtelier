@@ -86,7 +86,7 @@ export default function ActionsLog({ onNavigateToInvestigation }: Props) {
         )}
         {!isLoading && filtered.length === 0 && (
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "60%", gap: 8, color: "var(--t3)" }}>
-            <div style={{ fontSize: 28 }}>📋</div>
+            <div style={{ fontSize: 28, color: "var(--teal)" }}>LOG</div>
             <div style={{ fontSize: 12, color: "var(--t2)" }}>No actions recorded</div>
             <div style={{ fontSize: 10, fontFamily: "var(--mono)" }}>
               {filter === "ALL" ? "Use ESCALATE, BLOCK IP or ADD NOTE in the investigation view." : `No ${filter} actions yet.`}

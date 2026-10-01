@@ -1,5 +1,5 @@
 """
-hunt_engine.py — Lynx Hunt Workbench Engine
+hunt_templates.py — Lynx Hunt Workbench Engine
 
 Seven ES|QL hunt templates targeting raw Sysmon telemetry.
 Each template is a parameterized ES|QL query that the analyst
@@ -18,7 +18,7 @@ Template catalogue:
   HT-07  High-frequency child spawning   — process spawning >N children (pivot point)
 
 Usage:
-    from hunt_engine import run_hunt
+    from hunt_templates import run_hunt
     results = run_hunt("HT-02", host="WIN-SOC-01", hours=24)
 """
 
@@ -518,7 +518,7 @@ def list_templates() -> list:
 
 # ---------------------------------------------------------------------------
 # CLI smoke test — run from Node 1 to verify connectivity + field names
-# Usage: python hunt_engine.py
+# Usage: python hunt_templates.py
 # ---------------------------------------------------------------------------
 if __name__ == "__main__":
     print("=== Lynx Hunt Engine — smoke test ===\n")

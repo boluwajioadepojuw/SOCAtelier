@@ -4,6 +4,18 @@ A home SOC lab I built to practice the L1 loop end to end: take logs in,
 find the bad stuff, work the case, write it up. Everything runs on one
 machine with Docker; nothing here needs a second PC or a paid license.
 
+## Screenshots
+
+All captured from the live console on 30/09/2026:
+
+- [Case queue](screenshots/01-Case_Queue.png) - 10 open cases with risk and severity
+- [Case selected - process tree](screenshots/02-Case_Selected_Process_Tree.png)
+- [Cross-layer corroboration](screenshots/03-Cross_Layer.png) - EDR behavior confirmed by gateway flows
+- [Live Linux case](screenshots/04-Live_Linux_Case.png) - real telemetry from this machine
+- [Hunt workbench](screenshots/05-Hunt_Workbench.png)
+- [Coverage map](screenshots/06-Coverage_Map.png)
+- [Action log](screenshots/07-Action_Log.png)
+
 ## What is inside
 
 - Elasticsearch + Kibana as the SIEM core
@@ -19,7 +31,7 @@ machine with Docker; nothing here needs a second PC or a paid license.
 
 - 97 Sysmon detection rules mapped to MITRE ATT&CK
   (detection-rules/lynx-detection-rules.ndjson)
-- 12 Sigma rules, portable versions of the same detections (sigma-rules/)
+- 18 Sigma rules, portable versions of the same detections (sigma-rules/)
 - detections exercised with Atomic Red Team runs
 
 ## Incident reports
@@ -47,9 +59,32 @@ its ATT&CK technique.
 cd docker/elastic
 docker compose up -d          # Elasticsearch + Kibana
 python3 lynx/import_datasets.py   # replay stored cases
-python3 lynx/app.py               # Lynx API on :8000
+python3 lynx/server.py               # Lynx API on :8000
 cd lynx/frontend-react && npm run dev   # console on :5173
 ```
 
 The console works fully offline: case summaries and briefings are
 deterministic, no AI service required.
+
+## Data flow
+
+```mermaid
+flowchart LR
+    A[Sysmon - Windows endpoint] -->|EID 1/3/7/10/11/13| ES[(Elasticsearch)]
+    B[Elastic Defend - Linux endpoint] -->|process/file/network events| ES
+    C[Suricata on gateway] -->|EVE JSON| ES
+    ES --> D[signal detector - 90 behavioral profiles]
+    D --> BEH[(lynx-behaviors)]
+    BEH --> G[case grouper - host + 10min window]
+    G --> CAS[(lynx-cases)]
+    CAS --> LYNX[Lynx console - FastAPI + React]
+    LYNX --> R[written investigation report]
+    LYNX --> T[osTicket alert-to-ticket bridge]
+```
+
+1. Two independent telemetry paths land in Elasticsearch: endpoint (Sysmon
+   on Windows, Elastic Defend on Linux) and network (Suricata EVE JSON).
+2. The detector turns raw events into behaviors; the grouper bundles them
+   into cases.
+3. The console is where triage happens, and the reports and tickets are
+   the written output of that triage.

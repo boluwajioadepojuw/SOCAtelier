@@ -37,7 +37,7 @@ a fresh machine without the original lab hardware.
 
 | File | Description | Behaviors | Size |
 |---|---|---|---|
-| lynx-cases-2026-06-10.json | All 6 cases from case_builder.py | 6 cases | 4.4KB |
+| lynx-cases-2026-06-10.json | All 6 cases from case_grouper.py | 6 cases | 4.4KB |
 | behaviors-CASE-004-2026-06-10.json | Primary demo case. 251 behaviors, full kill chain, cross-layer corroborated | 251 | 155KB |
 | behaviors-CASE-005-2026-06-10.json | 53 behaviors. EXECUTION + DEFENSE_EVASION + DISCOVERY | 53 | 33KB |
 | behaviors-CASE-006-2026-06-10.json | 52 behaviors. EXECUTION + PERSISTENCE + DISCOVERY | 52 | 32KB |
@@ -68,7 +68,7 @@ Load the data into a fresh Elasticsearch with the import script:
 ES_PASS='<elastic password>' python3 lynx/import_datasets.py
 
 # 2. Re-form case relationships
-ES_PASS='<elastic password>' python3 lynx/case_builder.py
+ES_PASS='<elastic password>' python3 lynx/case_grouper.py
 
 # 3. Open the console
 # http://localhost:5173
@@ -85,5 +85,5 @@ not need to be active.
 |---|---|
 | IR-006 investigation report | `investigation-reports/IR-006/` |
 | Sigma detection rules | `sigma-rules/` |
-| Lynx behavior profiles | `lynx/behavior_detector.py` |
+| Lynx behavior profiles | `lynx/signal_detector.py` |
 | Attack scenario script | `lynx/IR-001-Scenario.ps1` (excluded from repo via .gitignore) |
