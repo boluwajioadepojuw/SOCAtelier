@@ -29,3 +29,7 @@ lynx/start_lynx.ps1
 *.log
 
 .vite
+
+# coverage artifacts
+.coverage
+htmlcov/
