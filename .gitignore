@@ -27,3 +27,5 @@ lynx/start_lynx.ps1
 .benchmarks/
 .venv/
 *.log
+
+.vite
