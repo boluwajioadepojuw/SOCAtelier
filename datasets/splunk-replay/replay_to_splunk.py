@@ -19,11 +19,12 @@ import argparse
 import json
 import sys
 import time
+import ssl
 import urllib.request
 from pathlib import Path
 
 
-def post_batch(hec_url: str, token: str, payload: str) -> None:
+def post_batch(hec_url: str, token: str, payload: str, insecure: bool = False) -> None:
     req = urllib.request.Request(
         hec_url.rstrip("/") + "/services/collector",
         data=payload.encode("utf-8"),
@@ -32,7 +33,8 @@ def post_batch(hec_url: str, token: str, payload: str) -> None:
             "Content-Type": "application/json",
         },
     )
-    with urllib.request.urlopen(req, timeout=60) as resp:
+    ctx = ssl._create_unverified_context() if insecure else None
+    with urllib.request.urlopen(req, timeout=60, context=ctx) as resp:
         body = resp.read().decode("utf-8", "replace")
     print(body)
 
@@ -44,6 +46,8 @@ def main() -> int:
     parser.add_argument("--hec-token", required=True)
     parser.add_argument("--now", action="store_true",
                         help="rebase event timestamps onto the current time")
+    parser.add_argument("--insecure", action="store_true",
+                        help="skip TLS verification (lab self-signed cert)")
     args = parser.parse_args()
 
     events_dir = Path(args.events_dir)
@@ -68,8 +72,8 @@ def main() -> int:
         if lines:
             print(f"posting {path.name}: {len(lines)} events")
             post_batch(args.hec_url, args.hec_token,
-                       "
-".join(json.dumps(e) for e in lines))
+                       "\n".join(json.dumps(e) for e in lines),
+                       insecure=args.insecure)
             total += len(lines)
     print(f"done: {total} events sent")
     return 0
