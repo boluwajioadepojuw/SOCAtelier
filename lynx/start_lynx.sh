@@ -9,4 +9,4 @@ if [ -z "$ES_PASS" ]; then
   echo "Set ES_PASS:  ES_PASS='<password>' bash start_lynx.sh"
   exit 1
 fi
-python3 -m uvicorn app:app --host 0.0.0.0 --port 8000
+python3 -m uvicorn server:app --host 0.0.0.0 --port 8000

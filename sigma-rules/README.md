@@ -1,7 +1,7 @@
 # Sigma Rules
 
 18 Sigma detection rules written from real attack telemetry captured during a
-lab stress test on 16/05/2026. Every rule comes from actual command lines and
+lab stress test on 10/06/2026. Every rule comes from actual command lines and
 process chains seen in Elasticsearch across 6 cases (CASE-001 through
 CASE-006) formed by the Lynx behavior engine.
 

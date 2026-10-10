@@ -8,7 +8,7 @@ machine with Docker; nothing here needs a second PC or a paid license.
 
 ## Screenshots
 
-All captured from the live console on 30/09/2026:
+All captured from the live console on 30/09-01/10/2026:
 
 - [Case queue](screenshots/01-Case_Queue.png) - 10 open cases with risk and severity
 - [Case selected - process tree](screenshots/02-Case_Selected_Process_Tree.png)
