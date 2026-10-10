@@ -24,7 +24,7 @@ jobs:
           pip install -r lynx/requirements.txt pytest pytest-cov requests
       - name: Run tests
         run: python -m pytest tests -q --no-header --cov=lynx --cov-report=term-missing
-      - name: Coverage benchmark (gate: executed ART techniques >= 90% rule coverage)
+      - name: "Coverage benchmark (gate: executed ART techniques >= 90% rule coverage)"
         run: |
           python lynx/benchmark_coverage.py
           python - <<'EOF'
