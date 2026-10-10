@@ -1,0 +1,168 @@
+{
+  "generated": "2026-10-11",
+  "rules_total": 96,
+  "executed_techniques": 12,
+  "covered_techniques": 11,
+  "gap_techniques": 1,
+  "coverage_pct": 91.7,
+  "detected_techniques": 9,
+  "behavior_detection_pct": 75.0,
+  "behaviors_fired_total": 358,
+  "matrix": [
+    {
+      "technique_id": "T1057",
+      "technique_name": "Process Discovery",
+      "tactic": "Discovery",
+      "behaviors_fired": 4,
+      "rules_covering": 1,
+      "rule_names": [
+        "[Sysmon] Tasklist Process Discovery"
+      ],
+      "status": "COVERED"
+    },
+    {
+      "technique_id": "T1082",
+      "technique_name": "System Information Discovery",
+      "tactic": "Discovery",
+      "behaviors_fired": 2,
+      "rules_covering": 2,
+      "rule_names": [
+        "[Sysmon] DriverQuery Security Tool Enumeration",
+        "[Sysmon] Systeminfo Execution"
+      ],
+      "status": "COVERED"
+    },
+    {
+      "technique_id": "T1016",
+      "technique_name": "Network Configuration Discovery",
+      "tactic": "Discovery",
+      "behaviors_fired": 1,
+      "rules_covering": 3,
+      "rule_names": [
+        "[Sysmon] IPConfig Network Discovery",
+        "[Sysmon] Route Table Discovery",
+        "[Sysmon] ARP Cache Enumeration"
+      ],
+      "status": "COVERED"
+    },
+    {
+      "technique_id": "T1049",
+      "technique_name": "Network Connections Discovery",
+      "tactic": "Discovery",
+      "behaviors_fired": 0,
+      "rules_covering": 1,
+      "rule_names": [
+        "[Sysmon] Netstat Active Connection Discovery"
+      ],
+      "status": "COVERED"
+    },
+    {
+      "technique_id": "T1033",
+      "technique_name": "System Owner/User Discovery",
+      "tactic": "Discovery",
+      "behaviors_fired": 20,
+      "rules_covering": 1,
+      "rule_names": [
+        "[Sysmon] Whoami Execution"
+      ],
+      "status": "COVERED"
+    },
+    {
+      "technique_id": "T1059.001",
+      "technique_name": "PowerShell Execution",
+      "tactic": "Execution",
+      "behaviors_fired": 23,
+      "rules_covering": 8,
+      "rule_names": [
+        "[Sysmon] Windows Script Host Execution",
+        "[Sysmon] PowerShell Encoded Command Execution",
+        "[Sysmon] PowerShell Download Cradle",
+        "[Sysmon] PowerShell Spawned by Suspicious Parent",
+        "[Sysmon] PowerShell Bypass Execution Policy",
+        "[Sysmon] MSHTA Executing Remote Script",
+        "[Sysmon] Certutil Decode or Download",
+        "[Sysmon] CMD Spawned by Suspicious Parent"
+      ],
+      "status": "COVERED"
+    },
+    {
+      "technique_id": "T1059.003",
+      "technique_name": "Windows Command Shell",
+      "tactic": "Execution",
+      "behaviors_fired": 138,
+      "rules_covering": 8,
+      "rule_names": [
+        "[Sysmon] Windows Script Host Execution",
+        "[Sysmon] PowerShell Encoded Command Execution",
+        "[Sysmon] PowerShell Download Cradle",
+        "[Sysmon] PowerShell Spawned by Suspicious Parent",
+        "[Sysmon] PowerShell Bypass Execution Policy",
+        "[Sysmon] MSHTA Executing Remote Script",
+        "[Sysmon] Certutil Decode or Download",
+        "[Sysmon] CMD Spawned by Suspicious Parent"
+      ],
+      "status": "COVERED"
+    },
+    {
+      "technique_id": "T1547.001",
+      "technique_name": "Registry Run Key Persistence",
+      "tactic": "Persistence",
+      "behaviors_fired": 9,
+      "rules_covering": 2,
+      "rule_names": [
+        "[Sysmon] Registry Run Key Modification",
+        "[Sysmon] Startup Folder File Created"
+      ],
+      "status": "COVERED"
+    },
+    {
+      "technique_id": "T1053.005",
+      "technique_name": "Scheduled Task Creation",
+      "tactic": "Persistence",
+      "behaviors_fired": 2,
+      "rules_covering": 3,
+      "rule_names": [
+        "[Sysmon] At.exe Scheduled Task (Legacy)",
+        "[Sysmon] Scheduled Task Running from Temp",
+        "[Sysmon] Scheduled Task Created via Schtasks"
+      ],
+      "status": "COVERED"
+    },
+    {
+      "technique_id": "T1136.001",
+      "technique_name": "Local Account Creation",
+      "tactic": "Persistence",
+      "behaviors_fired": 4,
+      "rules_covering": 2,
+      "rule_names": [
+        "[Sysmon] User Added to Administrators Group",
+        "[Sysmon] Net User Account Created"
+      ],
+      "status": "COVERED"
+    },
+    {
+      "technique_id": "T1003.001",
+      "technique_name": "OS Credential Dumping (LSASS)",
+      "tactic": "Credential Access",
+      "behaviors_fired": 0,
+      "rules_covering": 5,
+      "rule_names": [
+        "[Sysmon] PowerShell Accessing LSASS via .NET",
+        "[Sysmon] LSASS Process Access",
+        "[Sysmon] Mimikatz Indicators in Command Line",
+        "[Sysmon] SAM Registry Hive Access",
+        "[Sysmon] Procdump Targeting LSASS"
+      ],
+      "status": "COVERED"
+    },
+    {
+      "technique_id": "T1112",
+      "technique_name": "Modify Registry",
+      "tactic": "Defense Evasion",
+      "behaviors_fired": 0,
+      "rules_covering": 0,
+      "rule_names": [],
+      "status": "GAP"
+    }
+  ]
+}

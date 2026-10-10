@@ -1,0 +1,13 @@
+technique_id,technique_name,tactic,behaviors_fired,rules_covering,status
+T1057,Process Discovery,Discovery,4,1,COVERED
+T1082,System Information Discovery,Discovery,2,2,COVERED
+T1016,Network Configuration Discovery,Discovery,1,3,COVERED
+T1049,Network Connections Discovery,Discovery,0,1,COVERED
+T1033,System Owner/User Discovery,Discovery,20,1,COVERED
+T1059.001,PowerShell Execution,Execution,23,8,COVERED
+T1059.003,Windows Command Shell,Execution,138,8,COVERED
+T1547.001,Registry Run Key Persistence,Persistence,9,2,COVERED
+T1053.005,Scheduled Task Creation,Persistence,2,3,COVERED
+T1136.001,Local Account Creation,Persistence,4,2,COVERED
+T1003.001,OS Credential Dumping (LSASS),Credential Access,0,5,COVERED
+T1112,Modify Registry,Defense Evasion,0,0,GAP
