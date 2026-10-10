@@ -1,6 +1,5 @@
 title: Local Account Created by Shell
-owner: lab
-id: f2a3b4c5-4403-4e9f-9f84-lynx0000c6
+id: 587eab05-a930-4fc7-a4a2-c819c2bb20a5
 status: experimental
 description: Detects net.exe adding a local user from a shell, a move seen in both persistence and lateral movement playbooks.
 references:

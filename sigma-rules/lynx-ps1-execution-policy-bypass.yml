@@ -1,5 +1,5 @@
 title: PowerShell Execution Policy Bypass
-id: a1b2c3d4-0001-4e5f-a001-lynx00000001
+id: 1b60c78f-6ac8-4b21-810b-83c16aae950b
 status: test
 description: Detects PowerShell launched with -ExecutionPolicy Bypass flag, commonly used by attackers to run unsigned scripts without restriction. Observed in Lynx stress test 2026-06-10 across CASE-001 and CASE-004.
 references:

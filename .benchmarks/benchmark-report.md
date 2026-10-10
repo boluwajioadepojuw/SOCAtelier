@@ -10,16 +10,16 @@ Generated: 2026-10-11
 - Behavior counts: behaviors recorded in the sanitized dataset exports
   (each behavior is a detector match with its fire reasons).
 - Rule coverage: techniques mapped in the `threat` fields of the
-  96 rules in detection-rules/lynx-detection-rules.ndjson.
+  97 rules in detection-rules/lynx-detection-rules.ndjson.
   Matching is at the parent-technique level (a rule tagged T1059 covers
   T1059.001 and T1059.003), the same convention ATT&CK Navigator uses.
 
 ## Result
 
 - Executed techniques: 12
-- Covered by at least one detection rule: 11 (91.7%)
+- Covered by at least one detection rule: 12 (100.0%)
 - Techniques with behaviors fired during the run: 9 (75.0%)
-- Gaps (no rule): 1
+- Gaps (no rule): 0
 - Behaviors fired during the run: 358
 
 ## Matrix
@@ -37,7 +37,7 @@ Generated: 2026-10-11
 | T1053.005 Scheduled Task Creation | Persistence | 2 | 3 | COVERED |
 | T1136.001 Local Account Creation | Persistence | 4 | 2 | COVERED |
 | T1003.001 OS Credential Dumping (LSASS) | Credential Access | 0 | 5 | COVERED |
-| T1112 Modify Registry | Defense Evasion | 0 | 0 | GAP |
+| T1112 Modify Registry | Defense Evasion | 0 | 1 | COVERED |
 
 ## Limitations (read honestly)
 

@@ -53,9 +53,9 @@ sequenceDiagram
 
 ## Detection content
 
-- 96 Sysmon detection rules mapped to MITRE ATT&CK
+- 97 Sysmon detection rules mapped to MITRE ATT&CK
   (detection-rules/lynx-detection-rules.ndjson)
-- 18 Sigma rules, portable versions of the same detections (sigma-rules/)
+- 29 Sigma rules, portable versions of the same detections (sigma-rules/)
 - detections exercised with Atomic Red Team runs
 - Splunk detections exercised end to end: datasets/splunk-replay/ replays
   real Mordor Windows captures (plus a labeled 4625 burst) through the
@@ -67,10 +67,11 @@ sequenceDiagram
 The Atomic Red Team stress run (10/06/2026, 330 atomics, 708 behaviors) is
 measured against the rule set in CI on every push:
 
-- 11 of 12 executed techniques covered by detection rules (91.7 percent)
+- 12 of 12 executed techniques covered by detection rules (100 percent)
 - 9 of 12 executed techniques produced live behavior detections (75 percent,
   358 behaviors)
-- one known gap: T1112 Modify Registry
+- remaining evidence work: re-run the three techniques that produced no
+  behaviors (T1049, T1003.001, T1112) through the live pipeline
 
 Artifacts: [.benchmarks/benchmark-report.md](.benchmarks/benchmark-report.md)
 and [.benchmarks/coverage-matrix.csv](.benchmarks/coverage-matrix.csv).

@@ -10,4 +10,4 @@ T1547.001,Registry Run Key Persistence,Persistence,9,2,COVERED
 T1053.005,Scheduled Task Creation,Persistence,2,3,COVERED
 T1136.001,Local Account Creation,Persistence,4,2,COVERED
 T1003.001,OS Credential Dumping (LSASS),Credential Access,0,5,COVERED
-T1112,Modify Registry,Defense Evasion,0,0,GAP
+T1112,Modify Registry,Defense Evasion,0,1,COVERED

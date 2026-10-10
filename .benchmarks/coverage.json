@@ -1,10 +1,10 @@
 {
   "generated": "2026-10-11",
-  "rules_total": 96,
+  "rules_total": 97,
   "executed_techniques": 12,
-  "covered_techniques": 11,
-  "gap_techniques": 1,
-  "coverage_pct": 91.7,
+  "covered_techniques": 12,
+  "gap_techniques": 0,
+  "coverage_pct": 100.0,
   "detected_techniques": 9,
   "behavior_detection_pct": 75.0,
   "behaviors_fired_total": 358,
@@ -160,9 +160,11 @@
       "technique_name": "Modify Registry",
       "tactic": "Defense Evasion",
       "behaviors_fired": 0,
-      "rules_covering": 0,
-      "rule_names": [],
-      "status": "GAP"
+      "rules_covering": 1,
+      "rule_names": [
+        "[Sysmon] Registry Modified by reg.exe or regedit.exe"
+      ],
+      "status": "COVERED"
     }
   ]
 }

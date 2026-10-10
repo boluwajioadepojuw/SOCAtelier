@@ -1,0 +1,24 @@
+title: Windows Defender Exclusion Added
+author: Boluwaji Oluwaseyi Adepoju
+id: a80572f6-ced8-406f-93aa-ccbef1d0ef40
+status: experimental
+description: Portable version of the matching lab detection, converted from the Elastic rule shipped in SOCAtelier.
+references:
+    - https://attack.mitre.org/techniques/T1562/001/
+date: 2026/10/11
+tags:
+    - attack.defense_evasion
+    - attack.t1562.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: '\powershell.exe'
+        CommandLine|contains|all:
+            - 'Add-MpPreference'
+            - 'ExclusionPath'
+    condition: selection
+falsepositives:
+    - Documented admin policy scripts
+level: high

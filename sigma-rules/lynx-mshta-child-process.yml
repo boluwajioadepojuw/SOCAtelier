@@ -1,6 +1,5 @@
 title: Mshta Spawning a Shell
-owner: lab
-id: e1f2a3b4-3302-4d8e-8e73-lynx0000c5
+id: f4e2228c-d424-40b4-8d00-8b3a99598299
 status: experimental
 description: Detects mshta.exe launching a command shell, the classic signed-binary proxy move for script execution.
 references:
