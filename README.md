@@ -62,6 +62,20 @@ sequenceDiagram
   SplunkHarbor lab; all five SPL detections fire - evidence in
   [datasets/splunk-replay/README.md](datasets/splunk-replay/README.md)
 
+## Benchmark
+
+The Atomic Red Team stress run (10/06/2026, 330 atomics, 708 behaviors) is
+measured against the rule set in CI on every push:
+
+- 11 of 12 executed techniques covered by detection rules (91.7 percent)
+- 9 of 12 executed techniques produced live behavior detections (75 percent,
+  358 behaviors)
+- one known gap: T1112 Modify Registry
+
+Artifacts: [.benchmarks/benchmark-report.md](.benchmarks/benchmark-report.md)
+and [.benchmarks/coverage-matrix.csv](.benchmarks/coverage-matrix.csv).
+Regenerate with `python3 lynx/benchmark_coverage.py`.
+
 ## Incident reports
 
 investigation-reports/ has fourteen write-ups: six Windows cases

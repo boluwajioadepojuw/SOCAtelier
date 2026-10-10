@@ -24,6 +24,15 @@ jobs:
           pip install -r lynx/requirements.txt pytest pytest-cov requests
       - name: Run tests
         run: python -m pytest tests -q --no-header --cov=lynx --cov-report=term-missing
+      - name: Coverage benchmark (gate: executed ART techniques >= 90% rule coverage)
+        run: |
+          python lynx/benchmark_coverage.py
+          python - <<'EOF'
+          import json
+          s = json.load(open('.benchmarks/coverage.json'))
+          print(f"coverage: {s['coverage_pct']}% ({s['covered_techniques']}/{s['executed_techniques']} techniques)")
+          assert s['coverage_pct'] >= 90, "rule coverage of executed ART techniques dropped below 90%"
+          EOF
 
   frontend:
     runs-on: ubuntu-latest
