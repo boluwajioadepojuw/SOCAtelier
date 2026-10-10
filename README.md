@@ -53,7 +53,7 @@ sequenceDiagram
 
 ## Detection content
 
-- 97 Sysmon detection rules mapped to MITRE ATT&CK
+- 96 Sysmon detection rules mapped to MITRE ATT&CK
   (detection-rules/lynx-detection-rules.ndjson)
 - 18 Sigma rules, portable versions of the same detections (sigma-rules/)
 - detections exercised with Atomic Red Team runs
